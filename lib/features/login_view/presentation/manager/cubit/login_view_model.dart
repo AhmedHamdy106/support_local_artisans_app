@@ -10,17 +10,16 @@ class LoginScreenViewModel extends Cubit<LoginStates> {
 
   final TextEditingController passwordController = TextEditingController();
 
-  LoginUseCase loginUseCase;
-  LoginScreenViewModel({required this.loginUseCase})
-      : super(LoginInitialState());
+  LoginUseCase? loginUseCase;
+  LoginScreenViewModel({this.loginUseCase}) : super(LoginInitialState());
   // hold data - handle logic
   void login() async {
     emit(LoginLoadingState());
-    var either = await loginUseCase.invoke(
+    var either = await loginUseCase?.invoke(
       emailController.text,
       passwordController.text,
     );
-    either.fold(
+    either?.fold(
       (l) {
         emit(LoginSuccessState(responseEntity: l));
       },

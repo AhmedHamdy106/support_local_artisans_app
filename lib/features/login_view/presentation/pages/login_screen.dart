@@ -4,9 +4,11 @@ import 'package:support_local_artisans/features/login_view/presentation/manager/
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_view_model.dart';
 import '../../../../config/routes_manager/routes.dart';
 import '../../../../core/di/di.dart';
+import '../../../../core/shared/shared_preference.dart';
 import '../../../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../../../core/utils/dialogs.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../forgot_pass_view/forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final LoginScreenViewModel viewModel = getIt<LoginScreenViewModel>();
+  static final LoginScreenViewModel viewModel = getIt<LoginScreenViewModel>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,14 @@ class _LoginScreenState extends State<LoginScreen> {
             message: "Login Successfully.",
             posButtonTitle: "Ok",
             posButtonAction: () {
-              Navigator.pushReplacementNamed(context, Routes.homeRoute);
+              // todo : save token
+              SharedPreference.saveData(
+                  key: "token", value: state.responseEntity.token);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.homeRoute,
+                (route) => false,
+              );
             },
           );
         }
@@ -47,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: const Color(0xfff6f6f6), // Blue background
+          backgroundColor: const Color(0xffffffff), // Blue background
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Center(
@@ -55,14 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text(
-                      'Log in',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Image.asset(
+                      "assets/images/login_logo.jpg",
+                      height: 120,
+                      filterQuality: FilterQuality.high,
                     ),
                     const SizedBox(height: 40.0),
                     CustomTextFormField(
@@ -95,7 +103,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()),
+                          );
+                        },
                         child: const Text(
                           'Forgot password?',
                           style: TextStyle(
@@ -112,6 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (formKey.currentState!.validate()) {
                           viewModel.login();
                         }
+                        // if (viewModel.passwordController.text ==
+                        //     ForgotPasswordScreen.newPasswordController.text) {
+                        //   viewModel.login();
+                        //}
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

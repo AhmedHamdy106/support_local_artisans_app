@@ -57,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         key: formKey,
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: const Color(0xfff6f6f6),
+          backgroundColor: const Color(0xffffffff),
           body: Center(
             child: SingleChildScrollView(
               child: Container(
@@ -68,8 +68,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     Center(
                       child: Image.asset(
-                        'assets/images/reglogo.png',
-                        height: 130,
+                        'assets/images/register.jpg',
+                        height: 160,
+                        filterQuality: FilterQuality.high,
                       ),
                     ),
                     const CustomLabelTextField(label: "Full Name"),

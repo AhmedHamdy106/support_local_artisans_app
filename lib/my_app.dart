@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'config/routes_manager/route_generator.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? route;
+  const MyApp({super.key, this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (RouteSettings settings) =>
           RouteGenerator.getRoute(settings),
-      initialRoute: Routes.registerRoute,
+      initialRoute: route,
     );
   }
 }

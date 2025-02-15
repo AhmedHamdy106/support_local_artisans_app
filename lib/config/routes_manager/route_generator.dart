@@ -3,7 +3,6 @@ import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/features/login_view/presentation/pages/login_screen.dart';
 import 'package:support_local_artisans/features/register_view/presentation/pages/register_screen.dart';
 import 'package:support_local_artisans/features/splash_view/presentation/pages/splash_screen.dart';
-
 import '../../features/home_view/presentation/pages/home_screen.dart';
 
 class RouteGenerator {

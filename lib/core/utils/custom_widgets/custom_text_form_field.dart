@@ -8,6 +8,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool securedPassword;
   final Validator validator;
   final TextEditingController? controller;
+
   const CustomTextFormField({
     super.key,
     required this.hint,
