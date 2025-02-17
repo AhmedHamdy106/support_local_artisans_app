@@ -57,28 +57,57 @@ class _RegisterScreenState extends State<RegisterScreen> {
         key: formKey,
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: const Color(0xffffffff),
+          backgroundColor: const Color(0xffF8F0EC),
           body: Center(
             child: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/images/register.jpg',
-                        height: 160,
-                        filterQuality: FilterQuality.high,
+                    const Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 25,
+                          ),
+                          Text(
+                            'Create Account',
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 24,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF0E0705),
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'create an account to start your journey.',
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff9D9896),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     const CustomLabelTextField(label: "Full Name"),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     CustomTextFormField(
-                      hint: "please enter full name",
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _person_3.0x.png"),
+                      hint: "Enter your full name",
                       keyboardType: TextInputType.text,
                       securedPassword: false,
                       validator: (text) {
@@ -90,34 +119,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: viewModel.nameController,
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
-                    const CustomLabelTextField(label: "Mobile Number"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextFormField(
-                      hint: "please enter phone number",
-                      keyboardType: TextInputType.number,
-                      securedPassword: false,
-                      validator: (text) {
-                        if (text!.trim().isEmpty) {
-                          return "this field is required";
-                        }
-                        AppValidators.isValidEgyptianPhoneNumber(text);
-                        return null;
-                      },
-                      controller: viewModel.phoneController,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    // const CustomLabelTextField(label: "Mobile Number"),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
+                    // CustomTextFormField(
+                    //   hint: "please enter phone number",
+                    //   keyboardType: TextInputType.number,
+                    //   securedPassword: false,
+                    //   validator: (text) {
+                    //     if (text!.trim().isEmpty) {
+                    //       return "this field is required";
+                    //     }
+                    //     AppValidators.isValidEgyptianPhoneNumber(text);
+                    //     return null;
+                    //   },
+                    //   controller: viewModel.phoneController,
+                    // ),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
                     const CustomLabelTextField(label: "Email Address"),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     CustomTextFormField(
-                      hint: "please enter email address",
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                      hint: "Enter your email",
                       keyboardType: TextInputType.emailAddress,
                       securedPassword: false,
                       validator: (text) {
@@ -130,14 +161,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: viewModel.emailController,
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     const CustomLabelTextField(label: "Password"),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     CustomTextFormField(
-                      hint: "please enter password",
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      hint: "Enter your password",
                       keyboardType: TextInputType.text,
                       securedPassword: true,
                       validator: (text) {
@@ -150,14 +183,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: viewModel.passwordController,
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     const CustomLabelTextField(label: "Confirm Password"),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     CustomTextFormField(
-                      hint: "please enter confirm password",
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      hint: "Enter your password",
                       keyboardType: TextInputType.text,
                       securedPassword: true,
                       validator: (text) {
@@ -175,7 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: viewModel.confirmPasswordController,
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 40,
                     ),
                     // DropdownButtonFormField<String>(
                     //   value: userType,
@@ -222,63 +257,79 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //     },
                     //   ),
                     // ],
-
                     Center(
                       child: SizedBox(
-                        width: 200,
+                        width: double.infinity,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 14.0),
-                          ),
                           onPressed: () {
-                            //register();
+                            // login();
                             if (formKey.currentState!.validate()) {
                               viewModel.register();
                             }
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff8C4931),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                          ),
                           child: const Text(
-                            'Sign up',
+                            'sign up',
                             style: TextStyle(
-                              color: Color(0xff012e2f),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontFamily: "Roboto",
+                                fontSize: 20,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xffEEEDEC)),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
+                    // Center(
+                    //   child: TextButton(
+                    //     onPressed: () {},
+                    //     child: RichText(
+                    //       text: TextSpan(
+                    //         text: "Already have an account? ",
+                    //         style: TextStyle(color: Colors.black),
+                    //         children: [
+                    //           TextSpan(
+                    //             text: 'log in',
+                    //             style: TextStyle(
+                    //                 color: Colors.brown,
+                    //                 fontWeight: FontWeight.bold),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Already have account?",
+                          "Already have an account?",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xFF9D9896)),
                         ),
                         const SizedBox(
-                          width: 20,
+                          width: 2,
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, Routes.loginRoute);
                           },
                           child: Text(
-                            "Log in",
+                            "log in",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  color: const Color(0xff1f526c),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline,
+                                  fontFamily: "Roboto",
+                                  color: const Color(0xff8C4931),
                                 ),
                           ),
                         ),

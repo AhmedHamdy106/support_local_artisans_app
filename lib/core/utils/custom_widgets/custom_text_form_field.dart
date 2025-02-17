@@ -8,9 +8,11 @@ class CustomTextFormField extends StatefulWidget {
   final bool securedPassword;
   final Validator validator;
   final TextEditingController? controller;
+  final Widget prefixIcon;
 
   const CustomTextFormField({
     super.key,
+    required this.prefixIcon,
     required this.hint,
     required this.validator,
     this.keyboardType = TextInputType.text,
@@ -42,6 +44,7 @@ class _CustomTextFormField extends State<CustomTextFormField> {
       keyboardType: widget.keyboardType,
       obscureText: isVisibleText,
       decoration: InputDecoration(
+        prefixIcon: widget.prefixIcon,
         errorStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: Colors.red,
             ),
@@ -53,18 +56,34 @@ class _CustomTextFormField extends State<CustomTextFormField> {
                   });
                 },
                 child: isVisibleText
-                    ? const Icon(Icons.visibility_off_outlined)
-                    : const Icon(Icons.visibility))
+                    ? const Icon(
+                        Icons.visibility_off_outlined,
+                      )
+                    : const Icon(
+                        Icons.visibility,
+                        color: Color(0xff8C4931),
+                      ))
             : null,
         hintText: widget.hint,
-        hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-              color: Colors.black,
-            ),
-        fillColor: Colors.white,
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+        hintStyle: const TextStyle(
+          fontFamily: "Roboto",
+          fontSize: 14,
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w400,
         ),
+        fillColor: const Color(0xffF8F0EC),
+        filled: true,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xff8C4931)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+        // border: OutlineInputBorder(
+        //   borderRadius: BorderRadius.circular(10),
+        // ),
       ),
     );
   }

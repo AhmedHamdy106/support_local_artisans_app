@@ -11,7 +11,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await SharedPreference.init();
   var token = SharedPreference.getData(key: "token");
-  final String route;
+  String route = Routes.userSelectionRoute;
   if (token == null) {
     route = Routes.loginRoute;
   } else {

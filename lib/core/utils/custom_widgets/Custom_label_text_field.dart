@@ -10,9 +10,11 @@ class CustomLabelTextField extends StatelessWidget {
     return Text(
       label,
       style: const TextStyle(
-        color: Colors.black54,
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
+        color: Color(0xff0E0705),
+        fontFamily: "Roboto",
+        fontSize: 16,
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
