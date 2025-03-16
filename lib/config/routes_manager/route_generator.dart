@@ -4,7 +4,6 @@ import 'package:support_local_artisans/features/login_view/presentation/pages/lo
 import 'package:support_local_artisans/features/register_view/presentation/pages/register_screen.dart';
 import 'package:support_local_artisans/features/splash_view/presentation/pages/splash_screen.dart';
 import '../../features/home_view/presentation/pages/home_screen.dart';
-import '../../features/user_selection_screen_view/user_selection_screen_view.dart';
 
 class RouteGenerator {
   static Route<dynamic>? getRoute(RouteSettings settings) {
@@ -25,10 +24,10 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) => const HomeScreen(),
         );
-      case Routes.userSelectionRoute:
-        return MaterialPageRoute(
-          builder: (context) => const UserSelectionScreen(),
-        );
+      // case Routes.userSelectionRoute:
+      //   return MaterialPageRoute(
+      //     builder: (context) => const UserSelectionScreen(),
+      //   );
       default:
         return unDefinedRoute();
     }

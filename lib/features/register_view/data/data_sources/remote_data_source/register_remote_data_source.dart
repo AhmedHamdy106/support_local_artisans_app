@@ -4,10 +4,11 @@ import '../../../../../core/error/failures.dart';
 
 abstract class RegisterRemoteDataSource {
   Future<Either<RegisterResponseEntity, Failures>> register(
-    String name,
     String email,
+    String phoneNumber,
+    String displayname,
+    String Role,
     String password,
-    String rePassword,
-    String phone,
+    String confirmedPassword,
   );
 }

@@ -6,31 +6,28 @@ import '../../../domain/use_cases/register_use_case.dart';
 
 @injectable
 class RegisterScreenViewModel extends Cubit<RegisterStates> {
-  final TextEditingController nameController = TextEditingController();
-
   final TextEditingController emailController = TextEditingController();
-
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   RegisterUseCase registerUseCase;
   RegisterScreenViewModel({required this.registerUseCase})
       : super(RegisterInitialState());
-  // hold data - handle logic
-  void register() async {
+  void register({required String Role}) async {
     emit(RegisterLoadingState());
     var either = await registerUseCase.invoke(
-      nameController.text,
       emailController.text,
+      phoneController.text,
+      nameController.text,
+      Role,
       passwordController.text,
       confirmPasswordController.text,
-      phoneController.text,
     );
     either.fold(
       (l) {
-        emit(RegisterSuccessState(responseEntity: l));
+        emit(RegisterSuccessState(registerResponseEntity: l));
       },
       (r) {
         emit(RegisterErrorState(failures: r));

@@ -12,10 +12,8 @@ class LoginUseCase {
   Future<Either<LoginResponseEntity, Failures>> invoke(
     String email,
     String password,
+    bool RememberMe,
   ) {
-    return loginRepository.login(
-      email,
-      password,
-    );
+    return loginRepository.login(email, password, RememberMe);
   }
 }

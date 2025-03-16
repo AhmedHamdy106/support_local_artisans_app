@@ -66,6 +66,7 @@ class _CustomTextFormField extends State<CustomTextFormField> {
             : null,
         hintText: widget.hint,
         hintStyle: const TextStyle(
+          color: Color(0xff9D9896),
           fontFamily: "Roboto",
           fontSize: 14,
           fontStyle: FontStyle.normal,
@@ -81,9 +82,6 @@ class _CustomTextFormField extends State<CustomTextFormField> {
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Colors.grey),
         ),
-        // border: OutlineInputBorder(
-        //   borderRadius: BorderRadius.circular(10),
-        // ),
       ),
     );
   }

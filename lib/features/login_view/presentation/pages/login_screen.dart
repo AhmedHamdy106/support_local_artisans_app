@@ -20,6 +20,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   static final LoginScreenViewModel viewModel = getIt<LoginScreenViewModel>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool isRememberMeChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginScreenViewModel, LoginStates>(
@@ -44,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // todo : save token
               SharedPreference.saveData(
                   key: "token", value: state.responseEntity.token);
+              print(state.responseEntity.token);
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.homeRoute,
@@ -56,24 +59,21 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: const Color(0xFFF8F0EC), // Blue background
+          backgroundColor: const Color(0xFFF8F0EC),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: Center(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
+                    const SizedBox(height: 60),
                     const Center(
                       child: Text(
                         'Welcome Back👋',
                         style: TextStyle(
                           fontFamily: "Roboto",
                           fontSize: 24,
-                          fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff0E0705),
                         ),
@@ -82,26 +82,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                     const Center(
                       child: Text(
-                        'please enter your email and password to log in.',
+                        'Please enter your email and password to log in.',
                         style: TextStyle(
                           fontFamily: "Roboto",
                           fontSize: 14,
-                          fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff9D9896),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    const SizedBox(height: 30),
                     const Text(
                       'Email Address',
                       style: TextStyle(
                         color: Color(0xff0E0705),
                         fontFamily: "Roboto",
                         fontSize: 16,
-                        fontStyle: FontStyle.normal,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -114,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       securedPassword: false,
                       validator: (text) {
                         if (text!.trim().isEmpty) {
-                          return "this field is required";
+                          return "This field is required";
                         }
                         return null;
                       },
@@ -127,13 +123,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Color(0xff0E0705),
                         fontFamily: "Roboto",
                         fontSize: 16,
-                        fontStyle: FontStyle.normal,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 5),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
                           "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
@@ -142,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       securedPassword: true,
                       validator: (text) {
                         if (text!.trim().isEmpty) {
-                          return "this field is required";
+                          return "This field is required";
                         }
                         AppValidators.validatePassword(text);
                         return null;
@@ -150,27 +143,43 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: viewModel.passwordController,
                     ),
                     const SizedBox(height: 15.0),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ForgotPasswordScreen()),
-                          );
-                        },
-                        child: const Text(
-                          'Forget password?',
-                          style: TextStyle(
-                              color: Color(0xFF8C4931),
-                              fontFamily: "Roboto",
-                              fontStyle: FontStyle.normal,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
+
+                    /// إضافة Remember Me + Forget Password
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                              activeColor: const Color(0xFF8C4931),
+                              value: isRememberMeChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  isRememberMeChecked = value ?? false;
+                                });
+                              },
+                            ),
+                            const Text("Remember Me"),
+                          ],
                         ),
-                      ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                       ForgetPasswordScreen()),
+                            );
+                          },
+                          child: const Text(
+                            'Forget password?',
+                            style: TextStyle(
+                                color: Color(0xFF8C4931),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 30.0),
                     SizedBox(
@@ -184,65 +193,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff8C4931),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: const Text(
-                          'log in',
+                          'Log In',
                           style: TextStyle(
                               fontFamily: "Roboto",
                               fontSize: 20,
-                              fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w600,
                               color: Color(0xffEEEDEC)),
                         ),
                       ),
                     ),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     // login();
-                    //     if (formKey.currentState!.validate()) {
-                    //       viewModel.login();
-                    //     }
-                    //     // if (viewModel.passwordController.text ==
-                    //     //     ForgotPasswordScreen.newPasswordController.text) {
-                    //     //   viewModel.login();
-                    //     //}
-                    //   },
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: Colors.white,
-                    //     foregroundColor: const Color(0xFF003B84),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(10.0),
-                    //     ),
-                    //   ),
-                    //   child: const Padding(
-                    //     padding: EdgeInsets.symmetric(vertical: 15.0),
-                    //     child: Text(
-                    //       'Log in',
-                    //       style: TextStyle(
-                    //         color: Color(0xff012e2f),
-                    //         fontSize: 20,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(height: 40.0),
-                    // Center(
-                    //   child: RichText(
-                    //     text: const TextSpan(
-                    //       text: "Don't have an account? ",
-                    //       style: TextStyle(color: Colors.black),
-                    //       children: [
-                    //         TextSpan(
-                    //           text: 'sign up',
-                    //           style: TextStyle(
-                    //               color: Colors.brown, fontWeight: FontWeight.bold),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -253,15 +216,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 16,
                               color: Color(0xFF9D9896)),
                         ),
-                        const SizedBox(
-                          width: 2,
-                        ),
+                        const SizedBox(width: 2),
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, Routes.registerRoute);
                           },
                           child: Text(
-                            "sign up",
+                            "Sign Up",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium

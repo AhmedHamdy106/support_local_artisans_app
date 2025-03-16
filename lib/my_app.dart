@@ -3,8 +3,8 @@ import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'config/routes_manager/route_generator.dart';
 
 class MyApp extends StatelessWidget {
-  final String route = Routes.userSelectionRoute;
-  const MyApp({super.key,  String? route});
+  final String? route;
+  const MyApp({super.key, this.route});
 
   @override
   Widget build(BuildContext context) {

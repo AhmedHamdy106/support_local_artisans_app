@@ -7,6 +7,7 @@ import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/core/utils/validators.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/register_states.dart';
 import '../../../../config/routes_manager/routes.dart';
+import '../../domain/entities/RegisterResponseEntity.dart';
 import '../manager/cubit/register_view_model.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -18,15 +19,9 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final RegisterScreenViewModel viewModel = getIt<RegisterScreenViewModel>();
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // String userType = 'عميل'; // نوع المستخدم الافتراضي
-  // bool isArtisan = false; // هل المستخدم حرفي؟
-  // final TextEditingController workshopAddressController =
-  //     TextEditingController();
-  // final TextEditingController specializationController =
-  //     TextEditingController();
-
+  String selectedUserType = 'client';
+  RegisterResponseEntity state = RegisterResponseEntity();
   @override
   Widget build(BuildContext context) {
     return BlocListener<RegisterScreenViewModel, RegisterStates>(
@@ -71,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 25,
+                            height: 40,
                           ),
                           Text(
                             'Create Account',
@@ -121,26 +116,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(
                       height: 15,
                     ),
-                    // const CustomLabelTextField(label: "Mobile Number"),
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
-                    // CustomTextFormField(
-                    //   hint: "please enter phone number",
-                    //   keyboardType: TextInputType.number,
-                    //   securedPassword: false,
-                    //   validator: (text) {
-                    //     if (text!.trim().isEmpty) {
-                    //       return "this field is required";
-                    //     }
-                    //     AppValidators.isValidEgyptianPhoneNumber(text);
-                    //     return null;
-                    //   },
-                    //   controller: viewModel.phoneController,
-                    // ),
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
+                    const CustomLabelTextField(label: "Mobile Number"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      hint: "Enter phone number",
+                      keyboardType: TextInputType.number,
+                      securedPassword: false,
+                      validator: (text) {
+                        if (text!.trim().isEmpty) {
+                          return "this field is required";
+                        }
+                        AppValidators.isValidEgyptianPhoneNumber(text);
+                        return null;
+                      },
+                      controller: viewModel.phoneController,
+                      prefixIcon: const Icon(
+                        Icons.mobile_friendly,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     const CustomLabelTextField(label: "Email Address"),
                     const SizedBox(
                       height: 5,
@@ -156,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return "this field is required";
                         }
                         AppValidators.validateEmail(text);
-                        return null;
+                        //return null;
                       },
                       controller: viewModel.emailController,
                     ),
@@ -210,61 +209,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: viewModel.confirmPasswordController,
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 20,
                     ),
-                    // DropdownButtonFormField<String>(
-                    //   value: userType,
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       userType = value!;
-                    //       isArtisan = value == 'حرفي';
-                    //     });
-                    //   },
-                    //   items: ['عميل', 'حرفي'].map((type) {
-                    //     return DropdownMenuItem(
-                    //       value: type,
-                    //       child: Text(type),
-                    //     );
-                    //   }).toList(),
-                    //   decoration:
-                    //       const InputDecoration(labelText: 'نوع المستخدم'),
-                    // ),
-                    //
-                    // // الحقول الإضافية للحرفيين
-                    // if (isArtisan) ...[
-                    //   // عنوان الورشة
-                    //   TextFormField(
-                    //     controller: workshopAddressController,
-                    //     decoration:
-                    //         const InputDecoration(labelText: 'عنوان الورشة'),
-                    //     validator: (value) {
-                    //       if (isArtisan && (value == null || value.isEmpty)) {
-                    //         return 'يرجى إدخال عنوان الورشة';
-                    //       }
-                    //       return null;
-                    //     },
-                    //   ),
-                    //
-                    //   // التخصص
-                    //   TextFormField(
-                    //     controller: specializationController,
-                    //     decoration: const InputDecoration(labelText: 'التخصص'),
-                    //     validator: (value) {
-                    //       if (isArtisan && (value == null || value.isEmpty)) {
-                    //         return 'يرجى إدخال التخصص';
-                    //       }
-                    //       return null;
-                    //     },
-                    //   ),
-                    // ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildUserTypeCard(
+                            bc: const Color(0xffEDD3CA),
+                            'client',
+                            'assets/images/3.0x/Group_3.0x.png'),
+                        const SizedBox(width: 10),
+                        _buildUserTypeCard(
+                            bc: const Color(0xffDDDAD9),
+                            'seller',
+                            'assets/images/3.0x/Character_3.0x.png'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Center(
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // login();
                             if (formKey.currentState!.validate()) {
-                              viewModel.register();
+                              String roleToSend = selectedUserType == "client"
+                                  ? "User"
+                                  : "Artisan";
+                              viewModel.register(Role: roleToSend);
+                              // ✅ ضيفه هنا
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -286,25 +260,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    // Center(
-                    //   child: TextButton(
-                    //     onPressed: () {},
-                    //     child: RichText(
-                    //       text: TextSpan(
-                    //         text: "Already have an account? ",
-                    //         style: TextStyle(color: Colors.black),
-                    //         children: [
-                    //           TextSpan(
-                    //             text: 'log in',
-                    //             style: TextStyle(
-                    //                 color: Colors.brown,
-                    //                 fontWeight: FontWeight.bold),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -340,6 +295,67 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserTypeCard(String type, String imagePath,
+      {required Color bc}) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedUserType = type;
+        });
+      },
+      child: Container(
+        width: 160,
+        height: 165,
+        //padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+        decoration: BoxDecoration(
+          color: bc,
+          // color: selectedUserType == type
+          //     ? Colors.brown.shade600
+          //     : Color(0xffDDDAD9),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  child: Radio<String>(
+                    value: type,
+                    groupValue: selectedUserType,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedUserType = value!;
+                      });
+                    },
+                    activeColor: const Color(0xff8C4931),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 45.0, left: 7),
+                  child: Text(
+                    type,
+                    style: const TextStyle(
+                      fontFamily: "Roboto",
+                      fontSize: 20,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff0E0705),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            Image.asset(imagePath, height: 175),
+          ],
         ),
       ),
     );

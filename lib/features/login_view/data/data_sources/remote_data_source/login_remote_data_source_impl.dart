@@ -12,19 +12,21 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
   Future<Either<LoginResponseDM, Failures>> login(
     String email,
     String password,
+    bool RememberMe,
   ) async {
     var response = await ApiManager.postData(
       EndPoints.loginEndPoint,
       body: {
         "email": email,
         "password": password,
+        "RememberMe": RememberMe,
       },
     );
     var loginResponse = LoginResponseDM.fromJson(response.data);
     if (response.statusCode! >= 200 && response.statusCode! < 300) {
       return Left(loginResponse);
     } else {
-      return Right(ServerError(errorMessage: loginResponse.message!));
+      return Right(ServerError(errorMessage: loginResponse.message ?? ''));
     }
   }
 }

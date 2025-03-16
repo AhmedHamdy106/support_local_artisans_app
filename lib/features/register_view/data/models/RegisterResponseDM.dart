@@ -1,32 +1,23 @@
-import 'package:support_local_artisans/features/register_view/domain/entities/RegisterResponseEntity.dart';
+import '../../domain/entities/RegisterResponseEntity.dart';
 
 class RegisterResponseDM extends RegisterResponseEntity {
-  RegisterResponseDM({
-    super.message,
-    super.statusMsg,
-    super.user,
-    super.token,
-  });
+  RegisterResponseDM({super.message, super.statusMsg, super.user, super.token});
 
   RegisterResponseDM.fromJson(dynamic json) {
-    message = json['message'];
-    statusMsg = json["statusMsg"];
-    user = json['user'] != null ? UserDM.fromJson(json['user']) : null;
+    message = json['message']??""; // ✅ تحويل القيمة إلى String
+    statusMsg = json[
+        'statusMsg']; // ✅ تأكد أن جميع القيم المتوقعة كـ String يتم تحويلها
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     token = json['token'];
   }
 }
 
-class UserDM extends UserEntity {
-  UserDM({
-    super.name,
-    super.email,
-    this.role,
-  });
+class User extends UserEntity {
+  User({super.displayName, super.email, super.role});
 
-  UserDM.fromJson(dynamic json) {
-    name = json['name'];
-    email = json['email'];
-    role = json['role'];
+  User.fromJson(dynamic json) {
+    displayName = json['displayName']?.toString();
+    email = json['email']?.toString();
+    role = json['role']?.toString();
   }
-  String? role;
 }

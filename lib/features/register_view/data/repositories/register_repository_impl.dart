@@ -10,15 +10,16 @@ class RegisterRepositoryImpl implements RegisterRepository {
   RegisterRemoteDataSource registerRemoteDataSource;
   RegisterRepositoryImpl({required this.registerRemoteDataSource});
   @override
-  Future<Either<RegisterResponseEntity, Failures>> register(String name,
-      String email, String password, String rePassword, String phone) async {
+  Future<Either<RegisterResponseEntity, Failures>> register(
+    String email,
+    String phoneNumber,
+    String displayname,
+    String Role,
+    String password,
+    String confirmedPassword,
+  ) async {
     var either = await registerRemoteDataSource.register(
-      name,
-      email,
-      password,
-      rePassword,
-      phone,
-    );
+        email, phoneNumber, displayname, Role, password, confirmedPassword);
     return either.fold(
       (response) => Left(response),
       (error) => Right(error),

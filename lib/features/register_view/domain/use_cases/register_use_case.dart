@@ -10,13 +10,14 @@ class RegisterUseCase {
   RegisterUseCase({required this.registerRepository});
 
   Future<Either<RegisterResponseEntity, Failures>> invoke(
-    String name,
     String email,
+    String phoneNumber,
+    String displayname,
+    String Role,
     String password,
-    String rePassword,
-    String phone,
+    String confirmedPassword,
   ) {
     return registerRepository.register(
-        name, email, password, rePassword, phone);
+        email, phoneNumber, displayname, Role, password, confirmedPassword);
   }
 }

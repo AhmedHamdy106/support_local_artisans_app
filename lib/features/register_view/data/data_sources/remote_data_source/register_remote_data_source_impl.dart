@@ -9,23 +9,40 @@ import 'package:support_local_artisans/features/register_view/data/models/Regist
 @Injectable(as: RegisterRemoteDataSource)
 class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
   @override
-  Future<Either<RegisterResponseDM, Failures>> register(String name,
-      String email, String password, String rePassword, String phone) async {
+  Future<Either<RegisterResponseDM, Failures>> register(
+      String email,
+      String phoneNumber,
+      String displayname,
+      String Role,
+      String password,
+      String confirmedPassword) async {
+    print("📢 Sending Data to API:");
+    print({
+      "email": email,
+      "phoneNumber": phoneNumber,
+      "displayname": displayname,
+      "Role": Role,
+      "password": password,
+      "confirmedPassword": confirmedPassword
+    });
     var response = await ApiManager.postData(
       EndPoints.registerEndPoint,
       body: {
-        "name": name,
         "email": email,
+        "phoneNumber": phoneNumber,
+        "displayname": displayname,
+        "Role": Role,
         "password": password,
-        "rePassword": rePassword,
-        "phone": phone,
+        "confirmedPassword": confirmedPassword
       },
     );
     var registerResponse = RegisterResponseDM.fromJson(response.data);
+    print("📌 API Response Data: ${response.data}");
+    print("📌 API Status Code: ${response.statusCode}");
     if (response.statusCode! >= 200 && response.statusCode! < 300) {
       return Left(registerResponse);
     } else {
-      return Right(ServerError(errorMessage: registerResponse.message!));
+      return Right(ServerError(errorMessage: registerResponse.message??""));
     }
   }
 }

@@ -13,10 +13,12 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<LoginResponseEntity, Failures>> login(
     String email,
     String password,
+    bool RememberMe,
   ) async {
     var either = await loginRemoteDataSource.login(
       email,
       password,
+      RememberMe,
     );
     return either.fold(
       (response) => Left(response),

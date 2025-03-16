@@ -11,11 +11,12 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await SharedPreference.init();
   var token = SharedPreference.getData(key: "token");
-  String route = Routes.userSelectionRoute;
+  String? route;
   if (token == null) {
     route = Routes.loginRoute;
   } else {
     route = Routes.homeRoute;
+    print("Token :  $token");
   }
   configureDependencies();
   runApp(MyApp(

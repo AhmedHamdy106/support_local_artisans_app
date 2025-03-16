@@ -6,5 +6,6 @@ abstract class LoginRepository {
   Future<Either<LoginResponseEntity, Failures>> login(
     String email,
     String password,
+      bool RememberMe,
   );
 }

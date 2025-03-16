@@ -1,3 +1,3 @@
 class AppStrings {
-  static const String baseUrl = "https://ecommerce.routemisr.com";
+  static const String baseUrl = "http://abdoemam.runasp.net";
 }

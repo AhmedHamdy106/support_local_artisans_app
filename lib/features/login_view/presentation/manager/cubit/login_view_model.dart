@@ -18,6 +18,7 @@ class LoginScreenViewModel extends Cubit<LoginStates> {
     var either = await loginUseCase?.invoke(
       emailController.text,
       passwordController.text,
+      false,
     );
     either?.fold(
       (l) {

@@ -1,6 +1,7 @@
 import 'package:support_local_artisans/core/error/failures.dart';
 import 'package:support_local_artisans/features/register_view/domain/entities/RegisterResponseEntity.dart';
 
+
 abstract class RegisterStates {}
 
 class RegisterInitialState extends RegisterStates {}
@@ -13,6 +14,6 @@ class RegisterErrorState extends RegisterStates {
 }
 
 class RegisterSuccessState extends RegisterStates {
-  RegisterResponseEntity responseEntity;
-  RegisterSuccessState({required this.responseEntity});
+  RegisterResponseEntity registerResponseEntity;
+  RegisterSuccessState({required this.registerResponseEntity});
 }

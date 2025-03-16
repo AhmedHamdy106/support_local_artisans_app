@@ -26,6 +26,7 @@ class ApiManager {
       data: body,
       options: Options(
         headers: headers,
+        contentType: 'application/json',
         validateStatus: (status) => true,
       ),
     );
