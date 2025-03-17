@@ -1,8 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import '../../core/di/di.dart';
+import '../../config/routes_manager/routes.dart';
 import '../../core/utils/custom_widgets/custom_text_form_field.dart';
-import '../login_view/presentation/manager/cubit/login_view_model.dart';
-import '../verification_code_view/verification_code_screen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -11,9 +10,90 @@ class ForgetPasswordScreen extends StatefulWidget {
   State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
 }
 
-class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  static final LoginScreenViewModel viewModel = getIt<LoginScreenViewModel>();
+class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+  late Animation<double> animation;
+  late AnimationController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInOut)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        }
+      });
+  }
+
+  // zezobode430@gmail.com
+  // Abdoelnegm#0
+  Future<void> sendForgetPasswordRequest() async {
+    setState(() => isLoading = true);
+    try {
+      Response response = await Dio().post(
+        'http://abdoemam.runasp.net/api/Account/ForgetPassword',
+        data: {'email': emailController.text},
+      );
+      await ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          animation: animation,
+          behavior: SnackBarBehavior.floating,
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.all(16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          content: Text(
+            response.data['message'],
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: "Roboto",
+              fontSize: 16,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      Navigator.pushReplacementNamed(context, Routes.verificationCodeRoute);
+    } catch (e) {
+      await ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          animation: animation,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          content: Text(
+            'Error:  $e',
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: "Roboto",
+              fontSize: 16,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+    setState(() => isLoading = false);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -102,8 +182,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 CustomTextFormField(
                   prefixIcon:
                       Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
-                  hint: "Enter your mail",
-                  keyboardType: TextInputType.text,
+                  hint: "Enter your email",
+                  keyboardType: TextInputType.emailAddress,
                   securedPassword: false,
                   validator: (text) {
                     if (text!.trim().isEmpty) {
@@ -111,7 +191,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     }
                     return null;
                   },
-                  controller: viewModel.emailController,
+                  controller: emailController,
                 ),
                 const SizedBox(height: 140),
                 SizedBox(
@@ -119,24 +199,22 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff8C4931),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => VerificationCodeScreen()),
-                      );
-                    },
-                    child: const Text(
-                      'send code',
-                      style: TextStyle(
-                          fontFamily: "Roboto",
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FontStyle.normal,
-                          color: Color(0xffEEEDEC)),
-                    ),
+                    onPressed: isLoading ? null : sendForgetPasswordRequest,
+                    child: isLoading
+                        ? const CircularProgressIndicator(
+                            color: Color(0xff8C4931),
+                          )
+                        : const Text(
+                            'send code',
+                            style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.normal,
+                                color: Color(0xffEEEDEC)),
+                          ),
                   ),
                 ),
               ],
