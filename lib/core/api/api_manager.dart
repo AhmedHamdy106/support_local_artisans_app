@@ -8,6 +8,7 @@ class ApiManager {
   ApiManager() {
     dio = Dio();
   }
+
   static Future<Response> getData(String endPoint,
       {Map<String, dynamic>? queryParameters}) {
     return dio.get(
@@ -22,6 +23,19 @@ class ApiManager {
   static Future<Response> postData(String endPoint,
       {Map<String, dynamic>? body, Map<String, dynamic>? headers}) {
     return dio.post(
+      AppStrings.baseUrl + endPoint,
+      data: body,
+      options: Options(
+        headers: headers,
+        contentType: 'application/json',
+        validateStatus: (status) => true,
+      ),
+    );
+  }
+
+  static Future<Response> putData(String endPoint,
+      {Map<String, dynamic>? body, Map<String, dynamic>? headers}) {
+    return dio.put(
       AppStrings.baseUrl + endPoint,
       data: body,
       options: Options(

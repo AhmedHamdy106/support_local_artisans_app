@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/routes_manager/routes.dart';
 
 class VerificationCodeScreen extends StatefulWidget {
@@ -80,6 +81,11 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
       );
       if (response.statusCode == 200) {
         setState(() => token = response.data['token']);
+        // ✅ حفظ التوكين في SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("auth_token", token!);
+
+        print("Received Token and Saved: $token");
         await ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             animation: animation,
