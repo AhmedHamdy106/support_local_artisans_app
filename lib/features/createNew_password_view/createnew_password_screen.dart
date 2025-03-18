@@ -119,6 +119,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
               obscureText: true,
               decoration: InputDecoration(labelText: 'New Password'),
             ),
+            SizedBox(height: 30),
             TextField(
               controller: _confirmPasswordController,
               obscureText: true,
@@ -128,6 +129,9 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
             _isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xff8C4931), // ✅ صحيح الآن
+              ),
               onPressed: resetPassword,
               child: Text('Reset Password'),
             ),

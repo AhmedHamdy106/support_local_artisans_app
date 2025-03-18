@@ -4,11 +4,13 @@ class DialogUtils {
   static void showMessageDialog({
     required final BuildContext context,
     required final String message,
+    final String? title,
     final String? posButtonTitle,
     final VoidCallback? posButtonAction,
     final String? negButtonTitle,
     final VoidCallback? negButtonAction,
     final bool isCancelable = true,
+    final Color barrierColor = Colors.black54,
   }) {
     List<Widget> actions = [];
     if (posButtonTitle != null) {
@@ -18,9 +20,7 @@ class DialogUtils {
             Navigator.pop(context);
             posButtonAction?.call();
           },
-          child: Text(
-            posButtonTitle,
-          ),
+          child: Text(posButtonTitle),
         ),
       );
     }
@@ -31,53 +31,63 @@ class DialogUtils {
             Navigator.pop(context);
             negButtonAction?.call();
           },
-          child: Text(
-            negButtonTitle,
-          ),
+          child: Text(negButtonTitle),
         ),
       );
     }
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(
-              message,
-              style: const TextStyle(color: Colors.black),
-            ),
-            actions: actions,
-          );
-        },
-        barrierDismissible: isCancelable);
+      context: context,
+      barrierDismissible: isCancelable,
+      barrierColor: barrierColor,
+      builder: (context) {
+        return AlertDialog(
+          title: title != null ? Text(title) : null,
+          content: Text(message, style: const TextStyle(color: Colors.black)),
+          actions: actions,
+        );
+      },
+    );
   }
 
   static void showLoadingDialog(
-    final BuildContext context, {
-    required String message,
-    bool isCancelable = true,
-  }) {
+      final BuildContext context, {
+        required String message,
+        bool isCancelable = false,
+        final Color barrierColor = Colors.black54,
+      }) {
+    if (ModalRoute.of(context)?.isCurrent ?? false) {
+      return; // ✅ تجنب فتح أكثر من Dialog في نفس الوقت
+    }
+
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-            content: Row(
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(
-              width: 12,
-            ),
-            Text(
-              message,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ],
-        ));
-      },
       barrierDismissible: isCancelable,
+      barrierColor: barrierColor,
+      builder: (context) {
+        return WillPopScope(
+          onWillPop: () async => isCancelable,
+          child: AlertDialog(
+            content: Row(
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
   static void hideLoading(BuildContext context) {
-    Navigator.pop(context);
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 }
