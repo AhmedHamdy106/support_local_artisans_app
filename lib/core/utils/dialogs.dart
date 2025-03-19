@@ -17,10 +17,12 @@ class DialogUtils {
       actions.add(
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
             posButtonAction?.call();
           },
-          child: Text(posButtonTitle,style: const TextStyle(fontFamily: "Roboto"),),
+          child: Text(posButtonTitle, style: const TextStyle(fontFamily: "Roboto")),
         ),
       );
     }
@@ -28,67 +30,73 @@ class DialogUtils {
       actions.add(
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
             negButtonAction?.call();
           },
-          child: Text(negButtonTitle,style: const TextStyle(fontFamily: "Roboto"),),
+          child: Text(negButtonTitle, style: const TextStyle(fontFamily: "Roboto")),
         ),
       );
     }
-    showDialog(
-      context: context,
-      barrierDismissible: isCancelable,
-      barrierColor: barrierColor,
-      builder: (context) {
-        return AlertDialog(
-          title: title != null ? Text(title) : null,
-          content: Text(message,
-              style:
-                  const TextStyle(color: Colors.black, fontFamily: "Roboto")),
-          actions: actions,
-        );
-      },
-    );
+
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        useRootNavigator: true,
+        barrierDismissible: isCancelable,
+        barrierColor: barrierColor,
+        builder: (context) {
+          return AlertDialog(
+            title: title != null ? Text(title) : null,
+            content: Text(
+              message,
+              style: const TextStyle(color: Colors.black, fontFamily: "Roboto"),
+            ),
+            actions: actions,
+          );
+        },
+      );
+    }
   }
 
   static void showLoadingDialog(
-    final BuildContext context, {
-    required String message,
-    bool isCancelable = false,
-    final Color barrierColor = Colors.black54,
-  }) {
-    if (ModalRoute.of(context)?.isCurrent ?? false) {
-      return; // ✅ تجنب فتح أكثر من Dialog في نفس الوقت
-    }
-
-    showDialog(
-      context: context,
-      barrierDismissible: isCancelable,
-      barrierColor: barrierColor,
-      builder: (context) {
-        return WillPopScope(
-          onWillPop: () async => isCancelable,
-          child: AlertDialog(
-            content: Row(
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    message,
-                    style: const TextStyle(color: Colors.black,fontFamily: "Roboto"),
+      final BuildContext context, {
+        required String message,
+        bool isCancelable = false,
+        final Color barrierColor = Colors.black54,
+      }) {
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        useRootNavigator: true,
+        barrierDismissible: isCancelable,
+        barrierColor: barrierColor,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () async => isCancelable,
+            child: AlertDialog(
+              content: Row(
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      message,
+                      style: const TextStyle(color: Colors.black, fontFamily: "Roboto"),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 
   static void hideLoading(BuildContext context) {
-    if (Navigator.canPop(context)) {
+    if (context.mounted && Navigator.canPop(context)) {
       Navigator.pop(context);
     }
   }

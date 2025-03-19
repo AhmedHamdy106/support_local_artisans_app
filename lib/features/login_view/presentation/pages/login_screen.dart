@@ -9,6 +9,7 @@ import '../../../../core/shared/shared_preference.dart';
 import '../../../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../../../core/utils/dialogs.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../forgot_pass_view/forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen(
@@ -71,23 +72,23 @@ class _LoginScreenState extends State<LoginScreen> {
           DialogUtils.showMessageDialog(
             context: context,
             message: state.failures.errorMessage,
-            posButtonTitle: "OK",
+            posButtonTitle: "ok",
           );
         } else if (state is LoginSuccessState) {
           DialogUtils.hideLoading(context);
-          saveLoginData(viewModel.emailController.text,
-              viewModel.passwordController.text, RememberMe);
           DialogUtils.showMessageDialog(
             context: context,
             message: "Login Successfully.",
             posButtonTitle: "Ok",
             posButtonAction: () {
+              // todo : save token
               SharedPreference.saveData(
                   key: "token", value: state.responseEntity.token);
+              print(state.responseEntity.token);
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.homeRoute,
-                (route) => false,
+                    (route) => false,
               );
             },
           );
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 60),
                     const Center(
                       child: Text(
                         'Welcome Back👋',
@@ -116,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     const Center(
                       child: Text(
                         'Please enter your email and password to log in.',
@@ -128,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 30),
                     const Text(
                       'Email Address',
                       style: TextStyle(
@@ -138,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const SizedBox(height: 5.0),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
                           "assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
@@ -147,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: (text) => AppValidators.validateEmail(text),
                       controller: viewModel.emailController,
                     ),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 30.0),
                     const Text(
                       'Password',
                       style: TextStyle(
@@ -157,6 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const SizedBox(height: 5),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
                           "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
@@ -166,95 +169,91 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: (text) => AppValidators.validatePassword(text),
                       controller: viewModel.passwordController,
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 15.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Checkbox(
-                              activeColor: const Color(0xFF8C4931),
-                              value: RememberMe,
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  RememberMe = newValue ?? false;
-                                });
-                              },
-                            ),
-                            const Text(
-                              "Remember Me",
-                              style: TextStyle(
-                                color: Color(0xff0E0705),
-                                fontFamily: "Roboto",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                                activeColor: const Color(0xFF8C4931),
+                                value: RememberMe,
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    RememberMe = newValue ?? false;
+                                  });
+                                }),
+                            const Text("Remember Me"),
                           ],
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(
-                                context, Routes.forgetPasswordRoute);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const ForgetPasswordScreen()),
+                            );
                           },
                           child: const Text(
                             'Forget password?',
                             style: TextStyle(
-                              color: Color(0xFF8C4931),
-                              fontFamily: "Roboto",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
+                                color: Color(0xFF8C4931),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 90.0),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff8C4931),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          viewModel.login();
-                        }
-                      },
-                      child: const Text(
-                        'log in',
-                        style: TextStyle(
-                          fontFamily: "Roboto",
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xffEEEDEC),
+                    const SizedBox(height: 30.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // login();
+                          if (formKey.currentState!.validate()) {
+                            viewModel.login();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff8C4931),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: const Text(
+                          'Log In',
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xffEEEDEC)),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 40.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
                           "Don't have an account?",
                           style: TextStyle(
-                              fontFamily: "Roboto",
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                               color: Color(0xFF9D9896)),
                         ),
+                        const SizedBox(width: 2),
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, Routes.registerRoute);
                           },
                           child: Text(
-                            "sign up",
+                            "Sign Up",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  fontFamily: "Roboto",
-                                  color: const Color(0xff8C4931),
-                                ),
+                              fontFamily: "Roboto",
+                              color: const Color(0xff8C4931),
+                            ),
                           ),
                         ),
                       ],

@@ -221,15 +221,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff8C4931),
                             padding: const EdgeInsets.symmetric(vertical: 12),
+
                           ),
-                          child: const Text(
-                            'sign up',
-                            style: TextStyle(
-                                fontFamily: "Roboto",
-                                fontSize: 20,
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xffEEEDEC)),
+                          child: TextButton(
+                            onPressed: () {
+                        Navigator.pushNamed(context, Routes.homeRoute);
+                        } ,
+                            child: const Text(
+                              'sign up',
+                              style: TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 20,
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xffEEEDEC)),
+                            ),
                           ),
                         ),
                       ),
