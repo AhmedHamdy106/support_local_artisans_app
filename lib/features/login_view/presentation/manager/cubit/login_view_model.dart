@@ -7,26 +7,34 @@ import 'package:support_local_artisans/features/login_view/presentation/manager/
 @injectable
 class LoginScreenViewModel extends Cubit<LoginStates> {
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
+  final LoginUseCase? loginUseCase;
 
-  LoginUseCase? loginUseCase;
+  bool _isLoggingIn = false; // ✅ متغير لمنع تنفيذ أكثر من طلب في نفس الوقت
+
   LoginScreenViewModel({this.loginUseCase}) : super(LoginInitialState());
-  // hold data - handle logic
+
   void login() async {
+    if (_isLoggingIn) return; // ✅ منع تنفيذ دالة `login()` أكثر من مرة
+
+    _isLoggingIn = true;
     emit(LoginLoadingState());
+
     var either = await loginUseCase?.invoke(
-      emailController.text,
-      passwordController.text,
+      emailController.text.trim(),
+      passwordController.text.trim(),
       false,
     );
+
     either?.fold(
-      (l) {
-        emit(LoginSuccessState(responseEntity: l));
+          (successResponse) {
+        emit(LoginSuccessState(responseEntity: successResponse));
       },
-      (r) {
-        emit(LoginErrorState(failures: r));
+          (failureResponse) {
+        emit(LoginErrorState(failures: failureResponse));
       },
     );
+
+    _isLoggingIn = false; // ✅ إعادة السماح بإرسال طلب جديد
   }
 }

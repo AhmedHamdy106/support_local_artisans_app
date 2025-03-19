@@ -211,33 +211,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              String roleToSend = selectedUserType == "client"
-                                  ? "User"
-                                  : "Artisan";
+                              String roleToSend = selectedUserType == "client" ? "User" : "Artisan";
                               viewModel.register(Role: roleToSend);
-                              // ✅ ضيفه هنا
                             }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff8C4931),
                             padding: const EdgeInsets.symmetric(vertical: 12),
-
                           ),
-                          child: TextButton(
-                            onPressed: () {
-                        Navigator.pushNamed(context, Routes.homeRoute);
-                        } ,
-                            child: const Text(
-                              'sign up',
-                              style: TextStyle(
-                                  fontFamily: "Roboto",
-                                  fontSize: 20,
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xffEEEDEC)),
+                          child: const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 20,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xffEEEDEC),
                             ),
                           ),
                         ),
+
                       ),
                     ),
                     const SizedBox(
