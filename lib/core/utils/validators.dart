@@ -1,4 +1,14 @@
 class AppValidators {
+  static String? validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Username is required";
+    }
+    if (!RegExp(r"^[a-zA-Z][a-zA-Z0-9_]{2,19}$").hasMatch(value)) {
+      return "Username must be 3-20 characters long, start with a letter, and contain only letters, numbers, and underscores";
+    }
+    return null;
+  }
+
   static String? validateEmail(String? val) {
     RegExp emailRegex = RegExp(
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$");
@@ -20,6 +30,7 @@ class AppValidators {
     }
     return null;
   }
+
   static String? validatePhoneNumber(String? phoneNumber) {
     RegExp egyptPhoneRegex = RegExp(r'^(?:\+20|0)?(10|11|12|15)\d{8}$');
     if (phoneNumber == null || phoneNumber.trim().isEmpty) {

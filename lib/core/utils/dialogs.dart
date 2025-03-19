@@ -20,7 +20,7 @@ class DialogUtils {
             Navigator.pop(context);
             posButtonAction?.call();
           },
-          child: Text(posButtonTitle),
+          child: Text(posButtonTitle,style: const TextStyle(fontFamily: "Roboto"),),
         ),
       );
     }
@@ -31,7 +31,7 @@ class DialogUtils {
             Navigator.pop(context);
             negButtonAction?.call();
           },
-          child: Text(negButtonTitle),
+          child: Text(negButtonTitle,style: const TextStyle(fontFamily: "Roboto"),),
         ),
       );
     }
@@ -42,7 +42,9 @@ class DialogUtils {
       builder: (context) {
         return AlertDialog(
           title: title != null ? Text(title) : null,
-          content: Text(message, style: const TextStyle(color: Colors.black)),
+          content: Text(message,
+              style:
+                  const TextStyle(color: Colors.black, fontFamily: "Roboto")),
           actions: actions,
         );
       },
@@ -50,11 +52,11 @@ class DialogUtils {
   }
 
   static void showLoadingDialog(
-      final BuildContext context, {
-        required String message,
-        bool isCancelable = false,
-        final Color barrierColor = Colors.black54,
-      }) {
+    final BuildContext context, {
+    required String message,
+    bool isCancelable = false,
+    final Color barrierColor = Colors.black54,
+  }) {
     if (ModalRoute.of(context)?.isCurrent ?? false) {
       return; // ✅ تجنب فتح أكثر من Dialog في نفس الوقت
     }
@@ -74,7 +76,7 @@ class DialogUtils {
                 Expanded(
                   child: Text(
                     message,
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black,fontFamily: "Roboto"),
                   ),
                 ),
               ],

@@ -47,28 +47,229 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xffF8F0EC),
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  _buildTextField("Full Name", "Enter your full name", viewModel.nameController),
-                  _buildTextField("Mobile Number", "Enter phone number", viewModel.phoneController, keyboardType: TextInputType.number),
-                  _buildTextField("Email Address", "Enter your email", viewModel.emailController, keyboardType: TextInputType.emailAddress),
-                  _buildTextField("Password", "Enter your password", viewModel.passwordController, isPassword: true),
-                  _buildTextField("Confirm Password", "Confirm your password", viewModel.confirmPasswordController, isPassword: true),
-                  const SizedBox(height: 20),
-                  _buildUserTypeSelection(),
-                  const SizedBox(height: 20),
-                  _buildRegisterButton(),
-                  _buildLoginOption(),
-                ],
+      child: Form(
+        key: formKey,
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: const Color(0xffF8F0EC),
+          body: Center(
+            child: SingleChildScrollView(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Text(
+                            'Create Account',
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 24,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF0E0705),
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'create an account to start your journey.',
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff9D9896),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const CustomLabelTextField(label: "Full Name"),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextFormField(
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _person_3.0x.png"),
+                      hint: "Enter your full name",
+                      keyboardType: TextInputType.text,
+                      securedPassword: false,
+                      validator: (text) => AppValidators.validateUsername(text),
+                      controller: viewModel.nameController,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const CustomLabelTextField(label: "Mobile Number"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      hint: "Enter phone number",
+                      keyboardType: TextInputType.number,
+                      securedPassword: false,
+                      validator: (text) =>
+                          AppValidators.validatePhoneNumber(text),
+                      controller: viewModel.phoneController,
+                      prefixIcon: const Icon(
+                        Icons.mobile_friendly,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const CustomLabelTextField(label: "Email Address"),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextFormField(
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                      hint: "Enter your email",
+                      keyboardType: TextInputType.emailAddress,
+                      securedPassword: false,
+                      validator: (text) => AppValidators.validateEmail(text),
+                      controller: viewModel.emailController,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const CustomLabelTextField(label: "Password"),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextFormField(
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      hint: "Enter your password",
+                      keyboardType: TextInputType.text,
+                      securedPassword: true,
+                      validator: (text) => AppValidators.validatePassword(text),
+                      controller: viewModel.passwordController,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const CustomLabelTextField(label: "Confirm Password"),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    CustomTextFormField(
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      hint: "Enter your password",
+                      keyboardType: TextInputType.text,
+                      securedPassword: true,
+                      validator: (text) {
+                        if (text!.isEmpty) {
+                          if (text.trim().isEmpty) {
+                            return "this field is required";
+                          }
+                          return "Please enter password";
+                        }
+                        if (viewModel.passwordController.text != text) {
+                          return "Password doesn't match";
+                        }
+                        return null;
+                      },
+                      controller: viewModel.confirmPasswordController,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildUserTypeCard(
+                            bc: const Color(0xffEDD3CA),
+                            'client',
+                            'assets/images/3.0x/Group_3.0x.png'),
+                        const SizedBox(width: 10),
+                        _buildUserTypeCard(
+                            bc: const Color(0xffDDDAD9),
+                            'seller',
+                            'assets/images/3.0x/Character_3.0x.png'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              String roleToSend = selectedUserType == "client"
+                                  ? "User"
+                                  : "Artisan";
+                              viewModel.register(Role: roleToSend);
+                              // ✅ ضيفه هنا
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff8C4931),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: const Text(
+                            'sign up',
+                            style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 20,
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xffEEEDEC)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xFF9D9896)),
+                        ),
+                        const SizedBox(
+                          width: 2,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.loginRoute);
+                          },
+                          child: Text(
+                            "log in",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontFamily: "Roboto",
+                                  color: const Color(0xff8C4931),
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -77,106 +278,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildHeader() {
-    return const Center(
-      child: Column(
-        children: [
-          SizedBox(height: 40),
-          Text('Create Account', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-          SizedBox(height: 8),
-          Text('Create an account to start your journey.', style: TextStyle(fontSize: 16, color: Color(0xff9D9896))),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(String label, String hint, TextEditingController controller, {bool isPassword = false, TextInputType keyboardType = TextInputType.text}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomLabelTextField(label: label),
-        const SizedBox(height: 5),
-        CustomTextFormField(
-          hint: hint,
-          keyboardType: keyboardType,
-          securedPassword: isPassword,
-          controller: controller,
-          validator: (text) {
-            if (text!.trim().isEmpty) return "This field is required";
-            if (label == "Email Address") AppValidators.validateEmail(text);
-            if (label == "Mobile Number") AppValidators.validatePhoneNumber(text);
-            if (label == "Password") AppValidators.validatePassword(text);
-            return null;
-          }, prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
-        ),
-        const SizedBox(height: 15),
-      ],
-    );
-  }
-
-  Widget _buildUserTypeSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildUserTypeCard('client', 'assets/images/3.0x/Group_3.0x.png'),
-        const SizedBox(width: 10),
-        _buildUserTypeCard('seller', 'assets/images/3.0x/Character_3.0x.png'),
-      ],
-    );
-  }
-
-  Widget _buildUserTypeCard(String type, String imagePath) {
+  Widget _buildUserTypeCard(String type, String imagePath,
+      {required Color bc}) {
     return GestureDetector(
-      onTap: () => setState(() => selectedUserType = type),
+      onTap: () {
+        setState(() {
+          selectedUserType = type;
+        });
+      },
       child: Container(
         width: 160,
         height: 165,
         decoration: BoxDecoration(
-          color: selectedUserType == type ? Colors.brown.shade300 : const Color(0xffDDDAD9),
+          color: bc,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Radio<String>(
-              value: type,
-              groupValue: selectedUserType,
-              onChanged: (value) => setState(() => selectedUserType = value!),
-              activeColor: const Color(0xff8C4931),
+            Column(
+              children: [
+                Align(
+                  child: Radio<String>(
+                    value: type,
+                    groupValue: selectedUserType,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedUserType = value!;
+                      });
+                    },
+                    activeColor: const Color(0xff8C4931),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 45.0, left: 7),
+                  child: Text(
+                    type,
+                    style: const TextStyle(
+                      fontFamily: "Roboto",
+                      fontSize: 20,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff0E0705),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Text(type, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-            Image.asset(imagePath, height: 100),
+            const Spacer(),
+            Image.asset(imagePath, height: 175),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildRegisterButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          if (formKey.currentState!.validate()) {
-            viewModel.register(Role: selectedUserType == "client" ? "User" : "Artisan");
-          }
-        },
-        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xff8C4931), padding: const EdgeInsets.symmetric(vertical: 15)),
-        child: const Text('Sign Up', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white)),
-      ),
-    );
-  }
-
-  Widget _buildLoginOption() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Already have an account?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF9D9896))),
-        TextButton(
-          onPressed: () => Navigator.pushNamed(context, Routes.loginRoute),
-          child: const Text("Log In", style: TextStyle(fontSize: 16, color: Color(0xff8C4931))),
-        ),
-      ],
     );
   }
 }

@@ -9,10 +9,10 @@ import '../../../../core/shared/shared_preference.dart';
 import '../../../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../../../core/utils/dialogs.dart';
 import '../../../../core/utils/validators.dart';
-import '../../../forgot_pass_view/forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key,  String? savedEmail,  String? savedPassword,  bool? rememberMe});
+  const LoginScreen(
+      {super.key, String? savedEmail, String? savedPassword, bool? rememberMe});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -21,7 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   static final LoginScreenViewModel viewModel = getIt<LoginScreenViewModel>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool isRememberMeChecked = false;
+  bool RememberMe = false;
 
   @override
   void initState() {
@@ -40,13 +40,14 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           viewModel.emailController.text = savedEmail;
           viewModel.passwordController.text = savedPassword;
-          isRememberMeChecked = true;
+          rememberMe = true;
         });
       }
     }
   }
 
-  Future<void> saveLoginData(String email, String password, bool rememberMe) async {
+  Future<void> saveLoginData(
+      String email, String password, bool rememberMe) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("remember_me", rememberMe);
     if (rememberMe) {
@@ -74,7 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         } else if (state is LoginSuccessState) {
           DialogUtils.hideLoading(context);
-          saveLoginData(viewModel.emailController.text, viewModel.passwordController.text, isRememberMeChecked);
+          saveLoginData(viewModel.emailController.text,
+              viewModel.passwordController.text, RememberMe);
           DialogUtils.showMessageDialog(
             context: context,
             message: "Login Successfully.",
@@ -85,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.homeRoute,
-                    (route) => false,
+                (route) => false,
               );
             },
           );
@@ -102,49 +104,69 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 40),
                     const Center(
                       child: Text(
                         'Welcome Back👋',
                         style: TextStyle(
+                          fontFamily: "Roboto",
                           fontSize: 24,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff0E0705),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     const Center(
                       child: Text(
                         'Please enter your email and password to log in.',
                         style: TextStyle(
+                          fontFamily: "Roboto",
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff9D9896),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    const Text('Email Address'),
+                    const SizedBox(height: 80),
+                    const Text(
+                      'Email Address',
+                      style: TextStyle(
+                        color: Color(0xff0E0705),
+                        fontFamily: "Roboto",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     CustomTextFormField(
-                      prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
                       hint: "Enter your email",
                       keyboardType: TextInputType.emailAddress,
                       securedPassword: false,
                       validator: (text) => AppValidators.validateEmail(text),
                       controller: viewModel.emailController,
                     ),
-                    const SizedBox(height: 30.0),
-                    const Text('Password'),
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      'Password',
+                      style: TextStyle(
+                        color: Color(0xff0E0705),
+                        fontFamily: "Roboto",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     CustomTextFormField(
-                      prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                       hint: "Enter your password",
                       keyboardType: TextInputType.text,
                       securedPassword: true,
                       validator: (text) => AppValidators.validatePassword(text),
                       controller: viewModel.passwordController,
                     ),
-                    const SizedBox(height: 15.0),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -152,39 +174,90 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Checkbox(
                               activeColor: const Color(0xFF8C4931),
-                              value: isRememberMeChecked,
-                              onChanged: (value) {
+                              value: RememberMe,
+                              onChanged: (bool? newValue) {
                                 setState(() {
-                                  isRememberMeChecked = value ?? false;
+                                  RememberMe = newValue ?? false;
                                 });
                               },
                             ),
-                            const Text("Remember Me"),
+                            const Text(
+                              "Remember Me",
+                              style: TextStyle(
+                                color: Color(0xff0E0705),
+                                fontFamily: "Roboto",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ForgetPasswordScreen()),
-                            );
+                            Navigator.pushNamed(
+                                context, Routes.forgetPasswordRoute);
                           },
                           child: const Text(
                             'Forget password?',
-                            style: TextStyle(color: Color(0xFF8C4931)),
+                            style: TextStyle(
+                              color: Color(0xFF8C4931),
+                              fontFamily: "Roboto",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 30.0),
+                    const SizedBox(height: 90.0),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff8C4931),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           viewModel.login();
                         }
                       },
-                      child: const Text('Log In'),
+                      child: const Text(
+                        'log in',
+                        style: TextStyle(
+                          fontFamily: "Roboto",
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xffEEEDEC),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Don't have an account?",
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xFF9D9896)),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.registerRoute);
+                          },
+                          child: Text(
+                            "sign up",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontFamily: "Roboto",
+                                  color: const Color(0xff8C4931),
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
