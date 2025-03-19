@@ -43,15 +43,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(color: Color(0xff8C4931)),
               SizedBox(width: 40),
               Text(
-                "waiting....",
+                "Please wait...",
                 style: TextStyle(
                   color: Color(0xff0E0705),
                   fontFamily: "Roboto",
@@ -68,56 +67,87 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
     try {
       Response response = await Dio().post(
         'http://abdoemam.runasp.net/api/Account/ForgetPassword',
-        data: {'email': ForgetPasswordScreen.emailController.text},
+        data: {'email': ForgetPasswordScreen.emailController.text.trim()},
       );
+
       Navigator.of(context).pop();
-      await ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          animation: animation,
-          behavior: SnackBarBehavior.floating,
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          content: Text(
-            response.data['message'],
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: "Roboto",
-              fontSize: 16,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w400,
+
+      if (response.statusCode == 200) {
+        // ✅ Success: Navigate to Verification Code Screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            animation: animation,
+            behavior: SnackBarBehavior.floating,
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: Text(
+              response.data['message'] ?? "A verification code has been sent to your email.",
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: "Roboto",
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
             ),
+            duration: const Duration(seconds: 3),
           ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-      //Navigator.pushReplacementNamed(context, Routes.verificationCodeRoute);
+        );
+
+        // ✅ Navigate only if the request was successful
+        Navigator.pushReplacementNamed(context, Routes.verificationCodeRoute);
+      } else {
+        // ❌ Email not registered or another error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            animation: animation,
+            behavior: SnackBarBehavior.floating,
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: Text(
+              response.data['message'] ,
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: "Roboto",
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+
+        // ❌ Do not navigate if there's an error
+      }
     } catch (e) {
       Navigator.of(context).pop();
-      await ScaffoldMessenger.of(context).showSnackBar(
+
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           animation: animation,
           behavior: SnackBarBehavior.floating,
           padding: const EdgeInsets.all(16),
           margin: const EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          content: Text(
-            'Error:  $e',
-            style: const TextStyle(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          content: const Text(
+          "This email is not registered. Please enter a valid email.",
+            style: TextStyle(
               color: Colors.white,
               fontFamily: "Roboto",
               fontSize: 16,
-              fontStyle: FontStyle.normal,
               fontWeight: FontWeight.w400,
             ),
           ),
           duration: const Duration(seconds: 3),
         ),
       );
+
+      // ❌ Do not navigate if there's an error
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -197,8 +227,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         await sendForgetPasswordRequest();
-                        Navigator.pushReplacementNamed(
-                            context, Routes.verificationCodeRoute);
+
                       }
                     },
                     child: const Text(
