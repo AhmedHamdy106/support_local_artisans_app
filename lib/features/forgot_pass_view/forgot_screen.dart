@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 import '../../config/routes_manager/routes.dart';
 import '../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../core/utils/validators.dart';
@@ -42,17 +43,17 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.background,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(color: Color(0xff8C4931)),
+              CircularProgressIndicator(color: AppColors.primary),
               SizedBox(width: 40),
               Text(
                 "Please wait...",
                 style: TextStyle(
-                  color: Color(0xff0E0705),
+                  color: AppColors.textPrimary,
                   fontFamily: "Roboto",
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -84,7 +85,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
             content: Text(
               response.data['message'] ?? "A verification code has been sent to your email.",
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.background,
                 fontFamily: "Roboto",
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -108,7 +109,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
             content: Text(
               response.data['message'] ,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.background,
                 fontFamily: "Roboto",
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -133,7 +134,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
           content: const Text(
           "This email is not registered. Please enter a valid email.",
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.background,
               fontFamily: "Roboto",
               fontSize: 16,
               fontWeight: FontWeight.w400,
@@ -154,12 +155,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F0EC),
+        backgroundColor: AppColors.background,
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: const Color(0xFFF8F0EC),
+          backgroundColor: AppColors.background,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -174,7 +175,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                 const Text(
                   'Forget Password',
                   style: TextStyle(
-                    color: Color(0xff0E0705),
+                    color: AppColors.textPrimary,
                     fontFamily: "Roboto",
                     fontSize: 26,
                     fontWeight: FontWeight.w500,
@@ -186,7 +187,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: "Roboto",
-                    color: Color(0xff9D9896),
+                    color: AppColors.textSecondary,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
@@ -199,7 +200,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                       'Email Address',
                       style: TextStyle(
                         fontFamily: "Roboto",
-                        color: Color(0xff0E0705),
+                        color: AppColors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -221,7 +222,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff8C4931),
+                      backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     onPressed: () async {
@@ -236,7 +237,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                         fontFamily: "Roboto",
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xffEEEDEC),
+                        color: AppColors.buttonText,
                       ),
                     ),
                   ),

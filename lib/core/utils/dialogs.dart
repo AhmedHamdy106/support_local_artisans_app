@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 class DialogUtils {
   static void showMessageDialog({
-    required final BuildContext context,
-    required final String message,
-    final String? title,
-    final String? posButtonTitle,
-    final VoidCallback? posButtonAction,
-    final String? negButtonTitle,
-    final VoidCallback? negButtonAction,
-    final bool isCancelable = true,
-    final Color barrierColor = Colors.black54,
+    required BuildContext context,
+    required String message,
+    String? title,
+    String? posButtonTitle,
+    VoidCallback? posButtonAction,
+    String? negButtonTitle,
+    VoidCallback? negButtonAction,
+    bool isCancelable = true,
+    Color barrierColor = AppColors.textPrimary,
+    Color? iconColor,
+    IconData? icon,
   }) {
     List<Widget> actions = [];
     if (posButtonTitle != null) {
@@ -48,10 +51,18 @@ class DialogUtils {
         barrierColor: barrierColor,
         builder: (context) {
           return AlertDialog(
-            title: title != null ? Text(title) : null,
+            title: title != null
+                ? Row(
+              children: [
+                if (icon != null) Icon(icon, color: iconColor, size: 28),
+                const SizedBox(width: 8),
+                Text(title),
+              ],
+            )
+                : null,
             content: Text(
               message,
-              style: const TextStyle(color: Colors.black, fontFamily: "Roboto"),
+              style: const TextStyle(color: AppColors.textPrimary, fontFamily: "Roboto"),
             ),
             actions: actions,
           );
@@ -61,10 +72,10 @@ class DialogUtils {
   }
 
   static void showLoadingDialog(
-      final BuildContext context, {
+      BuildContext context, {
         required String message,
         bool isCancelable = false,
-        final Color barrierColor = Colors.black54,
+        Color barrierColor = AppColors.textPrimary,
       }) {
     if (context.mounted) {
       showDialog(
@@ -83,7 +94,7 @@ class DialogUtils {
                   Expanded(
                     child: Text(
                       message,
-                      style: const TextStyle(color: Colors.black, fontFamily: "Roboto"),
+                      style: const TextStyle(color: AppColors.textPrimary, fontFamily: "Roboto"),
                     ),
                   ),
                 ],

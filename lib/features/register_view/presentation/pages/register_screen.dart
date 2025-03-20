@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_local_artisans/core/di/di.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_text_form_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
@@ -51,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         key: formKey,
         child: Scaffold(
           resizeToAvoidBottomInset: true,
-          backgroundColor: const Color(0xffF8F0EC),
+          backgroundColor: AppColors.background,
           body: Center(
             child: SingleChildScrollView(
               child: Container(
@@ -74,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontSize: 24,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF0E0705),
+                              color: AppColors.textPrimary,
                             ),
                           ),
                           SizedBox(height: 8),
@@ -85,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontSize: 16,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w400,
-                              color: Color(0xff9D9896),
+                              color:AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -123,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: viewModel.phoneController,
                       prefixIcon: const Icon(
                         Icons.mobile_friendly,
-                        color: Colors.grey,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     const SizedBox(
@@ -192,12 +193,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildUserTypeCard(
-                            bc: const Color(0xffEDD3CA),
+                            bc: AppColors.border,
                             'client',
                             'assets/images/3.0x/Group_3.0x.png'),
                         const SizedBox(width: 10),
                         _buildUserTypeCard(
-                            bc: const Color(0xffDDDAD9),
+                            bc: AppColors.border,
                             'seller',
                             'assets/images/3.0x/Character_3.0x.png'),
                       ],
@@ -218,7 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff8C4931),
+                            backgroundColor: AppColors.primary,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                           child: const Text(
@@ -228,7 +229,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontSize: 20,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xffEEEDEC),
+                              color: AppColors.buttonText,
                             ),
                           ),
                         ),
@@ -246,7 +247,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontFamily: "Roboto",
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: Color(0xFF9D9896)),
+                              color: AppColors.textSecondary),
                         ),
                         const SizedBox(
                           width: 2,
@@ -262,7 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 .titleMedium
                                 ?.copyWith(
                                   fontFamily: "Roboto",
-                                  color: const Color(0xff8C4931),
+                                  color: AppColors.primary,
                                 ),
                           ),
                         ),
@@ -307,7 +308,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         selectedUserType = value!;
                       });
                     },
-                    activeColor: const Color(0xff8C4931),
+                    activeColor:AppColors.primary,
                   ),
                 ),
                 Padding(
@@ -319,7 +320,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       fontSize: 20,
                       fontStyle: FontStyle.normal,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xff0E0705),
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ),
