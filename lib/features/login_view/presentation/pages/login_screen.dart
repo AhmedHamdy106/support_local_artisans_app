@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
+import 'package:support_local_artisans/core/utils/custom_widgets/Custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_states.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_view_model.dart';
@@ -24,36 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool rememberMe = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   loadLoginData();
-  // }
-
-  // Future<void> loadLoginData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   bool savedRememberMe = prefs.getBool("remember_me") ?? false;
-  //   if (savedRememberMe) {
-  //     setState(() {
-  //       viewModel.emailController.text = prefs.getString("email") ?? "";
-  //       viewModel.passwordController.text = prefs.getString("password") ?? "";
-  //       rememberMe = savedRememberMe;
-  //     });
-  //   }
-  // }
-  //
-  // Future<void> saveLoginData(String email, String password, bool remember) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool("remember_me", remember);
-  //   if (remember) {
-  //     await prefs.setString("email", email);
-  //     await prefs.setString("password", password);
-  //   } else {
-  //     await prefs.remove("email");
-  //     await prefs.remove("password");
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginScreenViewModel, LoginStates>(
@@ -67,14 +38,13 @@ class _LoginScreenState extends State<LoginScreen> {
           DialogUtils.hideLoading(context);
           DialogUtils.showMessageDialog(
             context: context,
-            title: "Login Failed",
+            title: "Login Failed !",
             message: state.failures.errorMessage,
             posButtonTitle: "OK",
           );
         } else if (state is LoginSuccessState) {
-          print("Login successful! Navigating to home...");
+          print("Login successful.");
           DialogUtils.hideLoading(context);
-
           // تأكد من إغلاق أي Dialog مفتوح قبل التنقل
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -89,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: const Color(0xFFF8F0EC),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: Center(
@@ -122,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Text('Email Address'),
+                    const CustomLabelTextField(label: "Email Address"),
                     CustomTextFormField(
                       prefixIcon: const Icon(Icons.email,
                           color: AppColors.textSecondary),
@@ -133,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: viewModel.emailController,
                     ),
                     const SizedBox(height: 30.0),
-                    const Text('Password'),
+                    const CustomLabelTextField(label: "Password"),
                     CustomTextFormField(
                       prefixIcon: const Icon(Icons.lock,
                           color: AppColors.textSecondary),
@@ -158,7 +128,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               },
                             ),
-                            const Text("Remember Me"),
+                            const Text(
+                              "Remember Me",
+                              style: TextStyle(
+                                  color: AppColors.textPrimary, fontSize: 14),
+                            ),
                           ],
                         ),
                         TextButton(
@@ -171,7 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: const Text(
                             'Forget password?',
-                            style: TextStyle(color: AppColors.primary),
+                            style: TextStyle(
+                                color: AppColors.primary, fontFamily: "Roboto"),
                           ),
                         ),
                       ],
@@ -202,12 +177,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Don't have an account?"),
+                        const Text(
+                          "Don't have an account?",
+                          style: TextStyle(fontFamily: "Roboto"),
+                        ),
                         TextButton(
                           onPressed: () => Navigator.pushNamed(
                               context, Routes.registerRoute),
                           child: const Text("Sign Up",
-                              style: TextStyle(color: AppColors.primary)),
+                              style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontFamily: "Roboto")),
                         ),
                       ],
                     ),

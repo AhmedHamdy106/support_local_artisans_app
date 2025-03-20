@@ -25,7 +25,8 @@ class DialogUtils {
             }
             posButtonAction?.call();
           },
-          child: Text(posButtonTitle, style: const TextStyle(fontFamily: "Roboto")),
+          child: Text(posButtonTitle,
+              style: const TextStyle(fontFamily: "Roboto")),
         ),
       );
     }
@@ -38,7 +39,8 @@ class DialogUtils {
             }
             negButtonAction?.call();
           },
-          child: Text(negButtonTitle, style: const TextStyle(fontFamily: "Roboto")),
+          child: Text(negButtonTitle,
+              style: const TextStyle(fontFamily: "Roboto")),
         ),
       );
     }
@@ -50,21 +52,42 @@ class DialogUtils {
         barrierDismissible: isCancelable,
         barrierColor: barrierColor,
         builder: (context) {
-          return AlertDialog(
-            title: title != null
-                ? Row(
-              children: [
-                if (icon != null) Icon(icon, color: iconColor, size: 28),
-                const SizedBox(width: 8),
-                Text(title),
-              ],
-            )
-                : null,
-            content: Text(
-              message,
-              style: const TextStyle(color: AppColors.textPrimary, fontFamily: "Roboto"),
+          return Transform.scale(
+            scale: 0.80,
+            child: AlertDialog(
+              title: title != null
+                  ? Row(
+                      children: [
+                        if (icon != null)
+                          Icon(icon, color: iconColor, size: 24),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: const TextStyle(fontSize: 20),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    )
+                  : null,
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: SingleChildScrollView(
+                  child: Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontFamily: "Roboto",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              actions: actions,
             ),
-            actions: actions,
           );
         },
       );
@@ -72,11 +95,11 @@ class DialogUtils {
   }
 
   static void showLoadingDialog(
-      BuildContext context, {
-        required String message,
-        bool isCancelable = false,
-        Color barrierColor = Colors.transparent,
-      }) {
+    BuildContext context, {
+    required String message,
+    bool isCancelable = false,
+    Color barrierColor = Colors.transparent,
+  }) {
     if (context.mounted) {
       showDialog(
         context: context,
@@ -84,20 +107,27 @@ class DialogUtils {
         barrierDismissible: isCancelable,
         barrierColor: barrierColor,
         builder: (context) {
-          return WillPopScope(
-            onWillPop: () async => isCancelable,
+          return Transform.scale(
+            scale: 0.85, // تصغير حجم الديالوج
             child: AlertDialog(
-              content: Row(
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      message,
-                      style: const TextStyle(color: AppColors.textPrimary, fontFamily: "Roboto"),
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        message,
+                        style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontFamily: "Roboto",
+                            fontSize: 16),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

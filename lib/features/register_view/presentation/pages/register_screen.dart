@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontSize: 16,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w400,
-                              color:AppColors.textSecondary,
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -308,7 +308,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         selectedUserType = value!;
                       });
                     },
-                    activeColor:AppColors.primary,
+                    activeColor: AppColors.primary,
                   ),
                 ),
                 Padding(
