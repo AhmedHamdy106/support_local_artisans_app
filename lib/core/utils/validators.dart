@@ -21,15 +21,26 @@ class AppValidators {
   }
 
   static String? validatePassword(String? val) {
-    RegExp passwordRegex = RegExp(
-        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
     if (val == null || val.trim().isEmpty) {
       return 'Password is required';
     } else if (val.length < 8) {
       return "Password must be at least 8 characters";
-    } else if (!passwordRegex.hasMatch(val)) {
-      return "Password must be include uppercase,lowercase,number,special character";
     }
+    bool hasLowercase = val.contains(RegExp(r'[a-z]'));
+    bool hasUppercase = val.contains(RegExp(r'[A-Z]'));
+    bool hasNumber = val.contains(RegExp(r'\d'));
+    bool hasSpecialChar = val.contains(RegExp(r'[@$!%*?&]'));
+    List<String> errors = [];
+    if (!hasLowercase) errors.add("at least one lowercase letter");
+    if (!hasUppercase) errors.add("at least one uppercase letter");
+    if (!hasNumber) errors.add("at least one number");
+    if (!hasSpecialChar) {
+      errors.add("at least one special character");
+    }
+    if (errors.isNotEmpty) {
+      return "Password must contain ${errors.join(", ")}";
+    }
+
     return null;
   }
 

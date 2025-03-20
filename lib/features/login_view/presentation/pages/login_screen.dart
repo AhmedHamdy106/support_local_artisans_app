@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_states.dart';
@@ -13,7 +12,8 @@ import '../../../../core/utils/validators.dart';
 import '../../../forgot_pass_view/forgot_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key,  String? savedEmail , String? savedPassword,bool? rememberMe}) ;
+  const LoginScreen(
+      {super.key, String? savedEmail, String? savedPassword, bool? rememberMe});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -60,8 +60,10 @@ class _LoginScreenState extends State<LoginScreen> {
       bloc: viewModel,
       listener: (context, state) {
         if (state is LoginLoadingState) {
+          print("Login started...");
           DialogUtils.showLoadingDialog(context, message: "Logging in...");
         } else if (state is LoginErrorState) {
+          print("Login failed: ${state.failures.errorMessage}");
           DialogUtils.hideLoading(context);
           DialogUtils.showMessageDialog(
             context: context,
@@ -70,18 +72,18 @@ class _LoginScreenState extends State<LoginScreen> {
             posButtonTitle: "OK",
           );
         } else if (state is LoginSuccessState) {
+          print("Login successful! Navigating to home...");
           DialogUtils.hideLoading(context);
-          // saveLoginData(viewModel.emailController.text, viewModel.passwordController.text, rememberMe);
-          DialogUtils.showMessageDialog(
-            context: context,
-            title: "Success",
-            message: "Login Successfully!",
-            posButtonTitle: "OK",
-            posButtonAction: () {
-              SharedPreference.saveData(key: "token", value: state.responseEntity.token);
-              Navigator.pushNamedAndRemoveUntil(context, Routes.homeRoute, (route) => false);
-            },
-          );
+
+          // تأكد من إغلاق أي Dialog مفتوح قبل التنقل
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          SharedPreference.saveData(
+              key: "token", value: state.responseEntity.token);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homeRoute, (route) => false);
         }
       },
       child: Form(
@@ -96,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 60),
-                    Center(
+                    const Center(
                       child: Text(
                         'Welcome Back👋',
                         style: TextStyle(
@@ -122,7 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 30),
                     const Text('Email Address'),
                     CustomTextFormField(
-                      prefixIcon: Icon(Icons.email, color: AppColors.textSecondary),
+                      prefixIcon: const Icon(Icons.email,
+                          color: AppColors.textSecondary),
                       hint: "Enter your email",
                       keyboardType: TextInputType.emailAddress,
                       securedPassword: false,
@@ -132,7 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 30.0),
                     const Text('Password'),
                     CustomTextFormField(
-                      prefixIcon: Icon(Icons.lock, color: AppColors.textSecondary),
+                      prefixIcon: const Icon(Icons.lock,
+                          color: AppColors.textSecondary),
                       hint: "Enter your password",
                       keyboardType: TextInputType.text,
                       securedPassword: true,
@@ -159,7 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgetPasswordScreen()));
                           },
                           child: const Text(
                             'Forget password?',
@@ -183,7 +191,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: const Text(
                           'Log In',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.buttonText),
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.buttonText),
                         ),
                       ),
                     ),
@@ -193,8 +204,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         const Text("Don't have an account?"),
                         TextButton(
-                          onPressed: () => Navigator.pushNamed(context, Routes.registerRoute),
-                          child: const Text("Sign Up", style: TextStyle(color: AppColors.primary)),
+                          onPressed: () => Navigator.pushNamed(
+                              context, Routes.registerRoute),
+                          child: const Text("Sign Up",
+                              style: TextStyle(color: AppColors.primary)),
                         ),
                       ],
                     ),
