@@ -10,12 +10,12 @@ class AppValidators {
   }
 
   static String? validateEmail(String? val) {
-    RegExp emailRegex = RegExp(
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$");
+    RegExp emailRegex =
+        RegExp(r"^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|hotmail\.com)$");
     if (val == null || val.trim().isEmpty) {
       return 'Email is required';
     } else if (!emailRegex.hasMatch(val)) {
-      return 'Please enter a valid email address';
+      return 'Please enter a valid email';
     }
     return null;
   }
@@ -25,8 +25,10 @@ class AppValidators {
         r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
     if (val == null || val.trim().isEmpty) {
       return 'Password is required';
+    } else if (val.length < 8) {
+      return "Password must be at least 8 characters";
     } else if (!passwordRegex.hasMatch(val)) {
-      return "Password must be at least 8 characters, include uppercase, lowercase, number, and special character";
+      return "Password must be include uppercase,lowercase,number,special character";
     }
     return null;
   }

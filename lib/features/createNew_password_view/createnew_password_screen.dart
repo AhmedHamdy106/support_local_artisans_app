@@ -50,13 +50,16 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Success"),
+          title: const Text(
+            "Success",
+            style: TextStyle(fontFamily: "Roboto"),
+          ),
           content: const Text(
             "Password has been changed successfully.",
             style: TextStyle(
               fontSize: 16,
               fontFamily: "Roboto",
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w400,
             ),
           ),
           actions: [

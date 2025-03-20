@@ -168,15 +168,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     CustomTextFormField(
                       prefixIcon: Image.asset(
                           "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
-                      hint: "Enter your password",
+                      hint: "Enter confirmPassword",
                       keyboardType: TextInputType.text,
                       securedPassword: true,
                       validator: (text) {
                         if (text!.isEmpty) {
                           if (text.trim().isEmpty) {
-                            return "this field is required";
+                            return "confirmPassword is required";
                           }
-                          return "Please enter password";
+                          return "confirmPassword is required";
                         }
                         if (viewModel.passwordController.text != text) {
                           return "Password doesn't match";
@@ -211,7 +211,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              String roleToSend = selectedUserType == "client" ? "User" : "Artisan";
+                              String roleToSend = selectedUserType == "client"
+                                  ? "User"
+                                  : "Artisan";
                               viewModel.register(Role: roleToSend);
                             }
                           },
@@ -230,7 +232,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-
                       ),
                     ),
                     const SizedBox(

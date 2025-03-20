@@ -23,15 +23,25 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
         "RememberMe": RememberMe,
       },
     );
-    var loginResponse = LoginResponseDM.fromJson(response.data);
-    if (response.statusCode! >= 200 && response.statusCode! < 300) {
 
+    var loginResponse = LoginResponseDM.fromJson(response.data);
+
+    if (response.statusCode! >= 200 && response.statusCode! < 300) {
       return Left(loginResponse);
+    } else if (response.statusCode == 404) {
+      // Account not found
+      return Right(ServerError(
+          errorMessage:
+              "This account does not exist,it was not created before."));
     } else {
-      return Right(ServerError(errorMessage: loginResponse.message ?? ''));
+      return Right(ServerError(
+          errorMessage: loginResponse.message ??
+              "This account does not exist,it was not created before."));
     }
   }
-  Future<void> saveLoginData(String token, String email, String password, bool rememberMe) async {
+
+  Future<void> saveLoginData(
+      String token, String email, String password, bool rememberMe) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool("remember_me", rememberMe);

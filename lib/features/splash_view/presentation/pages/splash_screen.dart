@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:support_local_artisans/features/login_view/presentation/pages/login_screen.dart'; // استبدل بالمسار الصحيح لملف تسجيل الدخول
+import 'package:support_local_artisans/features/login_view/presentation/pages/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    loadLoginData(); // ✅ تحميل بيانات تسجيل الدخول عند فتح التطبيق
+    loadLoginData();
   }
 
   Future<void> loadLoginData() async {
@@ -25,7 +25,6 @@ class _SplashScreenState extends State<SplashScreen> {
       String? savedPassword = prefs.getString("password");
 
       if (savedEmail != null && savedPassword != null) {
-        // ✅ الانتقال إلى صفحة تسجيل الدخول وملء البيانات المحفوظة
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -40,7 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
 
-    // ✅ إذا لم يكن هناك بيانات محفوظة، انتقل مباشرةً إلى شاشة تسجيل الدخول
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

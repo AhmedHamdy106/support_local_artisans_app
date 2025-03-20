@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.homeRoute,
-                    (route) => false,
+                (route) => false,
               );
             },
           );
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                  const ForgetPasswordScreen()),
+                                      const ForgetPasswordScreen()),
                             );
                           },
                           child: const Text(
@@ -251,9 +251,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                              fontFamily: "Roboto",
-                              color: const Color(0xff8C4931),
-                            ),
+                                  fontFamily: "Roboto",
+                                  color: const Color(0xff8C4931),
+                                ),
                           ),
                         ),
                       ],
