@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 typedef Validator = String? Function(String? text);
 
@@ -38,14 +39,14 @@ class _CustomTextFormField extends State<CustomTextFormField> {
       validator: widget.validator,
       controller: widget.controller,
       style: const TextStyle(
-        color: Colors.black,
+        color: AppColors.textPrimary,
       ),
       keyboardType: widget.keyboardType,
       obscureText: isVisibleText,
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon,
         errorStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Colors.red,
+              color: AppColors.error,
             ),
         suffixIcon: widget.securedPassword
             ? InkWell(
@@ -60,34 +61,34 @@ class _CustomTextFormField extends State<CustomTextFormField> {
                       )
                     : const Icon(
                         Icons.visibility,
-                        color: Color(0xff8C4931),
+                        color: AppColors.primary,
                       ))
             : null,
         hintText: widget.hint,
         hintStyle: const TextStyle(
-          color: Color(0xff9D9896),
+          color: AppColors.textSecondary,
           fontFamily: "Roboto",
           fontSize: 14,
           fontStyle: FontStyle.normal,
           fontWeight: FontWeight.w400,
         ),
-        fillColor: const Color(0xffF8F0EC),
+        fillColor: AppColors.background,
         filled: true,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Color(0xff8C4931)),
+          borderSide: const BorderSide(color: AppColors.primary),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: AppColors.textSecondary),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Color(0xff8C4931)), // تعديل اللون
+          borderSide: const BorderSide(color: AppColors.primary), // تعديل اللون
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Color(0xff8C4931)), // تعديل اللون
+          borderSide: const BorderSide(color: AppColors.primary), // تعديل اللون
         ),
       ),
     );

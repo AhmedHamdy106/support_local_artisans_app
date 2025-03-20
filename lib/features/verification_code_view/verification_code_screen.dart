@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 import '../../config/routes_manager/routes.dart';
 import '../forgot_pass_view/forgot_screen.dart';
 
@@ -148,18 +149,18 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.background,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(color: Color(0xff8C4931)),
+              CircularProgressIndicator(color: AppColors.primary),
               SizedBox(width: 40),
               Text(
                 "waiting....",
                 style: TextStyle(
-                  color: Color(0xff0E0705),
+                  color: AppColors.textPrimary,
                   fontFamily: "Roboto",
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -188,7 +189,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
           content: Text(
             response.data['message'],
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.background,
               fontFamily: "Roboto",
               fontSize: 16,
               fontStyle: FontStyle.normal,
@@ -212,7 +213,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
           content: Text(
             'Error:  $e',
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.background,
               fontFamily: "Roboto",
               fontSize: 16,
               fontStyle: FontStyle.normal,
@@ -228,14 +229,14 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F0EC),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        backgroundColor: const Color(0xFFF8F0EC),
+        backgroundColor: AppColors.background,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: AppColors.textPrimary,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -250,7 +251,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
               const Text(
                 'Enter Verification Code',
                 style: TextStyle(
-                    color: Color(0xff0E0705),
+                    color:AppColors.textPrimary,
                     fontFamily: "Roboto",
                     fontSize: 26,
                     fontWeight: FontWeight.w500,
@@ -260,7 +261,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
               const Text(
                 'We have sent an OTP code to your email',
                 style: TextStyle(
-                    color: Color(0xff9D9896),
+                    color: AppColors.textSecondary,
                     fontFamily: "Roboto",
                     fontSize: 16,
                     fontWeight: FontWeight.w400),
@@ -269,19 +270,19 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
               const Text(
                 "example@gmail.com",
                 style: TextStyle(
-                    color: Color(0xff0E0705),
+                    color: AppColors.textPrimary,
                     fontFamily: "Roboto",
                     fontSize: 18,
                     fontWeight: FontWeight.w400),
               ),
               const SizedBox(height: 60),
               OtpTextField(
-                focusedBorderColor: const Color(0xff8C4931),
+                focusedBorderColor: AppColors.primary,
                 clearText: true,
-                enabledBorderColor: const Color(0xff9D9896),
+                enabledBorderColor: AppColors.textSecondary,
                 numberOfFields: 6,
-                borderColor: Colors.black,
-                cursorColor: Colors.black,
+                borderColor: AppColors.textPrimary,
+                cursorColor: AppColors.textPrimary,
                 keyboardType: TextInputType.number,
                 showFieldAsBox: true,
                 onSubmit: (String verificationCode) {
@@ -297,7 +298,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff8C4931),
+                    backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   onPressed: () async {
@@ -310,7 +311,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
                         fontStyle: FontStyle.normal,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xffEEEDEC)),
+                        color: AppColors.background),
                   ),
                 ),
               ),
@@ -325,7 +326,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.normal,
                       fontSize: 16,
-                      color: Color(0xFF9D9896),
+                      color: AppColors.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 1),
@@ -337,7 +338,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
                       "send again",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontFamily: "Roboto",
-                            color: const Color(0xff8C4931),
+                            color: AppColors.primary,
                           ),
                     ),
                   ),
