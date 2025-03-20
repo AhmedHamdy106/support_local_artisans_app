@@ -11,7 +11,7 @@ class DialogUtils {
     String? negButtonTitle,
     VoidCallback? negButtonAction,
     bool isCancelable = true,
-    Color barrierColor = AppColors.textPrimary,
+    Color barrierColor = Colors.transparent,
     Color? iconColor,
     IconData? icon,
   }) {
@@ -75,7 +75,7 @@ class DialogUtils {
       BuildContext context, {
         required String message,
         bool isCancelable = false,
-        Color barrierColor = AppColors.textPrimary,
+        Color barrierColor = Colors.transparent,
       }) {
     if (context.mounted) {
       showDialog(

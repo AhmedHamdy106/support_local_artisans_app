@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:support_local_artisans/core/api/api_manager.dart';
 import 'package:support_local_artisans/core/api/end_points.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 import '../../config/routes_manager/routes.dart';
 import '../../core/utils/custom_widgets/Custom_label_text_field.dart';
@@ -145,10 +146,10 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F0EC),
+        backgroundColor: AppColors.background,
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: const Color(0xFFF8F0EC),
+          backgroundColor: AppColors.background,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios,
@@ -171,7 +172,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                   child: Text(
                     'Create New Password',
                     style: TextStyle(
-                      color: Color(0xff0E0705),
+                      color: AppColors.textPrimary,
                       fontFamily: "Roboto",
                       fontSize: 26,
                       fontStyle: FontStyle.normal,
@@ -186,7 +187,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                     Text(
                       'Make sure your password  is strong',
                       style: TextStyle(
-                        color: Color(0xff9D9896),
+                        color: AppColors.textSecondary,
                         fontFamily: "Roboto",
                         fontSize: 16,
                         fontStyle: FontStyle.normal,
@@ -240,13 +241,13 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 _isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
-                        color: Color(0xff8C4931),
+                        color: AppColors.primary,
                       ))
                     : SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff8C4931),
+                            backgroundColor: AppColors.primary,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                           onPressed: () async {
@@ -260,7 +261,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                               fontFamily: "Roboto",
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xffEEEDEC),
+                              color: AppColors.buttonText,
                             ),
                           ),
                         ),

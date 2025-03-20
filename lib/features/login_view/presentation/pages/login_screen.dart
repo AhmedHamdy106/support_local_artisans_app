@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: const Color(0xFFF8F0EC),
+          backgroundColor: AppColors.background,
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: Center(
