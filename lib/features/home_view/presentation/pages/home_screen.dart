@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,10 +9,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           "support Local Artisans",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontFamily: "Roboto"),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -29,16 +31,16 @@ class HomeScreen extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xff00796b),
+        backgroundColor: AppColors.primary,
       ),
-      backgroundColor: Colors.white,
       body: const Center(
         child: Text(
           "Home Screen",
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+            fontFamily: "Roboto",
+            fontWeight: FontWeight.w400,
+            color: AppColors.textPrimary,
           ),
         ),
       ),

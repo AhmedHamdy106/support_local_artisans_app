@@ -1,144 +1,113 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
+import 'app_colors.dart';
 
 class DialogUtils {
-  static void showMessageDialog({
+  static AwesomeDialog? _loadingDialog;
+
+  static void showSuccessDialog({
     required BuildContext context,
     required String message,
-    String? title,
-    String? posButtonTitle,
-    VoidCallback? posButtonAction,
-    String? negButtonTitle,
-    VoidCallback? negButtonAction,
-    bool isCancelable = true,
-    Color barrierColor = Colors.transparent,
-    Color? iconColor,
-    IconData? icon,
+    String title = 'Success',
+    String buttonText = 'Ok',
+    VoidCallback? onButtonPressed,
   }) {
-    List<Widget> actions = [];
-    if (posButtonTitle != null) {
-      actions.add(
-        TextButton(
-          onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
-            posButtonAction?.call();
-          },
-          child: Text(posButtonTitle,
-              style: const TextStyle(fontFamily: "Roboto")),
-        ),
-      );
-    }
-    if (negButtonTitle != null) {
-      actions.add(
-        TextButton(
-          onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
-            negButtonAction?.call();
-          },
-          child: Text(negButtonTitle,
-              style: const TextStyle(fontFamily: "Roboto")),
-        ),
-      );
-    }
-
-    if (context.mounted) {
-      showDialog(
-        context: context,
-        useRootNavigator: true,
-        barrierDismissible: isCancelable,
-        barrierColor: barrierColor,
-        builder: (context) {
-          return Transform.scale(
-            scale: 0.80,
-            child: AlertDialog(
-              title: title != null
-                  ? Row(
-                      children: [
-                        if (icon != null)
-                          Icon(icon, color: iconColor, size: 24),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: const TextStyle(fontSize: 20),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    )
-                  : null,
-              content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: SingleChildScrollView(
-                  child: Text(
-                    message,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontFamily: "Roboto",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              actions: actions,
-            ),
-          );
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success, // نوع الديالوج نجاح
+      animType: AnimType.scale,
+      width: 350,
+      title: title,
+      desc: message,
+      btnOk: ElevatedButton.icon(
+        onPressed: () {
+          onButtonPressed!();
         },
-      );
-    }
+        icon: const Icon(
+          Icons.check_circle_outline,
+          color: Colors.white,
+          size: 25,
+        ),
+        label: const Text("OK",
+            style: TextStyle(color: Colors.white, fontSize: 16)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        ),
+      ),
+    ).show();
   }
 
-  static void showLoadingDialog(
-    BuildContext context, {
+  static void showErrorDialog({
+    required BuildContext context,
     required String message,
-    bool isCancelable = false,
-    Color barrierColor = Colors.transparent,
+    String title = 'Error',
+    String buttonText = 'Retry',
+    VoidCallback? onRetryPressed,
   }) {
-    if (context.mounted) {
-      showDialog(
-        context: context,
-        useRootNavigator: true,
-        barrierDismissible: isCancelable,
-        barrierColor: barrierColor,
-        builder: (context) {
-          return Transform.scale(
-            scale: 0.85, // تصغير حجم الديالوج
-            child: AlertDialog(
-              content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircularProgressIndicator(),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        message,
-                        style: const TextStyle(
-                            color: AppColors.textPrimary,
-                            fontFamily: "Roboto",
-                            fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.scale,
+      width: 350,
+      title: title,
+      desc: message,
+      btnOk: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.pop(context); // إغلاق الديالوج
         },
-      );
-    }
+        icon: const Icon(
+          Icons.error_outline,
+          color: Colors.white,
+          size: 25,
+        ),
+        label: const Text("Retry",
+            style: TextStyle(color: Colors.white, fontSize: 16)), // النص
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        ),
+      ),
+    ).show();
   }
 
-  static void hideLoading(BuildContext context) {
-    if (context.mounted && Navigator.canPop(context)) {
-      Navigator.pop(context);
+  static void showLoadingDialog({
+    required BuildContext context,
+    String title = 'Loading...',
+  }) {
+    _loadingDialog = AwesomeDialog(
+      context: context,
+      width: 400,
+      dialogType: DialogType.noHeader,
+      animType: AnimType.scale,
+      dismissOnTouchOutside: false,
+      dismissOnBackKeyPress: false,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(
+            color: AppColors.primary,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    )..show();
+  }
+
+  static void hideLoadingDialog() {
+    if (_loadingDialog != null) {
+      _loadingDialog!.dismiss();
+      _loadingDialog = null;
     }
   }
 }

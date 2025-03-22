@@ -28,21 +28,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
       bloc: viewModel,
       listener: (context, state) {
         if (state is RegisterLoadingState) {
-          DialogUtils.showLoadingDialog(context, message: "Loading....");
+          DialogUtils.showLoadingDialog(context: context, title: "Loading....");
         } else if (state is RegisterErrorState) {
-          DialogUtils.hideLoading(context);
-          DialogUtils.showMessageDialog(
+          DialogUtils.hideLoadingDialog();
+          DialogUtils.showErrorDialog(
+            title: "An error occurred while creating the account!",
             context: context,
             message: state.failures.errorMessage,
-            posButtonTitle: "OK",
+            buttonText: "try again",
+            onRetryPressed: () {
+              DialogUtils.hideLoadingDialog();
+            },
           );
         } else if (state is RegisterSuccessState) {
-          DialogUtils.hideLoading(context);
-          DialogUtils.showMessageDialog(
+          DialogUtils.hideLoadingDialog();
+          DialogUtils.showSuccessDialog(
             context: context,
-            message: "Register Successfully.",
-            posButtonTitle: "OK",
-            posButtonAction: () {
+            title: "success",
+            message: "Registration successful",
+            buttonText: "Ok",
+            onButtonPressed: () {
               Navigator.pushReplacementNamed(context, Routes.homeRoute);
             },
           );

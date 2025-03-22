@@ -44,7 +44,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.background,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -70,9 +71,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
         'http://abdoemam.runasp.net/api/Account/ForgetPassword',
         data: {'email': ForgetPasswordScreen.emailController.text.trim()},
       );
-
       Navigator.of(context).pop();
-
       if (response.statusCode == 200) {
         // ✅ Success: Navigate to Verification Code Screen
         ScaffoldMessenger.of(context).showSnackBar(
@@ -81,9 +80,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
             behavior: SnackBarBehavior.floating,
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Text(
-              response.data['message'] ?? "A verification code has been sent to your email.",
+              response.data['message'] ??
+                  "OTP code has been sent to your email.",
               style: const TextStyle(
                 color: AppColors.background,
                 fontFamily: "Roboto",
@@ -105,9 +106,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
             behavior: SnackBarBehavior.floating,
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Text(
-              response.data['message'] ,
+              response.data['message'],
               style: const TextStyle(
                 color: AppColors.background,
                 fontFamily: "Roboto",
@@ -118,7 +120,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
             duration: const Duration(seconds: 3),
           ),
         );
-
         // ❌ Do not navigate if there's an error
       }
     } catch (e) {
@@ -130,9 +131,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
           behavior: SnackBarBehavior.floating,
           padding: const EdgeInsets.all(16),
           margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           content: const Text(
-          "This email is not registered. Please enter a valid email.",
+            "This email is not registered. Please enter a valid email.",
             style: TextStyle(
               color: AppColors.background,
               fontFamily: "Roboto",
@@ -148,8 +150,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -160,7 +160,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
           scrolledUnderElevation: 0,
           backgroundColor: AppColors.background,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+            icon:
+                const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -228,7 +229,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen>
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         await sendForgetPasswordRequest();
-
                       }
                     },
                     child: const Text(

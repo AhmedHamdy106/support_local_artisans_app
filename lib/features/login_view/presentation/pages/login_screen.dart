@@ -32,24 +32,26 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is LoginLoadingState) {
           print("Login started...");
-          DialogUtils.showLoadingDialog(context, message: "Logging in...");
+          DialogUtils.showLoadingDialog(context: context, title: "Logging...");
         } else if (state is LoginErrorState) {
           print("Login failed: ${state.failures.errorMessage}");
-          DialogUtils.hideLoading(context);
-          DialogUtils.showMessageDialog(
+          DialogUtils.hideLoadingDialog();
+          DialogUtils.showErrorDialog(
             context: context,
-            title: "Login Failed !",
+            title: "An error occurred during the login process!",
             message: state.failures.errorMessage,
-            posButtonTitle: "OK",
+            buttonText: "try again",
+            onRetryPressed: () {
+              DialogUtils.hideLoadingDialog();
+            },
           );
         } else if (state is LoginSuccessState) {
-          print("Login successful.");
-          DialogUtils.hideLoading(context);
+          print("Login successful");
+          DialogUtils.hideLoadingDialog();
           // تأكد من إغلاق أي Dialog مفتوح قبل التنقل
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }
-
           SharedPreference.saveData(
               key: "token", value: state.responseEntity.token);
           Navigator.pushNamedAndRemoveUntil(
@@ -179,15 +181,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         const Text(
                           "Don't have an account?",
-                          style: TextStyle(fontFamily: "Roboto"),
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: AppColors.textSecondary),
                         ),
                         TextButton(
                           onPressed: () => Navigator.pushNamed(
                               context, Routes.registerRoute),
-                          child: const Text("Sign Up",
-                              style: TextStyle(
+                          child: Text(
+                            "sign up",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontFamily: "Roboto",
                                   color: AppColors.primary,
-                                  fontFamily: "Roboto")),
+                                ),
+                          ),
                         ),
                       ],
                     ),

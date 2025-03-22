@@ -47,6 +47,7 @@ dependencies:
   build_runner: any
   shared_preferences: ^2.5.1
   flutter_otp_text_field: ^1.5.1+1
+  awesome_dialog: ^3.2.1
 
 dev_dependencies:
   flutter_test:

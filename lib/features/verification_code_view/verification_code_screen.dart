@@ -111,7 +111,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
             title: const Text("Error"),
             content: Text(
               response.data['message'],
-              style: TextStyle(fontSize: 16, fontFamily: "Roboto"),
+              style: const TextStyle(fontSize: 16, fontFamily: "Roboto"),
             ),
             actions: [
               TextButton(
@@ -129,7 +129,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
           title: const Text("Error"),
           content: Text(
             'Error: $e',
-            style: TextStyle(fontSize: 16, fontFamily: "Roboto"),
+            style: const TextStyle(fontSize: 16, fontFamily: "Roboto"),
           ),
           actions: [
             TextButton(
@@ -251,7 +251,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
               const Text(
                 'Enter Verification Code',
                 style: TextStyle(
-                    color:AppColors.textPrimary,
+                    color: AppColors.textPrimary,
                     fontFamily: "Roboto",
                     fontSize: 26,
                     fontWeight: FontWeight.w500,
