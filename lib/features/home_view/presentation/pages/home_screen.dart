@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
@@ -26,18 +27,19 @@ class HomeScreen extends StatelessWidget {
               (route) => false,
             );
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.logout,
             color: Colors.white,
+            size: 25.sp,
           ),
         ),
         backgroundColor: AppColors.primary,
       ),
-      body: const Center(
+      body: Center(
         child: Text(
           "Home Screen",
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontFamily: "Roboto",
             fontWeight: FontWeight.w400,
             color: AppColors.textPrimary,

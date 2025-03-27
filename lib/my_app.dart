@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:support_local_artisans/config/routes_manager/routes.dart';
+import 'package:get/get.dart';
 import 'config/routes_manager/route_generator.dart';
 
 class MyApp extends StatelessWidget {
@@ -8,8 +8,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.noScaling,
+          ),
+          child: child!,
+        );
+      },
       onGenerateRoute: (RouteSettings settings) =>
           RouteGenerator.getRoute(settings),
       initialRoute: route,

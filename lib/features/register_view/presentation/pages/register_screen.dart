@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/core/di/di.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_text_field.dart';
@@ -61,34 +62,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
           body: Center(
             child: SingleChildScrollView(
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Center(
+                    Center(
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 40,
+                            height: 100.h,
                           ),
                           Text(
                             'Create Account',
                             style: TextStyle(
                               fontFamily: "Roboto",
-                              fontSize: 24,
+                              fontSize: 24.sp,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w500,
                               color: AppColors.textPrimary,
                             ),
                           ),
-                          SizedBox(height: 8),
                           Text(
                             'create an account to start your journey.',
                             style: TextStyle(
                               fontFamily: "Roboto",
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w400,
                               color: AppColors.textSecondary,
@@ -97,12 +96,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 40.h,
                     ),
                     const CustomLabelTextField(label: "Full Name"),
-                    const SizedBox(
-                      height: 5,
+                    SizedBox(
+                      height: 5.h,
                     ),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
@@ -113,12 +112,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: (text) => AppValidators.validateUsername(text),
                       controller: viewModel.nameController,
                     ),
-                    const SizedBox(
-                      height: 15,
+                    SizedBox(
+                      height: 15.h,
                     ),
-                    const CustomLabelTextField(label: "Mobile Number"),
-                    const SizedBox(
-                      height: 10,
+                    const CustomLabelTextField(label: "Phone Number"),
+                    SizedBox(
+                      height: 10.h,
                     ),
                     CustomTextFormField(
                       hint: "Enter phone number",
@@ -127,17 +126,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: (text) =>
                           AppValidators.validatePhoneNumber(text),
                       controller: viewModel.phoneController,
-                      prefixIcon: const Icon(
-                        Icons.mobile_friendly,
+                      prefixIcon: Icon(
+                        Icons.local_phone_outlined,
                         color: AppColors.textSecondary,
+                        size: 25.sp,
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: 10.h,
                     ),
                     const CustomLabelTextField(label: "Email Address"),
-                    const SizedBox(
-                      height: 5,
+                    SizedBox(
+                      height: 5.h,
                     ),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
@@ -148,12 +148,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: (text) => AppValidators.validateEmail(text),
                       controller: viewModel.emailController,
                     ),
-                    const SizedBox(
-                      height: 15,
+                    SizedBox(
+                      height: 15.h,
                     ),
                     const CustomLabelTextField(label: "Password"),
-                    const SizedBox(
-                      height: 5,
+                    SizedBox(
+                      height: 5.h,
                     ),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
@@ -164,12 +164,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: (text) => AppValidators.validatePassword(text),
                       controller: viewModel.passwordController,
                     ),
-                    const SizedBox(
-                      height: 15,
+                    SizedBox(
+                      height: 15.h,
                     ),
                     const CustomLabelTextField(label: "Confirm Password"),
-                    const SizedBox(
-                      height: 5,
+                    SizedBox(
+                      height: 5.h,
                     ),
                     CustomTextFormField(
                       prefixIcon: Image.asset(
@@ -191,8 +191,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       controller: viewModel.confirmPasswordController,
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 20.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -201,15 +201,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             bc: AppColors.border,
                             'client',
                             'assets/images/3.0x/Group_3.0x.png'),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 25.w),
                         _buildUserTypeCard(
                             bc: AppColors.border,
                             'seller',
                             'assets/images/3.0x/Character_3.0x.png'),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 40.h,
                     ),
                     Center(
                       child: SizedBox(
@@ -225,13 +225,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
                           ),
-                          child: const Text(
-                            'Sign Up',
+                          child: Text(
+                            'sign up',
                             style: TextStyle(
                               fontFamily: "Roboto",
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w600,
                               color: AppColors.buttonText,
@@ -240,22 +240,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 5.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Already have an account?",
                           style: TextStyle(
                               fontFamily: "Roboto",
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               color: AppColors.textSecondary),
-                        ),
-                        const SizedBox(
-                          width: 2,
                         ),
                         TextButton(
                           onPressed: () {
@@ -267,13 +264,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  fontFamily: "Roboto",
-                                  color: AppColors.primary,
-                                ),
+                                    fontFamily: "Roboto",
+                                    color: AppColors.primary,
+                                    fontSize: 16.sp,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 20.h,
+                    )
                   ],
                 ),
               ),
@@ -293,11 +295,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
       },
       child: Container(
-        width: 160,
-        height: 165,
+        width: 159.w,
+        height: 200.h,
         decoration: BoxDecoration(
-          color: bc,
-          borderRadius: BorderRadius.circular(10),
+          color: selectedUserType == type ? const Color(0xFFEDD3CA) : bc,
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -317,12 +319,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 45.0, left: 7),
+                  padding: EdgeInsets.only(top: 45.h, left: 7.w),
                   child: Text(
                     type,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: "Roboto",
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontStyle: FontStyle.normal,
                       fontWeight: FontWeight.w500,
                       color: AppColors.textPrimary,
@@ -332,7 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
             const Spacer(),
-            Image.asset(imagePath, height: 175),
+            Image.asset(imagePath, height: 175.h),
           ],
         ),
       ),

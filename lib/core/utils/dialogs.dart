@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DialogUtils {
   static AwesomeDialog? _loadingDialog;
@@ -14,28 +15,28 @@ class DialogUtils {
   }) {
     AwesomeDialog(
       context: context,
-      dialogType: DialogType.success, // نوع الديالوج نجاح
+      dialogType: DialogType.success,
       animType: AnimType.scale,
-      width: 350,
+      width: 350.w,
       title: title,
       desc: message,
       btnOk: ElevatedButton.icon(
         onPressed: () {
           onButtonPressed!();
         },
-        icon: const Icon(
+        icon: Icon(
           Icons.check_circle_outline,
           color: Colors.white,
-          size: 25,
+          size: 25.sp,
         ),
-        label: const Text("OK",
-            style: TextStyle(color: Colors.white, fontSize: 16)),
+        label:
+            Text("OK", style: TextStyle(color: Colors.white, fontSize: 16.sp)),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
         ),
       ),
     ).show();
@@ -52,26 +53,26 @@ class DialogUtils {
       context: context,
       dialogType: DialogType.error,
       animType: AnimType.scale,
-      width: 350,
+      width: 350.w,
       title: title,
       desc: message,
       btnOk: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pop(context); // إغلاق الديالوج
+          Navigator.pop(context);
         },
-        icon: const Icon(
+        icon: Icon(
           Icons.error_outline,
           color: Colors.white,
-          size: 25,
+          size: 25.sp,
         ),
-        label: const Text("Retry",
-            style: TextStyle(color: Colors.white, fontSize: 16)), // النص
+        label: Text("Retry",
+            style: TextStyle(color: Colors.white, fontSize: 16.sp)),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
         ),
       ),
     ).show();
@@ -83,7 +84,7 @@ class DialogUtils {
   }) {
     _loadingDialog = AwesomeDialog(
       context: context,
-      width: 400,
+      width: 300.w,
       dialogType: DialogType.noHeader,
       animType: AnimType.scale,
       dismissOnTouchOutside: false,
@@ -91,14 +92,19 @@ class DialogUtils {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
-          const SizedBox(height: 20),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          Row(
+            children: [
+              SpinKitFadingCircle(
+                color: Colors.grey,
+                size: 40.sp,
+              ),
+              SizedBox(width: 20.w),
+              Text(
+                title,
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+              ),
+            ],
+          )
         ],
       ),
     )..show();

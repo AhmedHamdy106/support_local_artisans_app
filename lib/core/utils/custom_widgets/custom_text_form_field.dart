@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 typedef Validator = String? Function(String? text);
@@ -39,20 +40,23 @@ class _CustomTextFormField extends State<CustomTextFormField> {
     return TextFormField(
       validator: widget.validator,
       controller: widget.controller,
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.textPrimary,
+        fontSize: 16.sp,
       ),
       keyboardType: widget.keyboardType,
       obscureText: isVisibleText,
       decoration: InputDecoration(
-        prefixIcon: widget.prefixIcon,
+        prefixIcon: Padding(
+          padding: EdgeInsets.all(10.r),
+          child: SizedBox(width: 24.w, height: 24.h, child: widget.prefixIcon),
+        ),
         errorMaxLines: 2,
-        // ✅ السماح بظهور الخطأ على سطرين أو أكثر
         errorStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: AppColors.error,
-              height: 1.2, // ✅ تحسين المسافة بين الأسطر
-              fontSize: 16, // ✅ تصغير حجم الخط قليلاً إذا لزم الأمر
-              overflow: TextOverflow.visible, // ✅ التأكد من عرض كل النص
+              height: 1.2.h,
+              fontSize: 16.sp,
+              overflow: TextOverflow.visible,
             ),
         suffixIcon: widget.securedPassword
             ? InkWell(
@@ -61,36 +65,40 @@ class _CustomTextFormField extends State<CustomTextFormField> {
                     isVisibleText = !isVisibleText;
                   });
                 },
-                child: isVisibleText
-                    ? const Icon(Icons.visibility_off_outlined)
-                    : const Icon(Icons.visibility, color: AppColors.primary),
+                child: Icon(
+                  isVisibleText
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility,
+                  color: isVisibleText ? Colors.grey : AppColors.primary,
+                  size: 25.sp,
+                ),
               )
             : null,
         hintText: widget.hint,
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           color: AppColors.textSecondary,
           fontFamily: "Roboto",
-          fontSize: 14,
+          fontSize: 14.sp,
           fontStyle: FontStyle.normal,
           fontWeight: FontWeight.w400,
         ),
         fillColor: AppColors.background,
         filled: true,
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.primary),
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5.w),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.textSecondary),
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide(color: AppColors.textSecondary, width: 1.w),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.primary),
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.w),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.primary),
+          borderRadius: BorderRadius.circular(10.r),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.w),
         ),
       ),
     );

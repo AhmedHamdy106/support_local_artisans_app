@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/Custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
@@ -31,10 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
       bloc: viewModel,
       listener: (context, state) {
         if (state is LoginLoadingState) {
-          print("Login started...");
           DialogUtils.showLoadingDialog(context: context, title: "Logging...");
         } else if (state is LoginErrorState) {
-          print("Login failed: ${state.failures.errorMessage}");
           DialogUtils.hideLoadingDialog();
           DialogUtils.showErrorDialog(
             context: context,
@@ -46,9 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           );
         } else if (state is LoginSuccessState) {
-          print("Login successful");
           DialogUtils.hideLoadingDialog();
-          // تأكد من إغلاق أي Dialog مفتوح قبل التنقل
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }
@@ -63,59 +60,60 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Scaffold(
           backgroundColor: const Color(0xFFF8F0EC),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: Center(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 60),
-                    const Center(
+                    SizedBox(height: 40.h),
+                    Center(
                       child: Text(
                         'Welcome Back👋',
                         style: TextStyle(
                           fontFamily: "Roboto",
-                          fontSize: 24,
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.normal,
                           color: AppColors.textPrimary,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Center(
+                    Center(
                       child: Text(
                         'Please enter your email and password to log in.',
                         style: TextStyle(
                           fontFamily: "Roboto",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 14.sp,
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.textSecondary,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: 80.h),
                     const CustomLabelTextField(label: "Email Address"),
                     CustomTextFormField(
-                      prefixIcon: const Icon(Icons.email,
-                          color: AppColors.textSecondary),
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
                       hint: "Enter your email",
                       keyboardType: TextInputType.emailAddress,
                       securedPassword: false,
                       validator: (text) => AppValidators.validateEmail(text),
                       controller: viewModel.emailController,
                     ),
-                    const SizedBox(height: 30.0),
+                    SizedBox(height: 20.h),
                     const CustomLabelTextField(label: "Password"),
                     CustomTextFormField(
-                      prefixIcon: const Icon(Icons.lock,
-                          color: AppColors.textSecondary),
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                       hint: "Enter your password",
                       keyboardType: TextInputType.text,
                       securedPassword: true,
                       validator: (text) => AppValidators.validatePassword(text),
                       controller: viewModel.passwordController,
                     ),
-                    const SizedBox(height: 15.0),
+                    SizedBox(height: 5.h),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -130,10 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               },
                             ),
-                            const Text(
+                            Text(
                               "Remember Me",
                               style: TextStyle(
-                                  color: AppColors.textPrimary, fontSize: 14),
+                                  color: AppColors.textPrimary,
+                                  fontSize: 14.sp,
+                                  fontFamily: "Roboto",
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ],
                         ),
@@ -145,15 +147,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                     builder: (context) =>
                                         const ForgetPasswordScreen()));
                           },
-                          child: const Text(
+                          child: Text(
                             'Forget password?',
                             style: TextStyle(
-                                color: AppColors.primary, fontFamily: "Roboto"),
+                                color: AppColors.primary,
+                                fontSize: 14.sp,
+                                fontFamily: "Roboto",
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 30.0),
+                    SizedBox(height: 80.h),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -164,27 +170,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
-                        child: const Text(
-                          'Log In',
+                        child: Text(
+                          'log in',
                           style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20.sp,
+                              fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.buttonText),
+                              color: AppColors.buttonText,
+                              fontFamily: "Roboto"),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 40.0),
+                    SizedBox(
+                      height: 5.h,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Don't have an account?",
                           style: TextStyle(
                               fontFamily: "Roboto",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.sp,
+                              fontStyle: FontStyle.normal,
                               color: AppColors.textSecondary),
                         ),
                         TextButton(
@@ -196,9 +207,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  fontFamily: "Roboto",
-                                  color: AppColors.primary,
-                                ),
+                                    fontFamily: "Roboto",
+                                    color: AppColors.primary,
+                                    fontSize: 16.sp,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],

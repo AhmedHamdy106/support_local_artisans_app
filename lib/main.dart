@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/my_app.dart';
 import 'core/di/di.dart';
@@ -19,7 +20,14 @@ void main() async {
     print("Token :  $token");
   }
   configureDependencies();
-  runApp(MyApp(
-    route: route,
-  ));
+  runApp(
+    ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MyApp(route: route);
+      },
+    ),
+  );
 }

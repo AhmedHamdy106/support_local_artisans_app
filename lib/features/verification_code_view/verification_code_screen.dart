@@ -1,69 +1,45 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import '../../config/routes_manager/routes.dart';
+import '../../core/utils/custom_dialogs/show_custom_error.dart';
+import '../../core/utils/custom_dialogs/show_custom_success.dart';
 import '../forgot_pass_view/forgot_screen.dart';
 
 class VerificationCodeScreen extends StatefulWidget {
-  const VerificationCodeScreen({super.key});
+  String? token;
+  VerificationCodeScreen({super.key});
 
   @override
   State<VerificationCodeScreen> createState() => _VerificationCodeScreenState();
 }
 
-class _VerificationCodeScreenState extends State<VerificationCodeScreen>
-    with SingleTickerProviderStateMixin {
+class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
   final TextEditingController otpController = TextEditingController();
   bool isLoading = false;
-  String? token;
-  late Animation<double> animation;
-  late AnimationController controller;
+  String email = "";
+
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
-    animation = CurvedAnimation(parent: controller, curve: Curves.easeInOut)
-      ..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed) {
-            controller.reverse();
-          }
-        },
-      );
+    email = Get.arguments ?? "example@gmail.com";
   }
 
   Future<void> verifyOTP() async {
     if (otpController.text.isEmpty || otpController.text.length < 6) {
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Invalid OTP"),
-          content: const Text(
-            "Please enter a valid OTP code.",
-            style: TextStyle(
-              fontFamily: "Roboto",
-              fontSize: 16,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+      showErrorDialog(
+          context, "Invalid OTP!", "Please enter a valid OTP code.");
       return;
     }
 
     setState(() => isLoading = true);
     try {
-      Response response = await Dio().post(
+      var response = await Dio().post(
         'http://abdoemam.runasp.net/api/Account/VerifyOTP',
         data: {'otp': otpController.text},
         options: Options(
@@ -73,72 +49,15 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
       );
 
       if (response.statusCode == 200) {
-        setState(() => token = response.data['token']);
+        setState(() => widget.token = response.data['token']);
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("auth_token", token!);
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return Transform.scale(
-              scale: 0.8, // تصغير الحجم بنسبة 80%
-              child: AlertDialog(
-                title: const Text("Success"),
-                content: const Text(
-                  "OTP Verified. Use the token to reset your password.",
-                  style: TextStyle(fontSize: 16, fontFamily: "Roboto"),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.createNewPasswordRoute,
-                        arguments: token!,
-                      );
-                    },
-                    child: const Text("OK"),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+        await prefs.setString("auth_token", widget.token!);
+        showCustomSuccessDialog(context, "Success", "OTP Verified.");
       } else {
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Error"),
-            content: Text(
-              response.data['message'],
-              style: const TextStyle(fontSize: 16, fontFamily: "Roboto"),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
+        showErrorDialog(context, "Error", response.data['message']);
       }
     } catch (e) {
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: Text(
-            'Error: $e',
-            style: const TextStyle(fontSize: 16, fontFamily: "Roboto"),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+      showErrorDialog(context, "Error", e.toString());
     }
     setState(() => isLoading = false);
   }
@@ -151,21 +70,28 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
         return AlertDialog(
           backgroundColor: AppColors.background,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          content: const Row(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(color: AppColors.primary),
-              SizedBox(width: 40),
-              Text(
-                "waiting....",
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontFamily: "Roboto",
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Row(
+                children: [
+                  SpinKitFadingCircle(
+                    color: Colors.grey,
+                    size: 40.sp,
+                  ),
+                  SizedBox(width: 20.w),
+                  Text(
+                    "Waiting...",
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontFamily: "Roboto",
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         );
@@ -173,55 +99,87 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
     );
 
     try {
-      Response response = await Dio().post(
+      var response = await Dio().post(
         'http://abdoemam.runasp.net/api/Account/ForgetPassword',
-        data: {'email': ForgetPasswordScreen.emailController.text},
+        data: {'email': ForgetPasswordScreen.emailController.text.trim()},
       );
       Navigator.of(context).pop();
-      await ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          animation: animation,
-          behavior: SnackBarBehavior.floating,
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          content: Text(
-            response.data['message'],
-            style: const TextStyle(
-              color: AppColors.background,
+      if (response.statusCode == 200) {
+        Get.snackbar(
+          "",
+          "",
+          titleText: Text(
+            "Success",
+            style: TextStyle(
               fontFamily: "Roboto",
-              fontSize: 16,
+              color: Colors.white,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
               fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w400,
             ),
           ),
+          messageText: Text(
+            response.data['message'] ?? "OTP code has been sent to your email.",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: "Roboto",
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              fontStyle: FontStyle.normal,
+            ),
+          ),
+          snackPosition: SnackPosition.TOP, // يظهر من فوق
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          borderRadius: 12.r,
+          margin: EdgeInsets.all(15.sp),
           duration: const Duration(seconds: 3),
-        ),
-      );
-      //Navigator.pushReplacementNamed(context, Routes.verificationCodeRoute);
+          icon: Icon(
+            Icons.check_circle_outline_outlined,
+            color: Colors.black,
+            size: 30.sp,
+          ),
+          forwardAnimationCurve: Curves.fastOutSlowIn,
+          reverseAnimationCurve: Curves.easeIn,
+        );
+        Navigator.pushReplacementNamed(context, Routes.verificationCodeRoute);
+      }
     } catch (e) {
       Navigator.of(context).pop();
-      await ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          animation: animation,
-          behavior: SnackBarBehavior.floating,
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          content: Text(
-            'Error:  $e',
-            style: const TextStyle(
-              color: AppColors.background,
-              fontFamily: "Roboto",
-              fontSize: 16,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.w400,
-            ),
+      Get.snackbar(
+        "Error!",
+        e.toString(),
+        titleText: Text(
+          e.toString(),
+          style: TextStyle(
+            fontFamily: "Roboto",
+            color: Colors.white,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.normal,
           ),
-          duration: const Duration(seconds: 3),
         ),
+        messageText: Text(
+          "This email is not registered. Please enter a valid email.",
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: "Roboto",
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xffd9403d),
+        borderRadius: 12.r,
+        margin: EdgeInsets.all(15.sp),
+        duration: const Duration(seconds: 3),
+        icon: Icon(
+          Icons.error_outline_outlined,
+          color: Colors.white,
+          size: 30.sp,
+        ),
+        forwardAnimationCurve: Curves.fastOutSlowIn,
+        reverseAnimationCurve: Curves.easeIn,
       );
     }
   }
@@ -242,94 +200,100 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.sp),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
-              const Text(
+              SizedBox(height: 40.h),
+              Text(
                 'Enter Verification Code',
                 style: TextStyle(
                     color: AppColors.textPrimary,
                     fontFamily: "Roboto",
-                    fontSize: 26,
+                    fontSize: 26.sp,
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.normal),
               ),
-              const SizedBox(height: 8),
-              const Text(
+              SizedBox(height: 8.h),
+              Text(
                 'We have sent an OTP code to your email',
                 style: TextStyle(
                     color: AppColors.textSecondary,
                     fontFamily: "Roboto",
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w400),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                "example@gmail.com",
+              SizedBox(height: 8.h),
+              Text(
+                email,
                 style: TextStyle(
                     color: AppColors.textPrimary,
                     fontFamily: "Roboto",
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.w400),
               ),
-              const SizedBox(height: 60),
-              OtpTextField(
-                focusedBorderColor: AppColors.primary,
-                clearText: true,
-                enabledBorderColor: AppColors.textSecondary,
-                numberOfFields: 6,
-                borderColor: AppColors.textPrimary,
-                cursorColor: AppColors.textPrimary,
-                keyboardType: TextInputType.number,
-                showFieldAsBox: true,
-                onSubmit: (String verificationCode) {
-                  setState(
-                    () {
-                      otpController.text = verificationCode;
-                    },
-                  );
-                }, // end onSubmit
+              SizedBox(height: 60.h),
+              SizedBox(
+                width: double.infinity,
+                child: OtpTextField(
+                  disabledBorderColor: const Color(0xff9D9896),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  borderRadius: BorderRadius.circular(4.r),
+                  focusedBorderColor: AppColors.primary,
+                  clearText: true,
+                  enabledBorderColor: AppColors.textSecondary,
+                  numberOfFields: 6,
+                  borderColor: AppColors.textPrimary,
+                  cursorColor: AppColors.textPrimary,
+                  keyboardType: TextInputType.number,
+                  showFieldAsBox: true,
+                  onSubmit: (String verificationCode) {
+                    setState(
+                      () {
+                        otpController.text = verificationCode;
+                      },
+                    );
+                  }, // end onSubmit
+                ),
               ),
-              const SizedBox(height: 140),
+              SizedBox(height: 140.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
                   ),
                   onPressed: () async {
                     await verifyOTP();
                   },
-                  child: const Text(
+                  child: Text(
                     'verify code',
                     style: TextStyle(
                         fontFamily: "Roboto",
                         fontStyle: FontStyle.normal,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.background),
                   ),
                 ),
               ),
-              const SizedBox(height: 16.0),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Didn’t received code?",
                     style: TextStyle(
                       fontFamily: "Roboto",
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.normal,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(width: 1),
+                  SizedBox(width: 1.w),
                   TextButton(
                     onPressed: () async {
                       await sendForgetPasswordRequest();
@@ -351,296 +315,3 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen>
     );
   }
 }
-
-// import 'package:dio/dio.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import '../../config/routes_manager/routes.dart';
-//
-// class VerificationCodeScreen extends StatefulWidget {
-//   const VerificationCodeScreen({super.key});
-//
-//   @override
-//   State<VerificationCodeScreen> createState() => _VerificationCodeScreenState();
-// }
-//
-// class _VerificationCodeScreenState extends State<VerificationCodeScreen>
-//     with SingleTickerProviderStateMixin {
-//   final TextEditingController otpController = TextEditingController();
-//   bool isLoading = false;
-//   String? token;
-//   late Animation<double> animation;
-//   late AnimationController controller;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     controller = AnimationController(
-//       duration: const Duration(seconds: 1),
-//       vsync: this,
-//     );
-//     animation = CurvedAnimation(parent: controller, curve: Curves.easeInOut)
-//       ..addStatusListener((status) {
-//         if (status == AnimationStatus.completed) {
-//           controller.reverse();
-//         }
-//       });
-//   }
-//
-//   @override
-//   void dispose() {
-//     controller.dispose();
-//     super.dispose();
-//   }
-//
-//   Future<void> verifyOTP() async {
-//     if (otpController.text.isEmpty || otpController.text.length < 6) {
-//       await ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           animation: animation,
-//           behavior: SnackBarBehavior.floating,
-//           padding: const EdgeInsets.all(16),
-//           margin: const EdgeInsets.all(16),
-//           shape:
-//               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//           content: const Text(
-//             "Please enter a valid OTP code",
-//             style: TextStyle(
-//               color: Colors.white,
-//               fontFamily: "Roboto",
-//               fontSize: 16,
-//               fontStyle: FontStyle.normal,
-//               fontWeight: FontWeight.w400,
-//             ),
-//           ),
-//           duration: const Duration(seconds: 3),
-//         ),
-//       );
-//       return;
-//     }
-//
-//     setState(() => isLoading = true);
-//     try {
-//       Response response = await Dio().post(
-//         'http://abdoemam.runasp.net/api/Account/VerifyOTP',
-//         data: {'otp': otpController.text},
-//         options: Options(
-//           validateStatus: (status) => true,
-//           headers: {'Content-Type': 'application/json'},
-//         ),
-//       );
-//       if (response.statusCode == 200) {
-//         setState(() => token = response.data['token']);
-//         // ✅ حفظ التوكين في SharedPreferences
-//         SharedPreferences prefs = await SharedPreferences.getInstance();
-//         await prefs.setString("auth_token", token!);
-//
-//         print("Received Token and Saved: $token");
-//         await ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             animation: animation,
-//             behavior: SnackBarBehavior.floating,
-//             margin: const EdgeInsets.all(16),
-//             padding: const EdgeInsets.all(16),
-//             shape:
-//                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//             content: Text(
-//               response.data['message'],
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontFamily: "Roboto",
-//                 fontSize: 16,
-//                 fontStyle: FontStyle.normal,
-//                 fontWeight: FontWeight.w400,
-//               ),
-//             ),
-//             duration: const Duration(seconds: 3),
-//           ),
-//         );
-//         Navigator.pushReplacementNamed(
-//           context,
-//           Routes.createNewPasswordRoute,
-//           arguments: token!,
-//         );
-//       } else {
-//         await ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             animation: animation,
-//             behavior: SnackBarBehavior.floating,
-//             margin: const EdgeInsets.all(16),
-//             padding: const EdgeInsets.all(16),
-//             shape:
-//                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//             content: Text(
-//               response.data['message'],
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontFamily: "Roboto",
-//                 fontSize: 16,
-//                 fontStyle: FontStyle.normal,
-//                 fontWeight: FontWeight.w400,
-//               ),
-//             ),
-//             duration: const Duration(seconds: 3),
-//           ),
-//         );
-//       }
-//     } catch (e) {
-//       await ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           animation: animation,
-//           behavior: SnackBarBehavior.floating,
-//           padding: const EdgeInsets.all(16),
-//           margin: const EdgeInsets.all(16),
-//           shape:
-//               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//           content: Text(
-//             'Error:  $e',
-//             style: const TextStyle(
-//               color: Colors.white,
-//               fontFamily: "Roboto",
-//               fontSize: 16,
-//               fontStyle: FontStyle.normal,
-//               fontWeight: FontWeight.w400,
-//             ),
-//           ),
-//           duration: const Duration(seconds: 3),
-//         ),
-//       );
-//     }
-//     setState(() => isLoading = false);
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color(0xFFF8F0EC),
-//       appBar: AppBar(
-//         scrolledUnderElevation: 0,
-//         backgroundColor: const Color(0xFFF8F0EC),
-//         leading: IconButton(
-//           icon: const Icon(
-//             Icons.arrow_back_ios,
-//             color: Colors.black,
-//           ),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: SingleChildScrollView(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               const SizedBox(
-//                 height: 40,
-//               ),
-//               const Text(
-//                 'Enter Verification Code',
-//                 style: TextStyle(
-//                   color: Color(0xff0E0705),
-//                   fontFamily: "Roboto",
-//                   fontSize: 26,
-//                   fontStyle: FontStyle.normal,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//               ),
-//               const SizedBox(height: 8),
-//               const Text(
-//                 'We have send an OTP code to your email',
-//                 style: TextStyle(
-//                   color: Color(0xff9D9896),
-//                   fontFamily: "Roboto",
-//                   fontSize: 16,
-//                   fontStyle: FontStyle.normal,
-//                   fontWeight: FontWeight.w400,
-//                 ),
-//               ),
-//               const SizedBox(height: 8),
-//               const Text(
-//                 "example@gmail.com",
-//                 style: TextStyle(
-//                   color: Color(0xff0E0705),
-//                   fontFamily: "Roboto",
-//                   fontSize: 18,
-//                   fontStyle: FontStyle.normal,
-//                   fontWeight: FontWeight.w400,
-//                 ),
-//               ),
-//               const SizedBox(height: 60),
-//               OtpTextField(
-//                 focusedBorderColor: const Color(0xff8C4931),
-//                 clearText: true,
-//                 enabledBorderColor: const Color(0xff9D9896),
-//                 numberOfFields: 6,
-//                 borderColor: Colors.black,
-//                 cursorColor: Colors.black,
-//                 keyboardType: TextInputType.number,
-//                 showFieldAsBox: true,
-//                 onSubmit: (String verificationCode) {
-//                   setState(
-//                     () {
-//                       otpController.text = verificationCode;
-//                     },
-//                   );
-//                 }, // end onSubmit
-//               ),
-//               const SizedBox(height: 140),
-//               SizedBox(
-//                 width: double.infinity,
-//                 child: ElevatedButton(
-//                   style: ElevatedButton.styleFrom(
-//                     backgroundColor: const Color(0xff8C4931),
-//                     padding: const EdgeInsets.symmetric(vertical: 12),
-//                   ),
-//                   onPressed: () async {
-//                     await verifyOTP();
-//                   },
-//                   child: const Text(
-//                     'verify code',
-//                     style: TextStyle(
-//                         fontFamily: "Roboto",
-//                         fontStyle: FontStyle.normal,
-//                         fontSize: 20,
-//                         fontWeight: FontWeight.w600,
-//                         color: Color(0xffEEEDEC)),
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 16.0),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   const Text(
-//                     "Didn’t received code?",
-//                     style: TextStyle(
-//                       fontFamily: "Roboto",
-//                       fontWeight: FontWeight.w500,
-//                       fontStyle: FontStyle.normal,
-//                       fontSize: 16,
-//                       color: Color(0xFF9D9896),
-//                     ),
-//                   ),
-//                   const SizedBox(width: 1),
-//                   TextButton(
-//                     onPressed: () {
-//                       //Navigator.pushNamed(context, Routes.registerRoute);
-//                     },
-//                     child: Text(
-//                       "send again",
-//                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-//                             fontFamily: "Roboto",
-//                             color: const Color(0xff8C4931),
-//                           ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

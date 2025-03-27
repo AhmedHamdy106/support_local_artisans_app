@@ -10,6 +10,6 @@ class AppColors {
   static const Color warning = Colors.orange; // لون التحذير
   static const Color info = Colors.blue; // لون المعلومات
   static const Color buttonText = Color(0xFFEEEDEC); // لون نص الأزرار
-  static const Color border = Color(0xFFDADADA); // لون الحدود
+  static const Color border = Color(0xFFDDDAD9); // لون الحدود
   static const Color snakebar = Color(0xff3c3f41); // لون الحدود
 }

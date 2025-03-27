@@ -1,5 +1,3 @@
-// handling validator
-
 class AppValidators {
   static String? validateUsername(String? value) {
     if (value == null || value.isEmpty) {

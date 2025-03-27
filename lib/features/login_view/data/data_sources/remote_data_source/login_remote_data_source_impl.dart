@@ -28,8 +28,8 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
 
     if (response.statusCode! >= 200 && response.statusCode! < 300) {
       return Left(loginResponse);
-    } else if (response.statusCode == 404) {
-      // Account not found
+    } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
+      // Account not found --->> Unauthorized , Bad Request
       return Right(ServerError(
           errorMessage:
               "This account does not exist,it was not created before."));

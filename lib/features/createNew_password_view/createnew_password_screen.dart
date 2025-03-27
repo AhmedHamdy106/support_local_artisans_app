@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:support_local_artisans/core/api/api_manager.dart';
 import 'package:support_local_artisans/core/api/end_points.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
-
-import '../../config/routes_manager/routes.dart';
+import '../../core/utils/custom_dialogs/success_dialog_glassmorphism.dart';
 import '../../core/utils/custom_widgets/Custom_label_text_field.dart';
 import '../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../core/utils/validators.dart';
@@ -44,37 +45,6 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   void initState() {
     super.initState();
     getToken();
-  }
-
-  void showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            "Success",
-            style: TextStyle(fontFamily: "Roboto"),
-          ),
-          content: const Text(
-            "Password has been changed successfully.",
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: "Roboto",
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, Routes.loginRoute);
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> resetPassword() async {
@@ -123,7 +93,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
       print("Response Data: ${response.data}");
 
       if (response.statusCode == 200) {
-        showSuccessDialog();
+        showSuccessDialogGlass(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to reset password: ${response.data}')),
@@ -151,72 +121,65 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
           scrolledUnderElevation: 0,
           backgroundColor: AppColors.background,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.black,
+              size: 24.sp,
             ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.sp),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                const Center(
+                SizedBox(height: 40.h),
+                Center(
                   child: Text(
                     'Create New Password',
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontFamily: "Roboto",
-                      fontSize: 26,
+                      fontSize: 26.sp,
                       fontStyle: FontStyle.normal,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
-                const Row(
+                SizedBox(height: 12.h),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Make sure your password  is strong',
+                      'Make sure your password is strong',
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontFamily: "Roboto",
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontStyle: FontStyle.normal,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 100),
+                SizedBox(height: 100.h),
                 const CustomLabelTextField(label: "New Password"),
-                const SizedBox(
-                  height: 5,
-                ),
+                SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
                       Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
-                  hint: "Enter your  New password",
+                  hint: "Enter your New password",
                   keyboardType: TextInputType.text,
                   securedPassword: true,
                   validator: (text) => AppValidators.validatePassword(text),
                   controller: passwordController,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20.h),
                 const CustomLabelTextField(label: "Confirm New Password"),
-                const SizedBox(
-                  height: 5,
-                ),
+                SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
                       Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
@@ -237,29 +200,31 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                   },
                   controller: confirmPasswordController,
                 ),
-                const SizedBox(height: 80),
+                SizedBox(height: 80.h),
                 _isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ))
+                    ? Center(
+                        child: SpinKitFadingCircle(
+                          color: Colors.grey,
+                          size: 40.sp,
+                        ),
+                      )
                     : SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
                           ),
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
                               await resetPassword();
                             }
                           },
-                          child: const Text(
+                          child: Text(
                             'confirm',
                             style: TextStyle(
                               fontFamily: "Roboto",
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.buttonText,
                             ),
