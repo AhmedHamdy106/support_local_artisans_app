@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart' as getx;
+import 'package:get/get_core/src/get_main.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/Custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
+import 'package:support_local_artisans/features/home_view/presentation/pages/home_screen.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_states.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_view_model.dart';
 import '../../../../config/routes_manager/routes.dart';
@@ -30,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<LoginScreenViewModel, LoginStates>(
       bloc: viewModel,
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is LoginLoadingState) {
           DialogUtils.showLoadingDialog(context: context, title: "Logging...");
         } else if (state is LoginErrorState) {
@@ -49,10 +52,11 @@ class _LoginScreenState extends State<LoginScreen> {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
           }
-          SharedPreference.saveData(
+          await SharedPreference.saveData(
               key: "token", value: state.responseEntity.token);
-          Navigator.pushNamedAndRemoveUntil(
-              context, Routes.homeRoute, (route) => false);
+          Get.offAll( HomeScreen(),
+              transition: getx.Transition.leftToRightWithFade,
+              duration: const Duration(milliseconds: 500));
         }
       },
       child: Form(

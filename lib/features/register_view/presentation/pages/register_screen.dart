@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart' as getx;
 import 'package:support_local_artisans/core/di/di.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_text_field.dart';
@@ -9,6 +10,8 @@ import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/core/utils/validators.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/register_states.dart';
 import '../../../../config/routes_manager/routes.dart';
+import '../../../../core/shared/shared_preference.dart';
+import '../../../home_view/presentation/pages/home_screen.dart';
 import '../manager/cubit/register_view_model.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -27,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return BlocListener<RegisterScreenViewModel, RegisterStates>(
       bloc: viewModel,
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is RegisterLoadingState) {
           DialogUtils.showLoadingDialog(context: context, title: "Loading....");
         } else if (state is RegisterErrorState) {
@@ -43,13 +46,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         } else if (state is RegisterSuccessState) {
           DialogUtils.hideLoadingDialog();
+          await SharedPreference.saveData(
+              key: "token", value: state.registerResponseEntity.token);
           DialogUtils.showSuccessDialog(
             context: context,
-            title: "success",
+            title: "Success",
             message: "Registration successful",
             buttonText: "Ok",
             onButtonPressed: () {
-              Navigator.pushReplacementNamed(context, Routes.homeRoute);
+              getx.Get.offAll( HomeScreen(),
+                  transition: getx.Transition.downToUp,
+                  duration: const Duration(milliseconds: 600));
             },
           );
         }

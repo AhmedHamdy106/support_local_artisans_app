@@ -25,7 +25,7 @@ class RouteGenerator {
         );
       case Routes.homeRoute:
         return MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => HomeScreen(),
         );
       case Routes.forgetPasswordRoute:
         return MaterialPageRoute(
@@ -37,9 +37,11 @@ class RouteGenerator {
         );
       case Routes.createNewPasswordRoute:
         return MaterialPageRoute(
-          builder: (context) => CreateNewPasswordScreen(token: '',),
+          builder: (context) => CreateNewPasswordScreen(
+            token: '',
+          ),
         );
- efault:
+      default:
         return unDefinedRoute();
     }
   }
