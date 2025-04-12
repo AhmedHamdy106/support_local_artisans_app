@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/AccountScreen/AccountScreen.dart';
@@ -50,20 +51,19 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     }
   }
 
-  // البحث عند الضغط على زر البحث أو "Done"
   void filterProducts() async {
     setState(() {
       searchText = _searchController.text;
-      isLoading = true;  // عرض شريط تحميل أثناء البحث
+      isLoading = true;
     });
 
     if (searchText.isEmpty) {
       setState(() {
-        filteredProducts = products;  // إذا كان النص فارغًا، عرض جميع المنتجات
+        filteredProducts = products;
         isLoading = false;
       });
     } else {
-      final searchResults = await HomeApi.searchProducts(searchText); // استدعاء الـ API
+      final searchResults = await HomeApi.searchProducts(searchText);
       setState(() {
         filteredProducts = searchResults;
         isLoading = false;
@@ -93,18 +93,18 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
 
   Widget buildMainContent() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 30.h),
           buildSearchBar(),
-          SizedBox(height: 40),
-          Text('Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
+          SizedBox(height: 40.h),
+          Text('Categories', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10.h),
           buildCategoriesList(),
-          SizedBox(height: 20),
-          Text('Products', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          SizedBox(height: 20.h),
+          Text('Products', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           Expanded(child: buildProductsGrid()),
         ],
       ),
@@ -117,43 +117,37 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         Expanded(
           child: TextField(
             controller: _searchController,
-            focusNode: _focusNode,  // ربط الـ FocusNode
-            onSubmitted: (_) {
-              // يتم البحث عند الضغط على "Done" في الكيبورد
-              filterProducts();
-            },
+            focusNode: _focusNode,
+            onSubmitted: (_) => filterProducts(),
             decoration: InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.zero,
               hintText: 'Search for anything...',
-              hintStyle: TextStyle(color: Color(0xff9D9896), fontSize: 13),
+              hintStyle: TextStyle(color: Color(0xff9D9896), fontSize: 13.sp),
               prefixIcon: IconButton(
-                icon: Icon(Icons.search, color: Color(0xff9D9896)),
-                onPressed: () {
-                  // يتم البحث عند الضغط على زر البحث
-                  filterProducts();
-                },
+                icon: Icon(Icons.search, color: Color(0xff9D9896), size: 20.sp),
+                onPressed: filterProducts,
               ),
               fillColor: Colors.white,
               filled: true,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.r),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
         ),
-        SizedBox(width: 12),
+        SizedBox(width: 12.w),
         CircleAvatar(
           backgroundColor: Colors.white,
-          radius: 16,
-          child: Icon(Icons.filter_list, color: Color(0xff9D9896), size: 18),
+          radius: 16.r,
+          child: Icon(Icons.filter_list, color: Color(0xff9D9896), size: 18.sp),
         ),
-        SizedBox(width: 10),
+        SizedBox(width: 10.w),
         CircleAvatar(
           backgroundColor: Colors.white,
-          radius: 16,
-          child: Icon(Icons.favorite_border, color: Color(0xff9D9896), size: 18),
+          radius: 16.r,
+          child: Icon(Icons.favorite_border, color: Color(0xff9D9896), size: 18.sp),
         ),
       ],
     );
@@ -166,28 +160,23 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         children: [
           buildCategoryItem(
             name: 'GlassBlowingAndGlass',
-            imageUrl:
-            'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg',
+            imageUrl: 'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg',
           ),
           buildCategoryItem(
             name: 'Leather',
-            imageUrl:
-            'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg',
+            imageUrl: 'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg',
           ),
           buildCategoryItem(
             name: 'WeavingAndTextiles',
-            imageUrl:
-            'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg',
+            imageUrl: 'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg',
           ),
           buildCategoryItem(
             name: 'WoodworkingAndCarpentry',
-            imageUrl:
-            'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg',
+            imageUrl: 'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg',
           ),
           buildCategoryItem(
             name: 'Pottery',
-            imageUrl:
-            'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg',
+            imageUrl: 'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg',
           ),
         ],
       ),
@@ -205,23 +194,23 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.only(right: 12),
+        padding: EdgeInsets.only(right: 12.w),
         child: Column(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               child: Image.network(
                 imageUrl,
-                width: 75,
-                height: 75,
+                width: 75.w,
+                height: 75.h,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6.h),
             Text(
               name,
-              style: const TextStyle(
-                fontSize: 12,
+              style: TextStyle(
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
             )
@@ -233,18 +222,20 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
 
   Widget buildProductsGrid() {
     if (filteredProducts.isEmpty) {
-      return Center(child: Text("No products found."));
+      return Center(child: Text("No products found.", style: TextStyle(fontSize: 14.sp)));
     }
     return GridView.builder(
-      padding: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(top: 10.h),
       itemCount: filteredProducts.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, crossAxisSpacing: 8, mainAxisSpacing: 8, childAspectRatio: 0.75,
+        crossAxisCount: 2,
+        crossAxisSpacing: 8.w,
+        mainAxisSpacing: 8.h,
+        childAspectRatio: 0.75,
       ),
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            // عند الضغط على المنتج، يتم الانتقال إلى صفحة تفاصيل المنتج
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -272,14 +263,16 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     );
   }
 
-
   Widget buildShimmerGrid() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.w),
       child: GridView.builder(
         itemCount: 6,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, mainAxisSpacing: 8, crossAxisSpacing: 8, childAspectRatio: 0.75,
+          crossAxisCount: 2,
+          mainAxisSpacing: 8.h,
+          crossAxisSpacing: 8.w,
+          childAspectRatio: 0.75,
         ),
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
@@ -288,7 +281,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
             ),
           );
@@ -311,7 +304,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
       unselectedItemColor: Color(0xff9D9896),
       showUnselectedLabels: true,
       backgroundColor: AppColors.primary,
-      iconSize: 24,
+      iconSize: 24.sp,
     );
   }
 
