@@ -6,7 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/Custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
-import 'package:support_local_artisans/features/home_view/presentation/pages/home_screen.dart';
+import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_states.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_view_model.dart';
 import '../../../../config/routes_manager/routes.dart';
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
           await SharedPreference.saveData(
               key: "token", value: state.responseEntity.token);
-          Get.offAll( HomeScreen(),
+          Get.offAll( HomeScreenUser(),
               transition: getx.Transition.leftToRightWithFade,
               duration: const Duration(milliseconds: 500));
         }
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: const Color(0xFFF8F0EC),
+          backgroundColor: AppColors.background,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: Center(

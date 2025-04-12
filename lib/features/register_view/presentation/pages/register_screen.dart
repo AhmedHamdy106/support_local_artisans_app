@@ -8,10 +8,10 @@ import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_te
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_text_form_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/core/utils/validators.dart';
+import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/register_states.dart';
 import '../../../../config/routes_manager/routes.dart';
 import '../../../../core/shared/shared_preference.dart';
-import '../../../home_view/presentation/pages/home_screen.dart';
 import '../manager/cubit/register_view_model.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -54,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             message: "Registration successful",
             buttonText: "Ok",
             onButtonPressed: () {
-              getx.Get.offAll( HomeScreen(),
+              getx.Get.offAll( HomeScreenUser(),
                   transition: getx.Transition.downToUp,
                   duration: const Duration(milliseconds: 600));
             },

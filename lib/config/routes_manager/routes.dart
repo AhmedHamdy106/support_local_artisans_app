@@ -6,4 +6,7 @@ class Routes {
   static const String forgetPasswordRoute = "forgetPassword";
   static const String verificationCodeRoute = "verificationCode";
   static const String createNewPasswordRoute = "createNewPassword";
+  static const String cartRoute = "cart";
+  static const String categoriesRoute = "categories";
+  static const String accountRoute = "account";
 }
