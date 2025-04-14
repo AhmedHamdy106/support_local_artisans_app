@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductModel.dart'; // تأكد من أن المسار صحيح
-import 'package:support_local_artisans/core/utils/app_colors.dart'; // تأكد من أن المسار صحيح
+import 'package:support_local_artisans/features/CartScreen/CartScreen.dart';
+import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductModel.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
+import 'package:support_local_artisans/features/CartScreen/CartApi.dart';
+import 'package:support_local_artisans/features/CartScreen/CartItemModel.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final ProductModel product;
@@ -34,6 +37,10 @@ class ProductDetailsScreen extends StatelessWidget {
             icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
             onPressed: () {
               // الانتقال إلى صفحة العربة
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartScreen()), // الانتقال إلى سلة المشتريات
+              );
             },
           ),
         ],
@@ -42,7 +49,6 @@ class ProductDetailsScreen extends StatelessWidget {
         padding: EdgeInsets.all(16.0.sp),
         child: ListView(
           children: [
-            // صورة المنتج
             Container(
               height: 300.h,
               decoration: BoxDecoration(
@@ -57,7 +63,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     product.imageUrl,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    height: 300.h, // تأكد من تحديد ارتفاع مطابق للحاوية
+                    height: 300.h,
                     errorBuilder: (context, error, stackTrace) {
                       return const Center(child: Icon(Icons.broken_image));
                     },
@@ -66,8 +72,6 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
-
-            // تفاصيل المنتج
             Text(
               product.title,
               style: TextStyle(
@@ -86,8 +90,6 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
-
-            // معلومات إضافية
             Row(
               children: [
                 Container(
@@ -111,8 +113,6 @@ class ProductDetailsScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 24.h),
-
-            // الوصف
             Text(
               'Description',
               style: TextStyle(
@@ -127,8 +127,6 @@ class ProductDetailsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(height: 24.h),
-
-            // السعر الإجمالي وزر الإضافة إلى العربة
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -150,19 +148,44 @@ class ProductDetailsScreen extends StatelessWidget {
                   ],
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    // منطق الإضافة إلى العربة
+                  onPressed: () async {
+                    final cartItem = CartItemModel(
+                      id: product.id,
+                      name: product.title,
+                      price: product.price.toInt(),  // Ensure price is int
+                      quantity: 1,
+                      pictureUrl: product.imageUrl,
+                      brand: product.brand,
+                      type: product.type,
+                    );
+                    final success = await CartApi.addToCart(
+                      id: cartItem.id,
+                      name: cartItem.name,
+                      price: cartItem.price,
+                      quantity: cartItem.quantity,
+                      pictureUrl: cartItem.pictureUrl,
+                      brand: cartItem.brand,
+                      type: cartItem.type,
+                    );
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Added to cart!')),
+                      );
+                      // الانتقال إلى صفحة العربة مباشرة بعد الإضافة
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CartScreen()), // الانتقال إلى سلة المشتريات
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to add to cart')),
+                      );
+                    }
                   },
-                  icon: const Icon(
-                    Icons.add_shopping_cart_outlined,
-                    color: Colors.white,
-                  ),
-                  label: const Text('Add to Cart'),
+                  icon: const Icon(Icons.add_shopping_cart),
+                  label: Text('Add to Cart'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   ),
                 ),
               ],
