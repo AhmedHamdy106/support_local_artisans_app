@@ -10,12 +10,12 @@ class LoginScreenViewModel extends Cubit<LoginStates> {
   final TextEditingController passwordController = TextEditingController();
   final LoginUseCase? loginUseCase;
 
-  bool _isLoggingIn = false; // ✅ متغير لمنع تنفيذ أكثر من طلب في نفس الوقت
+  bool _isLoggingIn = false;
 
   LoginScreenViewModel({this.loginUseCase}) : super(LoginInitialState());
 
   void login() async {
-    if (_isLoggingIn) return; // ✅ منع تنفيذ دالة `login()` أكثر من مرة
+    if (_isLoggingIn) return;
 
     _isLoggingIn = true;
     emit(LoginLoadingState());
@@ -27,14 +27,14 @@ class LoginScreenViewModel extends Cubit<LoginStates> {
     );
 
     either?.fold(
-          (successResponse) {
+      (successResponse) {
         emit(LoginSuccessState(responseEntity: successResponse));
       },
-          (failureResponse) {
+      (failureResponse) {
         emit(LoginErrorState(failures: failureResponse));
       },
     );
 
-    _isLoggingIn = false; // ✅ إعادة السماح بإرسال طلب جديد
+    _isLoggingIn = false;
   }
 }

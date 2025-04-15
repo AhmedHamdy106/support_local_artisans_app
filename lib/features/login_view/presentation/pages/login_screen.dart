@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
           await SharedPreference.saveData(
               key: "token", value: state.responseEntity.token);
-          Get.offAll( HomeScreenUser(),
+          Get.offAll(HomeScreenUser(),
               transition: getx.Transition.leftToRightWithFade,
               duration: const Duration(milliseconds: 500));
         }

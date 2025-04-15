@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductModel.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
   final VoidCallback onTap; // 👈 إضافة الـ onTap هنا
 
-  const ProductCard({required this.product, required this.onTap}); // 👈 تعديل المُنشئ ليشمل onTap
+  const ProductCard(
+      {required this.product,
+      required this.onTap}); // 👈 تعديل المُنشئ ليشمل onTap
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +25,10 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                product.imageUrl,  // عرض صورة المنتج
+                product.imageUrl, // عرض صورة المنتج
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: 150,
+                height: 100,
               ),
             ),
             Padding(
@@ -37,9 +40,12 @@ class ProductCard extends StatelessWidget {
                     product.title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Text(
                     '\$${product.price}',
-                    style: TextStyle(color: Colors.green, fontSize: 12),
+                    style: TextStyle(color: AppColors.primary, fontSize: 14),
                   ),
                 ],
               ),

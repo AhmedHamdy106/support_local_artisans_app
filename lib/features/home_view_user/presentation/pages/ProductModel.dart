@@ -2,7 +2,7 @@ class ProductModel {
   final int id;
   final String title;
   final String imageUrl;
-  final double price;
+  final num price;
   final String description;
   final String brand;
   final String type;

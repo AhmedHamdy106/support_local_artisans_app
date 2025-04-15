@@ -1,147 +1,230 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // استيراد مكتبة SharedPreferences
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../home_view/presentation/tabs/cart_screen.dart';
+import '../home_view_user/presentation/pages/ProductDetailsScreen.dart';
+import '../home_view_user/presentation/pages/ProductModel.dart';
 import 'CartItemModel.dart';
 
-class CartApi {
-  static final Dio _dio = Dio();
+class CartApi extends GetxService {
+  final Dio _dio = Dio();
 
-  // إعداد Dio بإضافة Authorization Header تلقائيًا
-  static Future<void> _setAuthHeader() async {
-    final prefs = await SharedPreferences.getInstance(); // استخدام SharedPreferences
-    final token = prefs.getString('token'); // قراءة التوكين من SharedPreferences
-    print('Token: $token'); // طباعة التوكين للتصحيح
+  Future<void> _setAuthHeader() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
     if (token != null && !JwtDecoder.isExpired(token)) {
       _dio.options.headers["Authorization"] = "Bearer $token";
-      print('Authorization Header: ${_dio.options.headers["Authorization"]}'); // طباعة الهيدر للتصحيح
     } else {
       _dio.options.headers.remove("Authorization");
-      print("Token is either null or expired");
     }
   }
 
-  // إرجاع Basket ID باستخدام userId من التوكن
-  static Future<String> _getBasketId() async {
+  Future<String?> _getUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token'); // قراءة التوكين من SharedPreferences
+    final token = prefs.getString('token');
     if (token != null && !JwtDecoder.isExpired(token)) {
       final decodedToken = JwtDecoder.decode(token);
-      final userId = decodedToken['nameid']; // ← غير المفتاح إذا اختلف
-      return "Basket_$userId";
+      return decodedToken['nameid'];
     }
-
-    return "Basket_Guest";
+    return null;
   }
 
-  // جلب محتويات السلة
-  static Future<List<CartItemModel>> getCartItems() async {
-    await _setAuthHeader(); // إضافة الهيدر
-    final basketId = await _getBasketId();
+  Future<List<CartItemModel>> getCartItems() async {
+    await _setAuthHeader();
+    final userId = await _getUserId();
+    if (userId == null) {
+      print("User not authenticated, cannot fetch cart items.");
+      return [];
+    }
     try {
       final response = await _dio.get(
-        "http://abdoemam.runasp.net/api/Basket/",
-        queryParameters: {"BasketId": basketId},
+        "http://abdoemam.runasp.net/api/Basket/$userId", // Use user ID as basket identifier
       );
-      print('Response Status: ${response.statusCode}');
-      print('Response Data: ${response.data}');
-      final items = response.data['items'] as List<dynamic>;
-      return items.map((item) => CartItemModel.fromJson(item)).toList();
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        return [CartItemModel.fromJson(data)];
+      } else if (data is List) {
+        return data.map((item) => CartItemModel.fromJson(item)).toList();
+      } else {
+        print("Unexpected response format for getCartItems: $data");
+        return [];
+      }
+    } on DioException catch (e) {
+      print(
+          "Error fetching cart items: ${e.response?.statusCode} - ${e.message}");
+      if (e.response?.statusCode == 401) {
+        // Handle unauthorized error
+      }
+      return [];
     } catch (e) {
       print("Error fetching cart items: $e");
       return [];
     }
   }
 
-  // تحديث السلة
-  static Future<void> updateCart(List<CartItemModel> items) async {
+  Future<void> updateCart(CartItemModel cart) async {
     await _setAuthHeader();
-    final basketId = await _getBasketId();
-    final data = {
-      "id": basketId,
-      "items": items.map((e) => e.toJson()).toList(),
-    };
+    final userId = await _getUserId();
+    if (userId == null) {
+      print("User not authenticated, cannot update cart.");
+      return;
+    }
     try {
-      await _dio.post("http://abdoemam.runasp.net/api/Basket/", data: data);
-      print("Cart updated successfully");
+      await _dio.put(
+        "http://abdoemam.runasp.net/api/Basket/$userId",
+        data: cart.toJson(),
+      );
+    } on DioException catch (e) {
+      print("Error updating cart: ${e.response?.statusCode} - ${e.message}");
+      if (e.response?.statusCode == 401) {
+        // Handle unauthorized error
+      }
     } catch (e) {
       print("Error updating cart: $e");
     }
   }
 
-  // حذف عنصر من السلة
-  static Future<void> removeItem(String itemName) async {
-    final items = await getCartItems();
-    items.removeWhere((item) => item.name == itemName);
-    await updateCart(items);
+  Future<void> removeItem(int itemId) async {
+    await _setAuthHeader();
+    final userId = await _getUserId();
+    if (userId == null) {
+      print("User not authenticated, cannot remove item.");
+      return;
+    }
+    try {
+      await _dio.delete(
+        "http://abdoemam.runasp.net/api/Basket/$userId/items/$itemId", // Specific endpoint for removing item
+      );
+    } on DioException catch (e) {
+      print("Error removing item: ${e.response?.statusCode} - ${e.message}");
+      if (e.response?.statusCode == 401) {
+        // Handle unauthorized error
+      }
+    } catch (e) {
+      print("Error removing item: $e");
+    }
   }
 
-  // مسح جميع العناصر من السلة
-  static Future<bool> clearCart() async {
+  Future<bool> clearCart() async {
     await _setAuthHeader();
-    final basketId = await _getBasketId();
+    final userId = await _getUserId();
+    if (userId == null) {
+      print("User not authenticated, cannot clear cart.");
+      return false;
+    }
     try {
       final response = await _dio.delete(
-        "http://abdoemam.runasp.net/api/Basket/",
-        queryParameters: {"BasketId": basketId},
+        "http://abdoemam.runasp.net/api/Basket/$userId", // DELETE request to clear the entire basket
       );
-      return response.data == true;
+      return response.statusCode == 204;
+    } on DioException catch (e) {
+      print("Error clearing cart: ${e.response?.statusCode} - ${e.message}");
+      if (e.response?.statusCode == 401) {
+        // Handle unauthorized error
+      }
+      return false;
     } catch (e) {
       print("Error clearing cart: $e");
       return false;
     }
   }
 
-  // إضافة عنصر إلى السلة
-  static Future<bool> addToCart({
-    required int id,
-    required String name,
-    required String pictureUrl,
-    required String brand,
-    required String type,
-    required int price,
-    required int quantity,
-  }) async {
+  Future<bool> addProductToCart(
+      BuildContext context, ProductModel product) async {
+    final dio = Dio();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'Not authenticated',
+          snackPosition: SnackPosition.BOTTOM);
+      return false;
+    }
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.headers['Content-Type'] = 'application/json';
+
+    String? userId;
     try {
-      final basketId = await _getBasketId();
-
-      // جلب العناصر الحالية في السلة
-      List<CartItemModel> currentItems = await getCartItems();
-
-      // التحقق إذا كان العنصر موجود بالفعل في السلة
-      final index = currentItems.indexWhere((item) => item.name == name);
-
-      if (index != -1) {
-        // إذا كان العنصر موجود، تحديث الكمية
-        currentItems[index].quantity += quantity;
-      } else {
-        // إذا لم يكن موجود، إضافة العنصر الجديد
-        currentItems.add(CartItemModel(
-          id: id,
-          name: name,
-          pictureUrl: pictureUrl,
-          brand: brand,
-          type: type,
-          price: price,
-          quantity: quantity,
-        ));
-      }
-
-      // تحديث السلة
-      await updateCart(currentItems);
-      return true;
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      userId = decodedToken[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
     } catch (e) {
-      print("Error adding to cart: $e");
+      print('Error decoding token: $e');
+    }
+
+    final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
+
+    final body = {
+      "id": basketId,
+      "items": [
+        {
+          "Id": product.id,
+          "Name": product.title,
+          "PictureUrl": product.imageUrl,
+          "price": product.price,
+          "Brand": product.brand,
+          "Type": product.type,
+          "Quantity": 1
+        }
+      ]
+    };
+
+    print('Adding to cart with body: $body');
+    print('Headers being sent: ${dio.options.headers}');
+
+    try {
+      final response = await dio.post(
+        'http://abdoemam.runasp.net/api/Basket/',
+        data: body,
+      );
+      print('Add to cart response status: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        Get.find<CartController>().fetchCartItems();
+        Get.to(() => CartScreen(initialProduct: product));
+        return true;
+      } else {
+        Get.snackbar('Error', 'Failed to add to cart: ${response.statusCode}',
+            snackPosition: SnackPosition.BOTTOM);
+        return false;
+      }
+    } catch (e) {
+      print('Error adding to cart: $e');
+      String errorMessage = 'Error adding to cart';
+      if (e is DioException && e.response?.data != null) {
+        errorMessage = 'Error adding to cart: ${e.response?.data}';
+        print('Error response data: ${e.response?.data}');
+      }
+      Get.snackbar('Error', errorMessage, snackPosition: SnackPosition.BOTTOM);
       return false;
     }
   }
 
-  // تحديث الكمية لعنصر في السلة
-  static Future<void> updateItemQuantity(String itemName, int newQuantity) async {
-    final items = await getCartItems();
-    final index = items.indexWhere((item) => item.name == itemName);
-    if (index != -1) {
-      items[index].quantity = newQuantity;
-      await updateCart(items);
+  Future<void> updateItemQuantity(
+    int itemId, // Use itemId to identify the specific item
+    int newQuantity,
+  ) async {
+    await _setAuthHeader();
+    final userId = await _getUserId();
+    if (userId == null) {
+      print("User not authenticated, cannot update item quantity.");
+      return;
+    }
+    try {
+      await _dio.put(
+        "http://abdoemam.runasp.net/api/Basket/$userId/items/$itemId", // Specific endpoint for updating item
+        data: {"quantity": newQuantity},
+      );
+    } on DioException catch (e) {
+      print(
+          "Error updating item quantity: ${e.response?.statusCode} - ${e.message}");
+      if (e.response?.statusCode == 401) {
+        // Handle unauthorized error
+      }
+    } catch (e) {
+      print("Error updating item quantity: $e");
     }
   }
 }

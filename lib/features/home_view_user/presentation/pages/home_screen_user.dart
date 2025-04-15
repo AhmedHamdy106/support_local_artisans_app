@@ -84,8 +84,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
       backgroundColor: AppColors.background,
       body: _selectedIndex == 0
           ? isLoading
-          ? buildShimmerGrid()
-          : buildMainContent()
+              ? buildShimmerGrid()
+              : buildMainContent()
           : _screens[_selectedIndex],
       bottomNavigationBar: buildBottomNavigationBar(),
     );
@@ -100,11 +100,13 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
           SizedBox(height: 30.h),
           buildSearchBar(),
           SizedBox(height: 40.h),
-          Text('Categories', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text('Categories',
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           SizedBox(height: 10.h),
           buildCategoriesList(),
           SizedBox(height: 20.h),
-          Text('Products', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text('Products',
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           Expanded(child: buildProductsGrid()),
         ],
       ),
@@ -147,7 +149,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         CircleAvatar(
           backgroundColor: Colors.white,
           radius: 16.r,
-          child: Icon(Icons.favorite_border, color: Color(0xff9D9896), size: 18.sp),
+          child: Icon(Icons.favorite_border,
+              color: Color(0xff9D9896), size: 18.sp),
         ),
       ],
     );
@@ -160,23 +163,28 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         children: [
           buildCategoryItem(
             name: 'GlassBlowingAndGlass',
-            imageUrl: 'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg',
+            imageUrl:
+                'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg',
           ),
           buildCategoryItem(
             name: 'Leather',
-            imageUrl: 'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg',
+            imageUrl:
+                'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg',
           ),
           buildCategoryItem(
             name: 'WeavingAndTextiles',
-            imageUrl: 'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg',
+            imageUrl:
+                'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg',
           ),
           buildCategoryItem(
             name: 'WoodworkingAndCarpentry',
-            imageUrl: 'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg',
+            imageUrl:
+                'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg',
           ),
           buildCategoryItem(
             name: 'Pottery',
-            imageUrl: 'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg',
+            imageUrl:
+                'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg',
           ),
         ],
       ),
@@ -222,7 +230,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
 
   Widget buildProductsGrid() {
     if (filteredProducts.isEmpty) {
-      return Center(child: Text("No products found.", style: TextStyle(fontSize: 14.sp)));
+      return Center(
+          child: Text("No products found.", style: TextStyle(fontSize: 14.sp)));
     }
     return GridView.builder(
       padding: EdgeInsets.only(top: 10.h),
@@ -239,7 +248,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ProductDetailsScreen(product: filteredProducts[index]),
+                builder: (_) =>
+                    ProductDetailsScreen(product: filteredProducts[index]),
               ),
             );
           },
@@ -252,7 +262,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ProductDetailsScreen(product: filteredProducts[index]),
+                    builder: (_) =>
+                        ProductDetailsScreen(product: filteredProducts[index]),
                   ),
                 );
               },
@@ -296,7 +307,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
       onTap: (index) => setState(() => _selectedIndex = index),
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Categories'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.category), label: 'Categories'),
         BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
       ],

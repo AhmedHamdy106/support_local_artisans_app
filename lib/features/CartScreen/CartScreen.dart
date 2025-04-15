@@ -1,106 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:support_local_artisans/features/CartScreen/CartApi.dart';
-import 'package:support_local_artisans/features/CartScreen/CartItemModel.dart';
+import 'package:get/get.dart';
+import '../../core/utils/app_colors.dart';
+import '../home_view_user/presentation/pages/ProductDetailsScreen.dart';
+import '../home_view_user/presentation/pages/ProductModel.dart';
+import 'CartItemModel.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+class CartScreen extends StatelessWidget {
+  final CartController cartController = Get.put(CartController());
+  final ProductModel? initialProduct; // استقبال المنتج كـ Parameter
 
-  @override
-  State<CartScreen> createState() => _CartScreenState();
-}
-
-class _CartScreenState extends State<CartScreen> {
-  late Future<List<CartItemModel>> _cartItemsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _cartItemsFuture = CartApi.getCartItems();
-  }
-
-  void _refreshCart() {
-    setState(() {
-      _cartItemsFuture = CartApi.getCartItems();
-    });
-  }
-
-  Future<void> _removeItem(String itemName) async {
-    await CartApi.removeItem(itemName);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("$itemName removed from cart")),
-    );
-    _refreshCart();
+  CartScreen({super.key, this.initialProduct}) {
+    final initialProduct = this.initialProduct;
+    if (initialProduct != null) {
+      // يمكنك هنا إضافة المنتج مباشرة إلى الكنترولر أو عمل أي منطق تريده
+      print('Received product in CartScreen: ${initialProduct.title}');
+      // مثال بسيط لإضافة المنتج مباشرة (قد تحتاج تعديل حسب منطق عربة التسوق)
+      cartController.cartItems.add(CartItemModel(
+          id: 'temp_${DateTime.now().millisecondsSinceEpoch}', // معرف مؤقت
+          items: [
+            Items(
+              id: initialProduct!.id,
+              name: initialProduct!.title,
+              pictureUrl: initialProduct!.imageUrl,
+              price: initialProduct!.price.toInt(),
+              brand: initialProduct!.brand,
+              type: initialProduct!.type,
+              quantity: 1,
+            ),
+          ]));
+    } else {
+      cartController.fetchCartItems(); // جلب بيانات عربة التسوق الموجودة
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text("Cart")),
-      body: FutureBuilder<List<CartItemModel>>(
-        future: _cartItemsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No items in cart'));
-          }
-
-          final items = snapshot.data!;
-
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    return Card(
-                      child: ListTile(
-                        leading: Image.network(
-                          item.pictureUrl,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.broken_image);
-                          },
-                        ),
-                        title: Text(item.name),
-                        subtitle: Text("Qty: ${item.quantity} x ${item.price} LE"),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _removeItem(item.name),
-                        ),
+      body: Obx(() {
+        if (cartController.cartItems.isEmpty && initialProduct == null) {
+          return const Center(child: Text('No items in cart'));
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: cartController.cartItems.length,
+          itemBuilder: (context, index) {
+            final cartModel = cartController.cartItems[index] as CartItemModel;
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  // ... (باقي تصميم عرض عناصر الكارت)
+                  children: [
+                    SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: Image.network(
+                        cartModel.items![0].pictureUrl ?? '',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.broken_image);
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // تنفيذ منطق الدفع
-                    // الانتقال إلى صفحة الدفع أو إتمام عملية الشراء
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Proceeding to checkout')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                  child: const Text("Checkout"),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cartModel.items![0].name ?? '',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text("${cartModel.items![0].price} LE"),
+                          // ... (باقي تفاصيل المنتج والكمية وأزرار التحكم)
+                        ],
+                      ),
+                    ),
+                    // ... (زر الحذف)
+                  ],
                 ),
               ),
-            ],
-          );
-        },
+            );
+          },
+        );
+      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: cartController.fetchCartItems,
+        child: const Icon(Icons.refresh),
       ),
     );
   }
