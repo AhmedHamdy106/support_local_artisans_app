@@ -7,16 +7,13 @@ import 'CartItemModel.dart';
 
 class CartScreen extends StatelessWidget {
   final CartController cartController = Get.put(CartController());
-  final ProductModel? initialProduct; // استقبال المنتج كـ Parameter
+  final ProductModel? initialProduct;
 
   CartScreen({super.key, this.initialProduct}) {
-    final initialProduct = this.initialProduct;
     if (initialProduct != null) {
-      // يمكنك هنا إضافة المنتج مباشرة إلى الكنترولر أو عمل أي منطق تريده
-      print('Received product in CartScreen: ${initialProduct.title}');
-      // مثال بسيط لإضافة المنتج مباشرة (قد تحتاج تعديل حسب منطق عربة التسوق)
-      cartController.cartItems.add(CartItemModel(
-          id: 'temp_${DateTime.now().millisecondsSinceEpoch}', // معرف مؤقت
+      cartController.cartItems.add(
+        CartItemModel(
+          id: 'temp_${DateTime.now().millisecondsSinceEpoch}',
           items: [
             Items(
               id: initialProduct!.id,
@@ -27,69 +24,164 @@ class CartScreen extends StatelessWidget {
               type: initialProduct!.type,
               quantity: 1,
             ),
-          ]));
+          ],
+        ),
+      );
     } else {
-      cartController.fetchCartItems(); // جلب بيانات عربة التسوق الموجودة
+      cartController.fetchCartItems();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text("Cart")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text('Cart', style: TextStyle(color: Colors.black)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.black),
+            onPressed: () {
+              // TODO: search logic
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: Obx(() {
-        if (cartController.cartItems.isEmpty && initialProduct == null) {
+        if (cartController.cartItems.isEmpty) {
           return const Center(child: Text('No items in cart'));
         }
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: cartController.cartItems.length,
-          itemBuilder: (context, index) {
-            final cartModel = cartController.cartItems[index] as CartItemModel;
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  // ... (باقي تصميم عرض عناصر الكارت)
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: Image.network(
-                        cartModel.items![0].pictureUrl ?? '',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.broken_image);
-                        },
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cartController.cartItems.length,
+                  itemBuilder: (context, index) {
+                    final cartModel = cartController.cartItems[index];
+                    final item = cartModel.items![0];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            cartModel.items![0].name ?? '',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text("${cartModel.items![0].price} LE"),
-                          // ... (باقي تفاصيل المنتج والكمية وأزرار التحكم)
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                image: DecorationImage(
+                                  image: NetworkImage(item.pictureUrl ?? ''),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(item.name ?? '',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0)),
+                                  const SizedBox(height: 4.0),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: 4.0),
+                                      Text('${item.brand} \n${item.type}',
+                                          style:
+                                              const TextStyle(fontSize: 12.0)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text('EGP ${item.price}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.0)),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: () {
+                                cartController.cartItems.removeAt(index);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    // ... (زر الحذف)
-                  ],
+                    );
+                  },
                 ),
               ),
-            );
-          },
+              const SizedBox(height: 16.0),
+              Obx(() {
+                int total =
+                    cartController.cartItems.fold<int>(0, (int sum, item) {
+                  // Explicitly type 'sum' as int
+                  int price = item.items?.first.price ?? 0;
+                  int quantity = item.items?.first.quantity ?? 1;
+                  return sum + (price * quantity).toInt();
+                });
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total price',
+                        style: TextStyle(color: Colors.grey.shade600)),
+                    Text('EGP $total',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18.0)),
+                  ],
+                );
+              }),
+              const SizedBox(height: 16.0),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    // TODO: Checkout logic
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Check Out',
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 16.0)),
+                      SizedBox(width: 8.0),
+                      Icon(Icons.arrow_forward, color: Colors.white),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: cartController.fetchCartItems,
-        child: const Icon(Icons.refresh),
-      ),
     );
   }
 }
