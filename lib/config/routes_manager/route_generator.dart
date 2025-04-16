@@ -8,6 +8,7 @@ import 'package:support_local_artisans/features/login_view/presentation/pages/lo
 import 'package:support_local_artisans/features/register_view/presentation/pages/register_screen.dart';
 import '../../features/createNew_password_view/createnew_password_screen.dart';
 import '../../features/forgot_pass_view/forgot_screen.dart';
+import '../../features/home_view/presentation/details/product_details_screen.dart';
 import '../../features/verification_code_view/verification_code_screen.dart';
 
 class RouteGenerator {
@@ -43,6 +44,9 @@ class RouteGenerator {
       case Routes.accountRoute:
         return MaterialPageRoute(
             builder: (_) => AccountScreen(), settings: settings);
+      case Routes.productDetailsRoute:
+        return MaterialPageRoute(
+            builder: (_) => const ProductDetailsScreen(), settings: settings);
       default:
         return _unDefinedRoute();
     }

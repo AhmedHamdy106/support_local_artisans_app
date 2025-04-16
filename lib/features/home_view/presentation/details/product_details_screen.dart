@@ -4,9 +4,9 @@ import '../../../../core/utils/app_colors.dart';
 import '../../models/product_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final Product product;
+  final Product? product;
 
-  const ProductDetailsScreen({super.key, required this.product});
+  const ProductDetailsScreen({super.key,  this.product});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -58,7 +58,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.r),
                     child: Image.network(
-                      widget.product.pictureUrl,
+                      widget.product!.pictureUrl,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 300.h, // تأكد من تحديد ارتفاع مطابق للحاوية
@@ -74,7 +74,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.product.name,
+                    widget.product!.name,
                     style: TextStyle(
                       fontFamily: "Roboto",
                       fontSize: 16.sp,
@@ -84,7 +84,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
                   Text(
-                    'EGP ${widget.product.price}',
+                    'EGP ${widget.product?.price}',
                     style: TextStyle(
                       fontFamily: "Roboto",
                       fontSize: 16.sp,
@@ -97,7 +97,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                "Brand : ${widget.product.brand.toString()}",
+                "Brand : ${widget.product?.brand.toString()}",
                 style: TextStyle(
                   fontFamily: "Roboto",
                   fontSize: 14.sp,
@@ -110,7 +110,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 height: 8.h,
               ),
               Text(
-                "Type : ${widget.product.type.toString()}",
+                "Type : ${widget.product?.type.toString()}",
                 style: TextStyle(
                   fontFamily: "Roboto",
                   fontSize: 14.sp,
@@ -162,7 +162,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               SizedBox(height: 10.h),
               Text(
-                widget.product.description,
+                widget.product!.description,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 24.h),
@@ -275,7 +275,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             fontSize: 14.sp, color: Colors.grey.shade600),
                       ),
                       Text(
-                        'EGP ${widget.product.price}',
+                        'EGP ${widget.product?.price}',
                         style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,

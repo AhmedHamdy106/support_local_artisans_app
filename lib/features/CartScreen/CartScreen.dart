@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
+import '../../config/routes_manager/routes.dart';
 import 'BasketItem.dart';
 
 class CartScreen extends StatefulWidget {
@@ -114,7 +115,8 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: AppColors.background,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, Routes.homeRoute),
         ),
         title: const Text('Cart Screen'),
       ),
