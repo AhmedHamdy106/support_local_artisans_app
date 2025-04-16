@@ -55,6 +55,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i5.RegisterRemoteDataSourceImpl());
     gh.factory<_i240.RegisterRepository>(() => _i1014.RegisterRepositoryImpl(
         registerRemoteDataSource: gh<_i1058.RegisterRemoteDataSource>()));
+    gh.factory<_i588.LoginScreenViewModel>(() =>
+        _i588.LoginScreenViewModel(loginUseCase: gh<_i1041.LoginUseCase>()));
     gh.factory<_i333.RegisterUseCase>(() => _i333.RegisterUseCase(
         registerRepository: gh<_i240.RegisterRepository>()));
     gh.factory<_i180.RegisterScreenViewModel>(() =>
@@ -64,8 +66,6 @@ extension GetItInjectableX on _i174.GetIt {
         loginRemoteDataSource: gh<_i685.LoginRemoteDataSource>()));
     gh.factory<_i1041.LoginUseCase>(
         () => _i1041.LoginUseCase(loginRepository: gh<_i36.LoginRepository>()));
-    gh.factory<_i588.LoginScreenViewModel>(() =>
-        _i588.LoginScreenViewModel(loginUseCase: gh<_i1041.LoginUseCase>()));
     return this;
   }
 }

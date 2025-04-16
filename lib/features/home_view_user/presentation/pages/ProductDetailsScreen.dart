@@ -75,6 +75,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         data: body,
       );
       if (response.statusCode == 200) {
+        print("________________________");
+        print(response.statusCode);
+        print("________________________");
+        print(response.statusMessage);
+        print("________________________");
+        print(response.data);
+        print("________________________");
         Get.find<CartController>().fetchCartItems();
         Get.to(() => CartScreen(initialProduct: widget.product));
         return true;
@@ -254,7 +261,8 @@ class CartController extends GetxController {
   RxList<dynamic> cartItems = <dynamic>[].obs;
 
   Future<void> fetchCartItems() async {
-    final List<dynamic> fetchedItems = await CartApi().getCartItems();
+    final List<dynamic> fetchedItems = (await CartApi().addProductToCart(
+        BuildContext as BuildContext, ProductModel as ProductModel)) as List;
     if (fetchedItems != null) {
       cartItems.value = fetchedItems;
     } else {

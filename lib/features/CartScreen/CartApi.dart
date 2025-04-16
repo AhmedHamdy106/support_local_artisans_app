@@ -182,6 +182,8 @@ class CartApi extends GetxService {
       );
       print('Add to cart response status: ${response.statusCode}');
       if (response.statusCode == 200) {
+        print(response.statusCode);
+        print(response.data);
         Get.find<CartController>().fetchCartItems();
         Get.to(() => CartScreen(initialProduct: product));
         return true;
