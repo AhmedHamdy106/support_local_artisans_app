@@ -42,6 +42,51 @@ class _CartScreenState extends State<CartScreen> {
     }
   }
 
+  // Handle deleting a single product
+  Future<void> _removeProduct(BasketItem item) async {
+    String basketId = '5e04bebb-7502-4f59-ab51-cae308d6bdb5'; // معرّف السلة
+    bool success = await CartApi.removeProductFromCart(context, basketId);
+    if (success) {
+      setState(() {
+        cartItems.remove(item); // إزالة المنتج من الواجهة بعد الحذف
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to remove product')),
+      );
+    }
+  }
+
+
+  // Handle deleting all products
+  Future<void> _removeAllProducts() async {
+    bool success = await CartApi.removeAllProductsFromCart(context);
+    if (success) {
+      setState(() {
+        cartItems.clear();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to clear cart')),
+      );
+    }
+  }
+  // Handle updating product quantity
+  Future<void> _updateProductQuantity(BasketItem item, int newQuantity) async {
+    if (newQuantity < 1) return; // لا تسمح بأن تكون الكمية أقل من 1
+    bool success = await CartApi.updateProductQuantity(context, item.id!, newQuantity);
+    if (success) {
+      setState(() {
+        item.quantity = newQuantity; // تحديث الكمية في الواجهة
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update product quantity')),
+      );
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +98,12 @@ class _CartScreenState extends State<CartScreen> {
           onPressed: () =>
               Navigator.pushReplacementNamed(context, Routes.homeRoute),
         ),
+        actions: [
+          IconButton(
+            onPressed: _removeAllProducts, // Clear cart
+            icon: const Icon(Icons.delete),
+          ),
+        ],
         title: const Text('Cart Screen'),
       ),
       body: _isLoading
@@ -63,7 +114,8 @@ class _CartScreenState extends State<CartScreen> {
           ? Center(child: Text(_errorMessage))
           : cartItems.isEmpty
           ? const Center(child: Text('Your cart is empty.'))
-          : ListView.builder(
+          : // Update quantity in ListView.builder inside the CartScreen
+      ListView.builder(
         itemCount: cartItems.length,
         itemBuilder: (context, index) {
           final item = cartItems[index];
@@ -84,7 +136,10 @@ class _CartScreenState extends State<CartScreen> {
                         fit: BoxFit.cover,
                         width: double.infinity,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.image_not_supported_outlined, size: 40.0);
+                          return const Icon(
+                            Icons.image_not_supported_outlined,
+                            size: 40.0,
+                          );
                         },
                       ),
                     ),
@@ -102,22 +157,43 @@ class _CartScreenState extends State<CartScreen> {
                         Text('${item.price} EGP',
                             style: const TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 2.0),
-                        Text('Quantity: ${item.quantity}'),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: item.quantity! > 1
+                                  ? () => _updateProductQuantity(item, item.quantity! - 1)
+                                  : null,
+                            ),
+                            Text('Quantity: ${item.quantity}'),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () => _updateProductQuantity(item, item.quantity! + 1),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
+                  ),
+                  IconButton(
+                    onPressed: () => _removeProduct(item),
+                    icon: const Icon(Icons.delete),
                   ),
                 ],
               ),
             ),
           );
         },
-      ),
+      )
+
+      ,
       bottomNavigationBar: cartItems.isNotEmpty
           ? Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: () {
             // تنفيذ الشراء
+            Navigator.pushNamed(context, Routes.paymentRoute);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF8C4931),

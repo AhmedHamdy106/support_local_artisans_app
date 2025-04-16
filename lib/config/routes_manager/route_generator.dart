@@ -3,6 +3,7 @@ import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/features/AccountScreen/AccountScreen.dart';
 import 'package:support_local_artisans/features/CartScreen/CartScreen.dart';
 import 'package:support_local_artisans/features/CategoriesScreen/CategoriesScreen.dart';
+import 'package:support_local_artisans/features/Payment/PaymentScreen.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import 'package:support_local_artisans/features/login_view/presentation/pages/login_screen.dart';
 import 'package:support_local_artisans/features/register_view/presentation/pages/register_screen.dart';
@@ -47,6 +48,9 @@ class RouteGenerator {
       case Routes.productDetailsRoute:
         return MaterialPageRoute(
             builder: (_) => const ProductDetailsScreen(), settings: settings);
+      case Routes.paymentRoute:
+        return MaterialPageRoute(
+            builder: (_) =>  PaymentScreen(), settings: settings);
       default:
         return _unDefinedRoute();
     }

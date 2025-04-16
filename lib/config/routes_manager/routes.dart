@@ -10,4 +10,5 @@ class Routes {
   static const String categoriesRoute = "categories";
   static const String accountRoute = "account";
   static const String productDetailsRoute = "productDetails";
+  static const String paymentRoute = "payment";
 }

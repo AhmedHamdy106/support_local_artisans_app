@@ -76,7 +76,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     Container(),
     const CategoriesScreen(),
     const CartScreen(),
-    const AccountScreen(),
+     AccountScreen(),
   ];
 
   @override

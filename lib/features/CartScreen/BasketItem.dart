@@ -1,12 +1,15 @@
 class BasketItem {
+
+  final String? id;
   final String? name;
   final String? pictureUrl;
   final String? brand;
   final String? type;
   final double? price;
-  final int? quantity;
+  late final int? quantity;
 
   BasketItem({
+    required this.id,
     required this.name,
     required this.pictureUrl,
     required this.brand,
@@ -17,6 +20,7 @@ class BasketItem {
 
   factory BasketItem.fromJson(Map<String, dynamic> json) {
     return BasketItem(
+      id: json['id'] as String?,
       name: json['name'] as String?,
       pictureUrl: json['pictureUrl'] as String?,
       brand: json['brand'] as String?,
