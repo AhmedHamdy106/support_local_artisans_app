@@ -25,21 +25,40 @@ class CartApi {
     try {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       userId = decodedToken[
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
     } catch (e) {
       print('Error decoding token: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error decoding token: $e')),
-      );
       return false;
     }
 
     final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
 
-    final body = {
-      "id": basketId,
-      "items": [
-        {
+    // ✅ 1. Get existing basket from backend
+    try {
+      final existingResponse = await dio.get(
+        'http://abdoemam.runasp.net/api/Basket/',
+      );
+
+      List<dynamic> existingItems = [];
+      if (existingResponse.statusCode == 200 &&
+          existingResponse.data != null &&
+          existingResponse.data['items'] != null) {
+        existingItems = existingResponse.data['items'];
+      }
+
+      // ✅ 2. Check if product already exists in basket
+      bool productExists = false;
+      for (var item in existingItems) {
+        if (item['id'] == widgetProduct.id) {
+          item['quantity'] += 1; // ✅ زيادة الكمية
+          productExists = true;
+          break;
+        }
+      }
+
+      // ✅ 3. If not exist, add it to the list
+      if (!productExists) {
+        existingItems.add({
           "Id": widgetProduct.id,
           "Name": widgetProduct.title,
           "PictureUrl": widgetProduct.imageUrl,
@@ -47,39 +66,28 @@ class CartApi {
           "Brand": widgetProduct.brand,
           "Type": widgetProduct.type,
           "Quantity": 1
-        }
-      ]
-    };
+        });
+      }
 
-    print('Adding to cart with body: $body');
-    print('Headers being sent: ${dio.options.headers}');
+      // ✅ 4. Send updated basket
+      final updatedBasket = {
+        "id": basketId,
+        "items": existingItems,
+      };
 
-    try {
       final response = await dio.post(
         'http://abdoemam.runasp.net/api/Basket/',
-        data: body,
+        data: updatedBasket,
       );
-      print('Add to cart response status: ${response.statusCode}');
+
       if (response.statusCode == 200) {
         return true;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text('Error: Failed to add to cart: ${response.statusCode}')),
-        );
+        print("Failed to update basket: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print('Error adding to cart: $e');
-      String errorMessage = 'Error adding to cart';
-      if (e is DioException && e.response?.data != null) {
-        errorMessage = 'Error adding to cart: ${e.response?.data}';
-        print('Error response data: ${e.response?.data}');
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      print("Error updating basket: $e");
       return false;
     }
   }
