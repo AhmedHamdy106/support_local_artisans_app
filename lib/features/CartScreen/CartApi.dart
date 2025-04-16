@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:support_local_artisans/features/CartScreen/BasketItem.dart';
 import '../home_view_user/presentation/pages/ProductModel.dart';
 
 class CartApi {
@@ -91,4 +92,33 @@ class CartApi {
       return false;
     }
   }
+
+  static Future<List<BasketItem>> getBasketItems() async {
+    final dio = Dio();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) throw Exception('Token not found');
+
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.headers['Content-Type'] = 'application/json';
+
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    final String? userId = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+    final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
+
+    final response = await dio.get('http://abdoemam.runasp.net/api/Basket/');
+
+    if (response.statusCode == 200 && response.data != null) {
+      final data = response.data;
+      if (data['items'] != null) {
+        return (data['items'] as List).map((item) => BasketItem.fromJson(item)).toList();
+      } else {
+        return [];
+      }
+    } else {
+      throw Exception('Failed to load cart');
+    }
+  }
+
 }
