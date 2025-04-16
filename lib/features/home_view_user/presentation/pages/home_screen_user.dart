@@ -13,6 +13,7 @@ import 'package:support_local_artisans/features/home_view_user/presentation/page
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductDetailsScreen.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductModel.dart';
 
+
 class HomeScreenUser extends StatefulWidget {
   @override
   State<HomeScreenUser> createState() => _HomeScreenUserState();
@@ -73,9 +74,9 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
 
   final List<Widget> _screens = [
     Container(),
-    CategoriesScreen(),
-    CartScreen(),
-    AccountScreen(),
+    const CategoriesScreen(),
+    const CartScreen(),
+    const AccountScreen(),
   ];
 
   @override

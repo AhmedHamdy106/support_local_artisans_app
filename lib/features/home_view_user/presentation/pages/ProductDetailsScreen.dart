@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../CartScreen/CartApi.dart';
 import '../../../CartScreen/CartScreen.dart';
 import 'ProductModel.dart';
@@ -17,92 +20,12 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  int _quantity = 1;
-
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  Future<String?> getUserIdFromToken() async {
-    final token = await getToken();
-    if (token != null) {
-      try {
-        Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-        return decodedToken[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-      } catch (e) {
-        print('Error decoding token: $e');
-      }
-    }
-    return null;
-  }
-
-  Future<bool> _addToCartAndNavigate() async {
-    final dio = Dio();
-    final token = await getToken();
-    final userId = await getUserIdFromToken();
-
-    if (token == null) {
-      Get.snackbar('Error', 'Not authenticated',
-          snackPosition: SnackPosition.BOTTOM);
-      return false;
-    }
-
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    dio.options.headers['Content-Type'] = 'application/json';
-
-    final basketId = userId != null ? "Basket_\$userId" : "Basket_Guest";
-
-    final body = {
-      "id": basketId,
-      "items": [
-        {
-          "Id": widget.product.id,
-          "Name": widget.product.title,
-          "PictureUrl": widget.product.imageUrl,
-          "price": widget.product.price,
-          "Brand": widget.product.brand,
-          "Type": widget.product.type,
-          "Quantity": _quantity
-        }
-      ]
-    };
-
-    try {
-      final response = await dio.post(
-        'http://abdoemam.runasp.net/api/Basket/',
-        data: body,
-      );
-      if (response.statusCode == 200) {
-        print("________________________");
-        print(response.statusCode);
-        print("________________________");
-        print(response.statusMessage);
-        print("________________________");
-        print(response.data);
-        print("________________________");
-        Get.find<CartController>().fetchCartItems();
-        Get.to(() => CartScreen(initialProduct: widget.product));
-        return true;
-      } else {
-        Get.snackbar('Error', 'Failed to add to cart',
-            snackPosition: SnackPosition.BOTTOM);
-        return false;
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Error adding to cart',
-          snackPosition: SnackPosition.BOTTOM);
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.background,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
@@ -128,17 +51,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(20.0),
                     border: Border.all(
-                        color: Colors.grey.withOpacity(0.3), width: 2.0),
+                        color: Colors.grey.withOpacity(0.5), width: 2.0),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20.0),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Image.network(
-                        widget.product.imageUrl,
-                        height: 300,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            20.0), // هنا بتحدد درجة الكيرف، ممكن تغير الرقم ده
+                        child: SizedBox(
+                          height: 250.0,
+                          child: Image.network(
+                            widget.product.imageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                  Icons.image_not_supported_outlined,
+                                  size: 40.0);
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -219,23 +153,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Total price', style: TextStyle(color: Colors.grey)),
-                const SizedBox(height: 4),
-                Text(
-                  'EGP ${widget.product.price * _quantity}',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+            // ... كود عرض السعر ...
             Row(
               children: [
                 ElevatedButton.icon(
-                  onPressed: _addToCartAndNavigate,
+                  onPressed: () async {
+                    final bool isAdded =
+                        await CartApi.addProductToCart(context, widget.product);
+                    if (isAdded) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Product added to cart!')),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CartScreen()),
+                      );
+                    } else {
+                      // الـ SnackBar بتاع الفشل بيتعرض جوه دالة _addProductToCart
+                    }
+                  },
                   icon:
                       const Icon(Icons.add_shopping_cart, color: Colors.white),
                   label: const Text('Add to cart'),
@@ -254,21 +191,5 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
       ),
     );
-  }
-}
-
-class CartController extends GetxController {
-  RxList<dynamic> cartItems = <dynamic>[].obs;
-
-  Future<void> fetchCartItems() async {
-    final List<dynamic> fetchedItems = (await CartApi().addProductToCart(
-        BuildContext as BuildContext, ProductModel as ProductModel)) as List;
-    if (fetchedItems != null) {
-      cartItems.value = fetchedItems;
-    } else {
-      cartItems.value = [];
-      Get.snackbar('Error', 'Failed to fetch cart items',
-          snackPosition: SnackPosition.BOTTOM);
-    }
   }
 }
