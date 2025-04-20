@@ -4,19 +4,20 @@ import 'package:support_local_artisans/features/AccountScreen/AccountScreen.dart
 import 'package:support_local_artisans/features/CartScreen/CartScreen.dart';
 import 'package:support_local_artisans/features/CategoriesScreen/CategoriesScreen.dart';
 import 'package:support_local_artisans/features/Payment/PaymentScreen.dart';
+import 'package:support_local_artisans/features/SplashScreen/SplashScreen.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import 'package:support_local_artisans/features/login_view/presentation/pages/login_screen.dart';
 import 'package:support_local_artisans/features/register_view/presentation/pages/register_screen.dart';
 import '../../features/createNew_password_view/createnew_password_screen.dart';
 import '../../features/forgot_pass_view/forgot_screen.dart';
-import '../../features/home_view/presentation/details/product_details_screen.dart';
+import '../../features/home_view_user/presentation/pages/ProductDetailsScreen.dart';
 import '../../features/verification_code_view/verification_code_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic>? getRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case Routes.splashRoute:
-      //   return MaterialPageRoute(builder: (_) => const SplashScreen(), settings: settings);
+      case Routes.splashRoute:
+        return MaterialPageRoute(builder: (_) => const SplashScreen(), settings: settings);
       case Routes.loginRoute:
         return MaterialPageRoute(
             builder: (_) => const LoginScreen(), settings: settings);

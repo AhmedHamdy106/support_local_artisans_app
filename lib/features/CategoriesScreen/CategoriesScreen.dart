@@ -3,8 +3,8 @@ import 'package:support_local_artisans/features/CategoriesScreen/CategoryProduct
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/CategoryModel.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../config/routes_manager/routes.dart';
+import '../../core/shared/shared_preference.dart';
+import '../home_view_user/presentation/pages/MainScreen.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -17,7 +17,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   List<CategoryModel> categories = [
     CategoryModel(
         id: 1,
-        name: 'GlassBlowingAndGlass',
+        name: 'Glass',
         imageUrl:
             'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg'),
     CategoryModel(
@@ -32,12 +32,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg'),
     CategoryModel(
         id: 4,
-        name: 'WoodworkingAndCarpentry',
+        name: 'Wood',
         imageUrl:
             'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg'),
     CategoryModel(
         id: 5,
-        name: 'Pottery',
+        name: 'PotteryAndCeramics',
         imageUrl:
             'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg'),
   ];
@@ -54,12 +54,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        centerTitle: true,
+        backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Navigator.pushNamed(context, Routes.homeRoute),
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () async {
+            final role = await SharedPreference.getData(key: 'role');
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (_) => MainScreen(isMerchant: role == 'Artisan'),
+              ),
+              (route) => false,
+            );
+          },
         ),
         title: Text(
           "Categories",
@@ -69,11 +77,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              // هنا تم استخدام SingleChildScrollView
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               child: Column(
                 children: [
-                  // هنا نعرض الفئات تحت بعضها
                   for (var category in categories)
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -88,27 +94,49 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             ),
                           );
                         },
-                        child: Column(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20.r),
-                              child: Image.network(
-                                category.imageUrl,
-                                height: 250.h,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
+                        child: Card(
+                          elevation: 3,
+                          color: AppColors.background,
+                          margin: EdgeInsets.symmetric(vertical: 10.h),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.r)),
+                          child: Padding(
+                            padding: EdgeInsets.all(12.w),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 80.w,
+                                  height: 80.h,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    child: Image.network(
+                                      category.imageUrl,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(
+                                            Icons.image_not_supported);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 16.w),
+                                Expanded(
+                                  child: Text(
+                                    category.name,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Icon(Icons.arrow_forward_ios,
+                                    color: Colors.grey.shade500),
+                              ],
                             ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              category.name,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),

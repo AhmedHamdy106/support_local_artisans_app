@@ -26,7 +26,7 @@ class CartApi {
     try {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       userId = decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
     } catch (e) {
       print('Error decoding token: $e');
       return false;
@@ -34,7 +34,6 @@ class CartApi {
 
     final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
 
-    // ✅ 1. Get existing basket from backend
     try {
       final existingResponse = await dio.get(
         'http://abdoemam.runasp.net/api/Basket/',
@@ -47,22 +46,20 @@ class CartApi {
         existingItems = existingResponse.data['items'];
       }
 
-      // ✅ 2. Check if product already exists in basket
       bool productExists = false;
       for (var item in existingItems) {
-        if (item['Id'] == widgetProduct.id) { // Check if product is already in the cart
-          item['Quantity'] += 1; // Increase quantity if product exists
+        if (item['Id'] == widgetProduct.id) {
+          item['Quantity'] += 1;
           productExists = true;
           break;
         }
       }
 
-      // ✅ 3. If not exist, add it to the list
       if (!productExists) {
         existingItems.add({
           "Id": widgetProduct.id,
-          "Name": widgetProduct.title,
-          "PictureUrl": widgetProduct.imageUrl,
+          "Name": widgetProduct.name,
+          "PictureUrl": widgetProduct.pictureUrl,
           "price": widgetProduct.price,
           "Brand": widgetProduct.brand,
           "Type": widgetProduct.type,
@@ -70,7 +67,6 @@ class CartApi {
         });
       }
 
-      // ✅ 4. Send updated basket
       final updatedBasket = {
         "id": basketId,
         "items": existingItems,
@@ -82,7 +78,7 @@ class CartApi {
       );
 
       if (response.statusCode == 200) {
-        return true;
+        return true; // تم تحديث السلة بنجاح على الـ Backend
       } else {
         print("Failed to update basket: ${response.statusCode}");
         return false;
@@ -92,6 +88,93 @@ class CartApi {
       return false;
     }
   }
+  // static Future<bool> addProductToCart(
+  //     BuildContext context, ProductModel widgetProduct) async {
+  //   final dio = Dio();
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+  //
+  //   if (token == null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Error: Not authenticated')),
+  //     );
+  //     return false;
+  //   }
+  //
+  //   dio.options.headers['Authorization'] = 'Bearer $token';
+  //   dio.options.headers['Content-Type'] = 'application/json';
+  //
+  //   String? userId;
+  //   try {
+  //     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+  //     userId = decodedToken[
+  //         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  //   } catch (e) {
+  //     print('Error decoding token: $e');
+  //     return false;
+  //   }
+  //
+  //   final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
+  //
+  //   // ✅ 1. Get existing basket from backend
+  //   try {
+  //     final existingResponse = await dio.get(
+  //       'http://abdoemam.runasp.net/api/Basket/',
+  //     );
+  //
+  //     List<dynamic> existingItems = [];
+  //     if (existingResponse.statusCode == 200 &&
+  //         existingResponse.data != null &&
+  //         existingResponse.data['items'] != null) {
+  //       existingItems = existingResponse.data['items'];
+  //     }
+  //
+  //     // ✅ 2. Check if product already exists in basket
+  //     bool productExists = false;
+  //     for (var item in existingItems) {
+  //       if (item['Id'] == widgetProduct.id) {
+  //         // Check if product is already in the cart
+  //         item['Quantity'] += 1; // Increase quantity if product exists
+  //         productExists = true;
+  //         break;
+  //       }
+  //     }
+  //
+  //     // ✅ 3. If not exist, add it to the list
+  //     if (!productExists) {
+  //       existingItems.add({
+  //         "Id": widgetProduct.id,
+  //         "Name": widgetProduct.title,
+  //         "PictureUrl": widgetProduct.imageUrl,
+  //         "price": widgetProduct.price,
+  //         "Brand": widgetProduct.brand,
+  //         "Type": widgetProduct.type,
+  //         "Quantity": 1
+  //       });
+  //     }
+  //
+  //     // ✅ 4. Send updated basket
+  //     final updatedBasket = {
+  //       "id": basketId,
+  //       "items": existingItems,
+  //     };
+  //
+  //     final response = await dio.post(
+  //       'http://abdoemam.runasp.net/api/Basket/',
+  //       data: updatedBasket,
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       return true;
+  //     } else {
+  //       print("Failed to update basket: ${response.statusCode}");
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     print("Error updating basket: $e");
+  //     return false;
+  //   }
+  // }
 
   static Future<List<BasketItem>> getBasketItems() async {
     final dio = Dio();
@@ -104,8 +187,10 @@ class CartApi {
     dio.options.headers['Content-Type'] = 'application/json';
 
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    final String? userId = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+    final String? userId = decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
     final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
+    print(basketId);
 
     final response = await dio.get('http://abdoemam.runasp.net/api/Basket/');
 
@@ -143,7 +228,7 @@ class CartApi {
     try {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       userId = decodedToken[
-      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
     } catch (e) {
       print('Error decoding token: $e');
       return false;
@@ -184,8 +269,7 @@ class CartApi {
     }
   }
 
-  static Future<bool> removeProductFromCart(BuildContext context,
-      String basketId) async {
+  static Future<bool> deleteBasket(BuildContext context) async {
     final dio = Dio();
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -198,37 +282,44 @@ class CartApi {
     }
 
     dio.options.headers['Authorization'] = 'Bearer $token';
-    dio.options.headers['Content-Type'] = 'application/json';
+
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    final String? userId = decodedToken[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+    final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
 
     try {
-      // Send DELETE request with BasketId
       final response = await dio.delete(
-        'http://abdoemam.runasp.net/api/Basket/', // URL for the DELETE request
+        'http://abdoemam.runasp.net/api/Basket/',
         queryParameters: {
-          'BasketId': basketId, // Pass the basketId as a query parameter
+          'BasketId': basketId,
         },
       );
 
       if (response.statusCode == 200) {
-        // Successfully deleted product from cart
+        // Successfully deleted the basket
         return true;
       } else {
-        print('Failed to remove product: ${response.statusCode}');
+        print(
+            'Failed to delete basket: ${response.statusCode} - ${response.data}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Failed to delete basket. Status: ${response.statusCode}')),
+        );
         return false;
       }
     } catch (e) {
-      print("Error removing product: $e");
+      print("Error deleting basket: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting basket: $e')),
+      );
       return false;
     }
   }
 
-
-  double calculateTotalPrice(List<BasketItem> items) {
-    return items.fold(0, (sum, item) => sum + (item.price! * item.quantity!));
-  }
-
-
-  static Future<bool> removeAllProductsFromCart(BuildContext context) async {
+  static Future<bool> removeProductFromCart(
+      BuildContext context, String productId) async {
     final dio = Dio();
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -243,35 +334,29 @@ class CartApi {
     dio.options.headers['Authorization'] = 'Bearer $token';
     dio.options.headers['Content-Type'] = 'application/json';
 
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    final String? userId = decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-    final String basketId = userId != null ? "Basket_$userId" : "Basket_Guest";
-
     try {
-      final response = await dio.get('http://abdoemam.runasp.net/api/Basket/');
+      final response = await dio.delete(
+        'http://abdoemam.runasp.net/api/Basket/items/$productId', // تأكد من الـ URL ده مع الـ API بتاعك
+      );
 
-      if (response.statusCode == 200) {
-        List<dynamic> items = []; // Clear all items
-
-        final updatedBasket = {
-          "id": basketId,
-          "items": items,
-        };
-
-        final updateResponse = await dio.post(
-          'http://abdoemam.runasp.net/api/Basket/',
-          data: updatedBasket,
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        print(
+            'Failed to remove product: ${response.statusCode} - ${response.data}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Failed to remove product. Status: ${response.statusCode}')),
         );
-
-        return updateResponse.statusCode == 200;
+        return false;
       }
-      return false;
     } catch (e) {
-      print("Error removing all products: $e");
+      print("Error removing product: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error removing product: $e')),
+      );
       return false;
     }
   }
 }
-
-
-

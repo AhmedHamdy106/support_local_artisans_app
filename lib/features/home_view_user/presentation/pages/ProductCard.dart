@@ -15,9 +15,9 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap, // 👈 ربط الـ onTap هنا
       child: Card(
-        elevation: 5,
+        elevation: 10,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,10 +25,21 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                product.imageUrl, // عرض صورة المنتج
+                product.pictureUrl!,
+                filterQuality: FilterQuality.high,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 65.0),
+                    child: Center(
+                        child: Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 45,
+                    )),
+                  );
+                },
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: 100,
+                height: 110,
               ),
             ),
             Padding(
@@ -37,15 +48,37 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    product.name!,
+                    maxLines: 1, // تحديد أقصى عدد للسطور هنا
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 6,
                   ),
                   Text(
-                    '\$${product.price}',
-                    style: TextStyle(color: AppColors.primary, fontSize: 14),
+                    product.description!,
+                    maxLines: 2, // تحديد أقصى عدد للسطور هنا
+                    overflow:
+                        TextOverflow.ellipsis, // إضافة علامة حذف لو النص طويل
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${product.price} EGP',
+                        style: TextStyle(
+                            color: AppColors.textPrimary, fontSize: 14),
+                      ),
+                    ],
                   ),
                 ],
               ),

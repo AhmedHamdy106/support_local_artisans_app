@@ -55,8 +55,8 @@ dependencies:
   shimmer:
   flutter_secure_storage: ^9.2.4
   jwt_decoder: ^2.0.1
-  connectivity_plus:
-  collection:
+  image_picker:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:

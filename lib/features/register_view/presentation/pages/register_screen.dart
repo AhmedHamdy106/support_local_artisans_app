@@ -8,10 +8,10 @@ import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_te
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_text_form_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/core/utils/validators.dart';
-import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/register_states.dart';
 import '../../../../config/routes_manager/routes.dart';
 import '../../../../core/shared/shared_preference.dart';
+import '../../../user_type_selection_screen/user_type_selection_screen.dart';
 import '../manager/cubit/register_view_model.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -48,15 +48,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           DialogUtils.hideLoadingDialog();
           await SharedPreference.saveData(
               key: "token", value: state.registerResponseEntity.token);
+          // حفظ قيمة الدور هنا
+          await SharedPreference.saveData(
+              key: "role",
+              value: selectedUserType == "client" ? "User" : "Artisan");
           DialogUtils.showSuccessDialog(
             context: context,
             title: "Success",
             message: "Registration successful",
             buttonText: "Ok",
             onButtonPressed: () {
-              getx.Get.offAll( HomeScreenUser(),
-                  transition: getx.Transition.downToUp,
-                  duration: const Duration(milliseconds: 600));
+              getx.Get.to(
+                () => UserTypeSelectionScreen(
+                  token: state.registerResponseEntity.token!,
+                ),
+                transition: getx.Transition.downToUp,
+                duration: const Duration(milliseconds: 800),
+              );
             },
           );
         }
@@ -200,20 +208,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     SizedBox(
                       height: 20.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildUserTypeCard(
-                            bc: AppColors.border,
-                            'client',
-                            'assets/images/3.0x/Group_3.0x.png'),
-                        SizedBox(width: 25.w),
-                        _buildUserTypeCard(
-                            bc: AppColors.border,
-                            'seller',
-                            'assets/images/3.0x/Character_3.0x.png'),
-                      ],
                     ),
                     SizedBox(
                       height: 40.h,

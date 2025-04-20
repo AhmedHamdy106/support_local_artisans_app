@@ -5,9 +5,9 @@ import '../../../CartScreen/CartScreen.dart';
 import 'ProductModel.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final ProductModel product;
+  final ProductModel? product;
 
-  const ProductDetailsScreen({super.key, required this.product});
+  const ProductDetailsScreen({super.key, this.product});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -57,7 +57,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         child: SizedBox(
                           height: 250.0,
                           child: Image.network(
-                            widget.product.imageUrl,
+                            widget.product?.pictureUrl ?? "",
                             fit: BoxFit.cover,
                             width: double.infinity,
                             errorBuilder: (context, error, stackTrace) {
@@ -97,7 +97,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.product.title,
+                        widget.product?.name ?? "",
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
@@ -131,7 +131,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 8),
                   Text(
-                    widget.product.description,
+                    widget.product?.description ?? "",
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
@@ -147,25 +147,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // ... كود عرض السعر ...
             Row(
               children: [
                 ElevatedButton.icon(
                   onPressed: () async {
-                    final bool isAdded =
-                        await CartApi.addProductToCart(context, widget.product);
+                    final bool isAdded = await CartApi.addProductToCart(
+                        context, widget.product ?? ProductModel());
                     if (isAdded) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Product added to cart!')),
                       );
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const CartScreen()),
+                        MaterialPageRoute(builder: (context) => CartScreen()),
                       );
-                    } else {
-                      // الـ SnackBar بتاع الفشل بيتعرض جوه دالة _addProductToCart
-                    }
+                    } else {}
                   },
                   icon:
                       const Icon(Icons.add_shopping_cart, color: Colors.white),

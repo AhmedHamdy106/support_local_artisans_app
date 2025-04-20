@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
-import 'package:support_local_artisans/features/AccountScreen/AccountScreen.dart';
-import 'package:support_local_artisans/features/CartScreen/CartScreen.dart';
-import 'package:support_local_artisans/features/CategoriesScreen/CategoriesScreen.dart';
 import 'package:support_local_artisans/features/CategoriesScreen/CategoryProductScreen.dart';
-import 'package:support_local_artisans/features/home_view_user/presentation/pages/CategoryItem.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/CategoryModel.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/HomeApi.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductCard.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductDetailsScreen.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/ProductModel.dart';
 
-
 class HomeScreenUser extends StatefulWidget {
+  const HomeScreenUser({super.key});
+
   @override
   State<HomeScreenUser> createState() => _HomeScreenUserState();
 }
 
 class _HomeScreenUserState extends State<HomeScreenUser> {
-  int _selectedIndex = 0;
   List<CategoryModel> categories = [];
   List<ProductModel> products = [];
   List<ProductModel> filteredProducts = [];
@@ -72,24 +67,9 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     }
   }
 
-  final List<Widget> _screens = [
-    Container(),
-    const CategoriesScreen(),
-    const CartScreen(),
-     AccountScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: _selectedIndex == 0
-          ? isLoading
-              ? buildShimmerGrid()
-              : buildMainContent()
-          : _screens[_selectedIndex],
-      bottomNavigationBar: buildBottomNavigationBar(),
-    );
+    return isLoading ? buildShimmerGrid() : buildMainContent();
   }
 
   Widget buildMainContent() {
@@ -126,9 +106,11 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
               isDense: true,
               contentPadding: EdgeInsets.zero,
               hintText: 'Search for anything...',
-              hintStyle: TextStyle(color: Color(0xff9D9896), fontSize: 13.sp),
+              hintStyle:
+                  TextStyle(color: const Color(0xff9D9896), fontSize: 13.sp),
               prefixIcon: IconButton(
-                icon: Icon(Icons.search, color: Color(0xff9D9896), size: 20.sp),
+                icon: Icon(Icons.search,
+                    color: const Color(0xff9D9896), size: 20.sp),
                 onPressed: filterProducts,
               ),
               fillColor: Colors.white,
@@ -140,54 +122,46 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
             ),
           ),
         ),
-        SizedBox(width: 12.w),
-        CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 16.r,
-          child: Icon(Icons.filter_list, color: Color(0xff9D9896), size: 18.sp),
-        ),
-        SizedBox(width: 10.w),
-        CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 16.r,
-          child: Icon(Icons.favorite_border,
-              color: Color(0xff9D9896), size: 18.sp),
-        ),
       ],
     );
   }
 
   Widget buildCategoriesList() {
+    final categoryList = [
+      {
+        'name': 'Glass',
+        'image':
+            'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg'
+      },
+      {
+        'name': 'Leather',
+        'image':
+            'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg'
+      },
+      {
+        'name': 'WeavingAndTextiles',
+        'image':
+            'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg'
+      },
+      {
+        'name': 'Wood',
+        'image':
+            'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg'
+      },
+      {
+        'name': 'PotteryAndCeramics',
+        'image':
+            'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg'
+      },
+    ];
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: [
-          buildCategoryItem(
-            name: 'GlassBlowingAndGlass',
-            imageUrl:
-                'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg',
-          ),
-          buildCategoryItem(
-            name: 'Leather',
-            imageUrl:
-                'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg',
-          ),
-          buildCategoryItem(
-            name: 'WeavingAndTextiles',
-            imageUrl:
-                'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg',
-          ),
-          buildCategoryItem(
-            name: 'WoodworkingAndCarpentry',
-            imageUrl:
-                'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg',
-          ),
-          buildCategoryItem(
-            name: 'Pottery',
-            imageUrl:
-                'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg',
-          ),
-        ],
+        children: categoryList
+            .map((cat) =>
+                buildCategoryItem(name: cat['name']!, imageUrl: cat['image']!))
+            .toList(),
       ),
     );
   }
@@ -198,31 +172,21 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => CategoryProductsScreen(categoryName: name),
-          ),
+              builder: (_) => CategoryProductsScreen(categoryName: name)),
         );
       },
       child: Padding(
-        padding: EdgeInsets.only(right: 12.w),
+        padding: EdgeInsets.only(right: 14.w),
         child: Column(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16.r),
-              child: Image.network(
-                imageUrl,
-                width: 75.w,
-                height: 75.h,
-                fit: BoxFit.cover,
-              ),
+              child: Image.network(imageUrl,
+                  width: 75.w, height: 75.h, fit: BoxFit.cover),
             ),
             SizedBox(height: 6.h),
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            )
+            Text(name,
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -241,31 +205,28 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         crossAxisCount: 2,
         crossAxisSpacing: 8.w,
         mainAxisSpacing: 8.h,
-        childAspectRatio: 0.75,
+        childAspectRatio: 0.66,
       ),
       itemBuilder: (context, index) {
+        final product = filteredProducts[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) =>
-                    ProductDetailsScreen(product: filteredProducts[index]),
-              ),
+                  builder: (_) => ProductDetailsScreen(product: product)),
             );
           },
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOutBack,
             child: ProductCard(
-              product: filteredProducts[index],
+              product: product,
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        ProductDetailsScreen(product: filteredProducts[index]),
-                  ),
+                      builder: (_) => ProductDetailsScreen(product: product)),
                 );
               },
             ),
@@ -288,8 +249,8 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         ),
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
-            baseColor: Colors.grey.shade300,
-            highlightColor: Colors.grey.shade100,
+            baseColor: Colors.grey.shade400,
+            highlightColor: Colors.grey.shade200,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -299,25 +260,6 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
           );
         },
       ),
-    );
-  }
-
-  Widget buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: (index) => setState(() => _selectedIndex = index),
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.category), label: 'Categories'),
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
-      ],
-      selectedItemColor: AppColors.primary,
-      unselectedItemColor: Color(0xff9D9896),
-      showUnselectedLabels: true,
-      backgroundColor: AppColors.primary,
-      iconSize: 24.sp,
     );
   }
 

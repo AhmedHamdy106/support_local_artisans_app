@@ -11,9 +11,9 @@ class CategoryModel {
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      id: json['id'] ?? 0,  // إذا لم يكن المفتاح موجودًا، تعيين قيمة افتراضية
-      name: json['name'] ?? '',  // تعيين قيمة فارغة إذا كان المفتاح مفقودًا
-      imageUrl: json['pictureUrl'] ?? '', // تعيين قيمة فارغة إذا كان المفتاح مفقودًا
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      imageUrl: json['pictureUrl'] ?? '',
     );
   }
 }

@@ -5,8 +5,8 @@ import 'package:support_local_artisans/features/home_view_user/presentation/page
 class HomeApi {
   static final Dio _dio = Dio(BaseOptions(
     baseUrl: 'http://abdoemam.runasp.net/api/',
-    connectTimeout: Duration(milliseconds: 5000),
-    receiveTimeout: Duration(milliseconds: 3000),
+    connectTimeout: const Duration(milliseconds: 5000),
+    receiveTimeout: const Duration(milliseconds: 3000),
   ));
 
   // ✅ Get all categories (with fallback if response is a List)
@@ -16,7 +16,9 @@ class HomeApi {
       final responseData = response.data;
       print("📦 Category Response: $responseData");
 
-      if (responseData != null && responseData is Map && responseData['data'] != null) {
+      if (responseData != null &&
+          responseData is Map &&
+          responseData['data'] != null) {
         return (responseData['data'] as List)
             .map((json) => CategoryModel.fromJson(json))
             .toList();
@@ -34,7 +36,8 @@ class HomeApi {
   }
 
   // ✅ Get products by category
-  static Future<List<ProductModel>> getProductsByCategory(String category) async {
+  static Future<List<ProductModel>> getProductsByCategory(
+      String category) async {
     try {
       final response = await _dio.get("Category?category=$category");
       print("📦 Products by category response: ${response.data}");

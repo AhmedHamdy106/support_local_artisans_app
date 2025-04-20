@@ -1,31 +1,80 @@
 class ProductModel {
-  final int id;
-  final String title;
-  final String imageUrl;
-  final num price;
-  final String description;
-  final String brand;
-  final String type;
+  int? id;
+  String? name;
+  String? description;
+  String? pictureUrl;
+  double? price;
+  int? brandId;
+  String? brand;
+  int? typeId;
+  String? type;
+  Artisan? artisan;
 
-  ProductModel({
-    required this.id,
-    required this.title,
-    required this.imageUrl,
-    required this.price,
-    required this.description,
-    required this.brand,
-    required this.type,
-  });
+  ProductModel(
+      {this.id,
+      this.name,
+      this.description,
+      this.pictureUrl,
+      this.price,
+      this.brandId,
+      this.brand,
+      this.typeId,
+      this.type,
+      this.artisan});
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) {
-    return ProductModel(
-      id: json['id'],
-      title: json['name'],
-      imageUrl: json['pictureUrl'],
-      price: (json['price'] as num).toDouble(),
-      description: json['description'],
-      brand: json['brand'],
-      type: json['type'],
-    );
+  ProductModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    description = json['description'];
+    pictureUrl = json['pictureUrl'];
+    price = json['price'];
+    brandId = json['brandId'];
+    brand = json['brand'];
+    typeId = json['typeId'];
+    type = json['type'];
+    artisan =
+        json['artisan'] != null ? new Artisan.fromJson(json['artisan']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['pictureUrl'] = this.pictureUrl;
+    data['price'] = this.price;
+    data['brandId'] = this.brandId;
+    data['brand'] = this.brand;
+    data['typeId'] = this.typeId;
+    data['type'] = this.type;
+    if (this.artisan != null) {
+      data['artisan'] = this.artisan!.toJson();
+    }
+    return data;
+  }
+}
+
+class Artisan {
+  String? id;
+  String? displayName;
+  String? email;
+  String? phoneNumber;
+
+  Artisan({this.id, this.displayName, this.email, this.phoneNumber});
+
+  Artisan.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    displayName = json['displayName'];
+    email = json['email'];
+    phoneNumber = json['phoneNumber'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['displayName'] = this.displayName;
+    data['email'] = this.email;
+    data['phoneNumber'] = this.phoneNumber;
+    return data;
   }
 }

@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'config/routes_manager/route_generator.dart';
 
 class MyApp extends StatelessWidget {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       },
       onGenerateRoute: (RouteSettings settings) =>
           RouteGenerator.getRoute(settings),
-      initialRoute: route,
+      initialRoute: Routes.splashRoute,
     );
   }
 }
