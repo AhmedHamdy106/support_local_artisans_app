@@ -6,8 +6,8 @@ abstract class RegisterRemoteDataSource {
   Future<Either<RegisterResponseEntity, Failures>> register(
     String email,
     String phoneNumber,
-    String displayname,
-    String Role,
+    String displayName,
+    String role,
     String password,
     String confirmedPassword,
   );

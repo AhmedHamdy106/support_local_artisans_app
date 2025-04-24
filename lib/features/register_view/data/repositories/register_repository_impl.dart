@@ -13,13 +13,13 @@ class RegisterRepositoryImpl implements RegisterRepository {
   Future<Either<RegisterResponseEntity, Failures>> register(
     String email,
     String phoneNumber,
-    String displayname,
-    String Role,
+    String displayName,
+    String role,
     String password,
     String confirmedPassword,
   ) async {
     var either = await registerRemoteDataSource.register(
-        email, phoneNumber, displayname, Role, password, confirmedPassword);
+        email, phoneNumber, displayName, role, password, confirmedPassword);
     return either.fold(
       (response) => Left(response),
       (error) => Right(error),

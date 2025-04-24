@@ -8,16 +8,17 @@ class RegisterResponseDM extends RegisterResponseEntity {
     statusMsg = json[
         'statusMsg']; // ✅ تأكد أن جميع القيم المتوقعة كـ String يتم تحويلها
     user = json['user'] != null ? User.fromJson(json['user']) : null;
-    token = json['token'];
+    token = json['token'].toString();
   }
 }
 
 class User extends UserEntity {
-  User({super.displayName, super.email, super.role});
+  User({super.displayName, super.email, super.role,super.phoneNumber});
 
   User.fromJson(dynamic json) {
     displayName = json['displayName']?.toString();
     email = json['email']?.toString();
     role = json['role']?.toString();
+    phoneNumber = json['phoneNumber']?.toString();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/CartScreen/CartScreen.dart';
-import 'package:support_local_artisans/features/AccountScreen/AccountScreen.dart';
+import 'package:support_local_artisans/features/AccountScreen/ProfileScreen.dart';
 import 'package:support_local_artisans/features/CategoriesScreen/CategoriesScreen.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import '../../../home_view_artisan/AddProductScreen.dart';

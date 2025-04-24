@@ -12,12 +12,12 @@ class RegisterUseCase {
   Future<Either<RegisterResponseEntity, Failures>> invoke(
     String email,
     String phoneNumber,
-    String displayname,
-    String Role,
+    String displayName,
+    String role,
     String password,
     String confirmedPassword,
   ) {
     return registerRepository.register(
-        email, phoneNumber, displayname, Role, password, confirmedPassword);
+        email, phoneNumber, displayName, role, password, confirmedPassword);
   }
 }

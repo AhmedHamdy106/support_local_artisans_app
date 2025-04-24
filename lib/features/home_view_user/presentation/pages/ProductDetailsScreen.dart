@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:support_local_artisans/features/home_view_user/presentation/pages/ArtisianDetailsScreen.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../CartScreen/CartApi.dart';
 import '../../../CartScreen/CartScreen.dart';
@@ -52,8 +53,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                            20.0), // هنا بتحدد درجة الكيرف، ممكن تغير الرقم ده
+                        borderRadius: BorderRadius.circular(20.0),
                         child: SizedBox(
                           height: 250.0,
                           child: Image.network(
@@ -121,18 +121,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       const SizedBox(width: 8),
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4),
-                      const Text('4.8 (7,500)',
-                          style: TextStyle(color: Colors.grey)),
+                      const Text('4.8', style: TextStyle(color: Colors.grey)),
+                      SizedBox(
+                        width: 105,
+                      ),
+                      Text(
+                        '${widget.product!.price?.toInt()} EGP',
+                        style: const TextStyle(
+                            color: Colors.grey, fontWeight: FontWeight.w600),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   const Text('Description',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 8),
                   Text(
                     widget.product?.description ?? "",
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
@@ -147,6 +154,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // ✅ صف الـ Row اللي فيه الزر والأيقونة
             Row(
               children: [
                 ElevatedButton.icon(
@@ -159,12 +167,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       );
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => CartScreen()),
+                        MaterialPageRoute(
+                            builder: (context) =>  CartScreen()),
                       );
                     } else {}
                   },
                   icon:
-                      const Icon(Icons.add_shopping_cart, color: Colors.white),
+                  const Icon(Icons.add_shopping_cart, color: Colors.white),
                   label: const Text('Add to cart'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF8C4931),
@@ -175,8 +184,52 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
+                const SizedBox(width: 16.0), // مسافة بين الزر والأيقونة
+                // ✅ الأيقونة الجديدة اللي هتودي لصفحة بيانات الحرفي
+                InkWell(
+                  onTap: () {
+                    if (widget.product?.artisan != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ArtisanDetailsScreen(
+                              artisan: widget.product!.artisan!),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('No artisan information available.')),
+                      );
+                    }
+                  },
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 80.0),
+                        child: Icon(
+                          Icons.person_pin,
+                          size: 30.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 72.0),
+                        child: Text(
+                          'Artisan Profile',
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
+            // ممكن نضيف هنا أيقونة تانية لو محتاجين
           ],
         ),
       ),

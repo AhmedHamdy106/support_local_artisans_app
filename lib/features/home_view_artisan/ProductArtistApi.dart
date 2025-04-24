@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'ProductArtistModel.dart';
 
 class ProductArtistApi {
-  static const String baseUrl = 'http://abdoemam.runasp.net/api';
+  static const String baseUrl = 'http://abdoemam.runasp.net';
 
   static Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -52,7 +53,7 @@ class ProductArtistApi {
         'craftCategory': craftCategories,
       });
 
-      final url = '$baseUrl/Products/upload-image';
+      final url = '$baseUrl/api/Products/upload-image';
       final response = await dio.post(url, data: formData);
 
       if (response.statusCode == 200) {
@@ -69,7 +70,7 @@ class ProductArtistApi {
     try {
       Dio dio = await _getDioClient();
       final response =
-          await dio.post('$baseUrl/Products', data: product.toJson());
+      await dio.post('$baseUrl/api/Products', data: product.toJson());
       if (response.statusCode != 201) {
         throw Exception('فشل في إضافة المنتج');
       }
@@ -78,23 +79,40 @@ class ProductArtistApi {
     }
   }
 
+
+  // ✅ تعديل دالة تحديث المنتج بناءً على الـ API و الـ Token
   static Future<void> updateProduct(int id, ProductArtistModel product) async {
     try {
       Dio dio = await _getDioClient();
-      final response =
-          await dio.put('$baseUrl/Products/$id', data: product.toJson());
-      if (response.statusCode != 200) {
+
+      // التأكد من أن الـ category موجودة
+      if (product.category == null || product.category!.isEmpty) {
+        throw Exception("Category is required");
+      }
+
+      final response = await dio.put(
+        '$baseUrl/api/Products/$id',
+        data: product.toJson(), // البيانات المرسلة لتحديث المنتج
+      );
+
+      if (response.statusCode == 200) {
+        print("تم تحديث المنتج بنجاح");
+      } else {
+        print("خطأ: ${response.statusCode} - ${response.data}");
         throw Exception('فشل في تحديث المنتج');
       }
     } catch (e) {
+      print("حدث خطأ أثناء تحديث المنتج: $e");
       throw Exception('حدث خطأ أثناء تحديث المنتج: $e');
     }
   }
 
+
+
   static Future<void> deleteProduct(int id) async {
     try {
       Dio dio = await _getDioClient();
-      final response = await dio.delete('$baseUrl/Products/$id');
+      final response = await dio.delete('$baseUrl/api/Products/$id');
       if (response.statusCode != 200) {
         throw Exception('فشل في حذف المنتج');
       }
@@ -106,7 +124,7 @@ class ProductArtistApi {
   static Future<List<ProductArtistModel>> getAllProducts() async {
     try {
       Dio dio = await _getDioClient();
-      final url = '$baseUrl/Products';
+      final url = '$baseUrl/api/Products';
       final response = await dio.get(url);
 
       if (response.statusCode == 200) {
@@ -134,6 +152,7 @@ class ProductArtistApi {
     } catch (e) {
       throw Exception('حدث خطأ أثناء جلب المنتج: $e');
     }
+
   }
 
   // ✅ دالة جديدة لعرض منتجات التاجر فقط
@@ -141,7 +160,7 @@ class ProductArtistApi {
     try {
       Dio dio = await _getDioClient();
       final url =
-          '$baseUrl/Products/my-products'; // endpoint حسب الباك اند عندك
+          '$baseUrl/api/Products/mine'; // endpoint حسب الباك اند عندك
       final response = await dio.get(url);
 
       if (response.statusCode == 200) {

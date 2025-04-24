@@ -1,12 +1,11 @@
 class BasketItem {
-
-  final String? id;
+  final int? id;  // تعديل هنا ليكون int بدلاً من String
   final String? name;
   final String? pictureUrl;
   final String? brand;
   final String? type;
   final double? price;
-  late final int? quantity;
+    int? quantity;
 
   BasketItem({
     required this.id,
@@ -20,7 +19,7 @@ class BasketItem {
 
   factory BasketItem.fromJson(Map<String, dynamic> json) {
     return BasketItem(
-      id: json['id'] as String?,
+      id: json['id'] as int?,  // تعديل هنا لاستقبال int
       name: json['name'] as String?,
       pictureUrl: json['pictureUrl'] as String?,
       brand: json['brand'] as String?,
@@ -32,6 +31,7 @@ class BasketItem {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,  // تعديل هنا ليكون int
       'name': name,
       'pictureUrl': pictureUrl,
       'brand': brand,

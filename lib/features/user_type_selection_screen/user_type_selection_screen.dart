@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../core/shared/shared_preference.dart';
-import '../../core/utils/app_colors.dart';
+import 'package:support_local_artisans/core/di/di.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
+import 'package:support_local_artisans/core/shared/shared_preference.dart';
+import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/register_view_model.dart';
 import '../home_view_user/presentation/pages/MainScreen.dart';
+import '../../../../config/routes_manager/routes.dart';
 
 class UserTypeSelectionScreen extends StatefulWidget {
-  final String? token;
-  const UserTypeSelectionScreen({super.key, this.token});
+  const UserTypeSelectionScreen({super.key});
 
   @override
   _UserTypeSelectionScreenState createState() =>
@@ -15,93 +17,126 @@ class UserTypeSelectionScreen extends StatefulWidget {
 
 class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
   String? selectedUserType;
+  final viewModel = getIt<RegisterScreenViewModel>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Are you a seller or a client?',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF4A3B3B),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Choose the method that aligns with the\nservice you want.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF786A6A),
-                ),
-              ),
-              const SizedBox(height: 60),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildUserTypeCard(
-                    bc: AppColors.border,
-                    type: 'client',
-                    imagePath: 'assets/images/3.0x/Group_3.0x.png',
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Are you a seller or a client?',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF4A3B3B),
                   ),
-                  SizedBox(width: 25.w),
-                  _buildUserTypeCard(
-                    bc: AppColors.border,
-                    type: 'seller',
-                    imagePath: 'assets/images/3.0x/Character_3.0x.png',
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Choose the method that aligns with the\nservice you want.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF786A6A),
                   ),
-                ],
-              ),
-              const SizedBox(height: 120),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: selectedUserType != null
-                      ? () async {
-                          final isMerchant = selectedUserType == 'seller';
-                          // حفظ قيمة التوكن
-                          await SharedPreference.saveData(
-                              key: "token", value: widget.token);
-                          // حفظ قيمة الدور
-                          await SharedPreference.saveData(
-                              key: "role",
-                              value: isMerchant ? "Artisan" : "User");
+                ),
+                const SizedBox(height: 60),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildUserTypeCard(
+                      bc: AppColors.border,
+                      type: 'client',
+                      imagePath: 'assets/images/3.0x/Group_3.0x.png',
+                    ),
+                    SizedBox(width: 25.w),
+                    _buildUserTypeCard(
+                      bc: AppColors.border,
+                      type: 'seller',
+                      imagePath: 'assets/images/3.0x/Character_3.0x.png',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 60),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: selectedUserType != null
+                        ? () async {
+                      final isMerchant = selectedUserType == 'seller';
+                      final role = isMerchant ? "Artisan" : "User";
 
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    MainScreen(isMerchant: isMerchant)),
-                            (route) => false,
-                          );
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF774936),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      // حفظ الدور
+                      await SharedPreference.saveData(key: "role", value: role);
+
+                      // استدعاء البيانات من التخزين المؤقت
+                      final name = SharedPreference.getData(key: "temp_name");
+                      final phone = SharedPreference.getData(key: "temp_phone");
+                      final email = SharedPreference.getData(key: "temp_email");
+                      final password = SharedPreference.getData(key: "temp_password");
+                      final confirmPassword = SharedPreference.getData(key: "temp_confirmPassword");
+
+                      // تنفيذ التسجيل عبر ViewModel
+                      final result = await viewModel.registerFromSelection(
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        password: password,
+                        confirmPassword: confirmPassword, // تأكيد كلمة المرور
+                        role: role,
+                      );
+
+                      if (result) {
+                        // استلام التوكن والدور بعد التسجيل
+                        final token = await SharedPreference.getData(key: "token");
+                        final role = await SharedPreference.getData(key: "role");
+                        print("✅ Registration completed successfully.");
+                        print("📦 token: $token");
+                        print("🧑‍💼 role: $role");
+
+                        // استخدم Navigator للتوجيه إلى الصفحة الرئيسية
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MainScreen(isMerchant: isMerchant),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Registration Failed. Please try again."),
+                          ),
+                        );
+                      }
+                    }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF774936),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

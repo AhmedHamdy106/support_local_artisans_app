@@ -3,12 +3,14 @@ class LoginResponseEntity {
   String? statusMsg;
   LoginUserEntity? user;
   String? token;
+  String?userId;
 
   LoginResponseEntity({
     this.message,
     this.statusMsg,
     this.user,
     this.token,
+    this.userId,
   });
 }
 

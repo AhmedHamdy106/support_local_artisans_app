@@ -48,7 +48,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
-            Navigator.pushNamed(context, Routes.categoriesRoute);
+            Navigator.pop(context);
           },
         ),
         backgroundColor: AppColors.background,

@@ -12,16 +12,16 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
   Future<Either<RegisterResponseDM, Failures>> register(
       String email,
       String phoneNumber,
-      String displayname,
-      String Role,
+      String displayName,
+      String role,
       String password,
       String confirmedPassword) async {
     print("📢 Sending Data to API:");
     print({
       "email": email,
       "phoneNumber": phoneNumber,
-      "displayname": displayname,
-      "Role": Role,
+      "displayName": displayName,
+      "role": role,
       "password": password,
       "confirmedPassword": confirmedPassword
     });
@@ -30,8 +30,8 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
       body: {
         "email": email,
         "phoneNumber": phoneNumber,
-        "displayname": displayname,
-        "Role": Role,
+        "displayName": displayName,
+        "role": role,
         "password": password,
         "confirmedPassword": confirmedPassword
       },

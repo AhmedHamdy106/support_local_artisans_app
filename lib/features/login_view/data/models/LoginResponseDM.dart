@@ -6,23 +6,23 @@ class LoginResponseDM extends LoginResponseEntity {
     super.statusMsg,
     super.user,
     super.token,
+    super.userId, // Add userId to the constructor
   });
 
   LoginResponseDM.fromJson(dynamic json) {
-    message = json['message']?.toString();
-    statusMsg = json['statusMsg']?.toString();
-    user = (json['user'] != null ? User.fromJson(json['user']) : null);
-    token = json['token']?.toString();
+    message = json['message'] as String?;
+    statusMsg = json['statusMsg'] as String?;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    token = json['token'] as String?;
+    userId = json['userId'] ; // Parse userId from JSON
   }
-}
-
-class User extends LoginUserEntity {
+}class User extends LoginUserEntity {
   User({super.displayName, super.email, super.role});
 
   User.fromJson(dynamic json) {
-    displayName = json['displayName']?.toString();
-    email = json['email']?.toString();
-    role = json['role']?.toString();
+    displayName = json['displayName'] as String?;
+    email = json['email'] as String?;
+    role = json['role'] as String?;
   }
 }
 

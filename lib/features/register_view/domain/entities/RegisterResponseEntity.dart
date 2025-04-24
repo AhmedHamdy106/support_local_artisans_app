@@ -16,10 +16,12 @@ class UserEntity {
   String? displayName;
   String? email;
   String? role;
+  String?phoneNumber;
 
   UserEntity({
     this.displayName,
     this.email,
     this.role,
+    this.phoneNumber
   });
 }

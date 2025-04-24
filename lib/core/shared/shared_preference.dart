@@ -34,22 +34,22 @@ class SharedPreference {
   static dynamic getData({required String key}) {
     var value = sharedPreferences.get(key);
 
-    if (value == null) {
-      return null; // Return null explicitly if the key doesn't exist
-    }
+    if (value == null) return null;
 
-    // Check if the data is a JSON string and decode it
     if (value is String) {
-      try {
-        return jsonDecode(value); // Try to decode JSON
-      } catch (e) {
-        // Optional: Log the error during JSON decoding
-        // print('Error decoding JSON for key "$key": $e');
-        return value; // If not JSON or decoding fails, return the string itself
+      // ✅ فقط حاول تفك JSON لو القيمة فعلاً بدأت بـ { أو [
+      if (value.trim().startsWith('{') || value.trim().startsWith('[')) {
+        try {
+          return jsonDecode(value);
+        } catch (e) {
+          return value;
+        }
       }
     }
+
     return value;
   }
+
 
   // Method to remove data
   static Future<bool> removeData({required String key}) async {

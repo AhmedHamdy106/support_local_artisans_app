@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
 import 'package:support_local_artisans/core/utils/app_colors.dart';
@@ -14,8 +13,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
   late AnimationController _logoController;
   late Animation<double> _scaleAnimation;
 
@@ -35,26 +33,39 @@ class _SplashScreenState extends State<SplashScreen>
 
     _logoController.forward();
 
-    checkLoginStatus();
+    // بعد الانيميشن نبدأ التحقق من التوكن
+    Future.delayed(const Duration(seconds: 3), () {
+      checkLoginStatus();
+    });
   }
 
   Future<void> checkLoginStatus() async {
     final token = await SharedPreference.getData(key: "token");
     final role = await SharedPreference.getData(key: "role");
 
-    await Future.delayed(const Duration(seconds: 3)); // ⏱ لإظهار الانيميشن
-
     if (token != null && role != null) {
       if (JwtDecoder.isExpired(token)) {
-        Get.offAll(() => const LoginScreen());
-        return;
+        // إذا كان التوكن منتهي الصلاحية، ننتقل إلى شاشة تسجيل الدخول
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } else {
+        // إذا كان التوكن صالحًا، ننتقل إلى الصفحة الرئيسية بناءً على الدور
+        final isMerchant = role == "Artisan";
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(isMerchant: isMerchant),
+          ),
+        );
       }
-
-      /// ✅ توجيه موحد حسب الدور
-      final isMerchant = role == "Artisan";
-      Get.offAll(() => MainScreen(isMerchant: isMerchant));
     } else {
-      Get.offAll(() => const LoginScreen());
+      // إذا لم يوجد توكن، ننتقل إلى شاشة تسجيل الدخول
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
     }
   }
 
@@ -74,8 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset("assets/images/logo.jpg",
-                  height: 120), // 🖼 ضع اللوجو هنا
+              Image.asset("assets/images/logo.jpg", height: 120), // ضع اللوجو هنا
               const SizedBox(height: 20),
               const Text(
                 "Support Local Artisans",

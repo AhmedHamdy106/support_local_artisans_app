@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-
-import 'EditProductScreen.dart';
-import 'ProductArtistApi.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
+import 'package:support_local_artisans/features/CartScreen/CartApi.dart';
+import 'package:support_local_artisans/features/home_view_artisan/EditProductScreen.dart';
+import '../../config/routes_manager/routes.dart';
+import '../../core/shared/shared_preference.dart';
+import '../home_view_user/presentation/pages/MainScreen.dart';
+import 'ProductArtistApi.dart'; // تأكد من أنك قد أضفت الـ API هنا
 import 'ProductArtistModel.dart';
 
 class MyProductsScreen extends StatefulWidget {
@@ -23,13 +27,14 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     fetchMyProducts();
   }
 
+  // Fetch products from API
   Future<void> fetchMyProducts() async {
     try {
-      final result = await ProductArtistApi.getMerchantProducts();
+      final result = await ProductArtistApi.getMerchantProducts();  // الحصول على المنتجات الخاصة بالتاجر
       setState(() {
         products = result;
         _categories = result
-            .map((e) => e.category)
+            .map((e) => e.category)  // التأكد من أن لديك خاصية category في الـ Model
             .whereType<String>()
             .toSet()
             .toList();
@@ -41,7 +46,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     }
   }
 
-
+  // Delete product
   Future<void> _deleteProduct(int id) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -57,8 +62,8 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
 
     if (confirmed == true) {
       try {
-        await ProductArtistApi.deleteProduct(id);
-        await fetchMyProducts();
+        await ProductArtistApi.deleteProduct(id);  // حذف المنتج
+        await fetchMyProducts();  // إعادة تحميل المنتجات بعد الحذف
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Product deleted")));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete")));
@@ -78,7 +83,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         backgroundColor: Colors.deepPurple,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : products.isEmpty
           ? Center(child: Text("You haven't added any products yet."))
           : Padding(

@@ -21,12 +21,12 @@ class HomeScreenArtisan extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: const [
+        actions:  [
           IconButton(
             icon: Icon(Icons.logout),
             color: AppColors.primary,
-            onPressed: logout,
-            tooltip: 'Logout',
+
+            tooltip: 'Logout', onPressed: () {  },
           ),
         ],
       ),
