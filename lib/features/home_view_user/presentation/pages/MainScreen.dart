@@ -68,29 +68,65 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: _screens[_currentIndex],
-      floatingActionButton: widget.isMerchant && _currentIndex == 0
-          ? FloatingActionButton.extended(
+      floatingActionButton: widget.isMerchant
+          ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const AddProductScreen()),
                 );
               },
-              label: const Text("Add Product"),
-              icon: const Icon(Icons.add),
+              child: const Icon(Icons.add, color: Colors.white),
               backgroundColor: AppColors.primary,
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: _navItems,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: const Color(0xff9D9896),
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8,
+        child: SizedBox(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(5, (index) {
+              if (index == 2) {
+                return const SizedBox(width: 40); // مكان الزرار
+              }
+
+              final actualIndex = index > 2 ? index - 1 : index;
+              final item = _navItems[actualIndex];
+
+              return Expanded(
+                child: InkWell(
+                  onTap: () => setState(() => _currentIndex = actualIndex),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconTheme(
+                        data: IconThemeData(
+                          color: _currentIndex == actualIndex
+                              ? const Color(0xFF8C4931)
+                              : const Color(0xff9D9896),
+                        ),
+                        child: item.icon!,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        item.label!,
+                        style: TextStyle(
+                          color: _currentIndex == actualIndex
+                              ? const Color(0xFF8C4931)
+                              : const Color(0xff9D9896),
+                          fontSize: 12,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }

@@ -25,7 +25,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
   bool _isLoading = false;
 
   String? _selectedCategory;
-  final List<String> _categories = ['GlassBlowing', 'Woodworking', 'Pottery', 'Leather', 'Weaving'];
+  final List<String> _categories = [
+    'GlassBlowing',
+    'Woodworking',
+    'Pottery',
+    'Leather',
+    'Weaving'
+  ];
 
   Future<void> _pickImage() async {
     showModalBottomSheet(
@@ -44,7 +50,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Navigator.of(context).pop();
                   var status = await Permission.camera.request();
                   if (status.isGranted) {
-                    final pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+                    final pickedImage = await ImagePicker()
+                        .pickImage(source: ImageSource.camera);
                     if (pickedImage != null) {
                       setState(() {
                         _image = pickedImage;
@@ -65,7 +72,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   Navigator.of(context).pop();
                   var status = await Permission.mediaLibrary.request();
                   if (status.isGranted || status.isLimited) {
-                    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    final pickedImage = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
                     if (pickedImage != null) {
                       setState(() {
                         _image = pickedImage;
@@ -89,12 +97,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedCategory == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please select a category")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Please select a category")));
         return;
       }
 
       if (_image == null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please select an image")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Please select an image")));
         return;
       }
 
@@ -103,7 +113,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       });
 
       try {
-        String imageUrl = await ProductArtistApi.uploadImage(_image!.path, _categories);
+        String imageUrl =
+            await ProductArtistApi.uploadImage(_image!.path, _categories);
 
         final product = ProductArtistModel(
           id: DateTime.now().millisecondsSinceEpoch,
@@ -118,10 +129,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
         await ProductArtistApi.addProduct(product);
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Product added successfully")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Product added successfully")));
         Navigator.pop(context);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to add product: $e")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Failed to add product: $e")));
       } finally {
         setState(() {
           _isLoading = false;
@@ -133,8 +146,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Add Product'),
+        centerTitle: true,
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 24),
         backgroundColor: AppColors.primary,
       ),
       body: SingleChildScrollView(
@@ -144,12 +160,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: Column(
             children: [
               _buildTextField(_nameController, 'Product Name'),
-              _buildTextField(_priceController, 'Product Price', keyboardType: TextInputType.number),
+              _buildTextField(_priceController, 'Product Price',
+                  keyboardType: TextInputType.number),
               _buildTextField(_descriptionController, 'Product Description'),
               _buildTextField(_brandController, 'Product Brand'),
               _buildTextField(_typeController, 'Product Type'),
               const SizedBox(height: 16.0),
-
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
                 onChanged: (String? newValue) {
@@ -159,7 +175,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Select Category',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0)),
                 ),
                 items: _categories.map((String category) {
                   return DropdownMenuItem<String>(
@@ -167,42 +184,49 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     child: Text(category),
                   );
                 }).toList(),
-                validator: (value) => value == null ? 'Please select a category' : null,
+                validator: (value) =>
+                    value == null ? 'Please select a category' : null,
               ),
-
               const SizedBox(height: 16.0),
               ElevatedButton.icon(
                 onPressed: _pickImage,
-                icon: Icon(Icons.image),
-                label: Text('Pick Product Image'),
+                icon: Icon(
+                  Icons.image,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  'Pick Product Image',
+                  style: TextStyle(color: Colors.white),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
-
               const SizedBox(height: 10.0),
               if (_image != null)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.file(File(_image!.path), height: 150),
                 ),
-
               const SizedBox(height: 24.0),
               _isLoading
                   ? CircularProgressIndicator()
                   : SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  child: Text('Add Product'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                    textStyle: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        child: Text(
+                          'Add Product',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          textStyle: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -210,7 +234,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, {TextInputType? keyboardType}) {
+  Widget _buildTextField(TextEditingController controller, String label,
+      {TextInputType? keyboardType}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: TextFormField(
@@ -220,7 +245,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
         ),
-        validator: (value) => value == null || value.isEmpty ? 'Please enter $label' : null,
+        validator: (value) =>
+            value == null || value.isEmpty ? 'Please enter $label' : null,
       ),
     );
   }

@@ -27,7 +27,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         title: const Text('Product Details'),
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           IconButton(
               icon: const Icon(Icons.shopping_cart_outlined), onPressed: () {}),
         ],
@@ -68,21 +67,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey.withOpacity(0.7),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.favorite_border),
-                      color: Colors.white,
-                      onPressed: () {},
                     ),
                   ),
                 ),
@@ -135,7 +119,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(height: 16),
                   const Text('Description',
                       style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 8),
                   Text(
                     widget.product?.description ?? "",
@@ -167,13 +151,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       );
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) =>  CartScreen()),
+                        MaterialPageRoute(builder: (context) => CartScreen()),
                       );
-                    } else {}
+                    }
                   },
                   icon:
-                  const Icon(Icons.add_shopping_cart, color: Colors.white),
+                      const Icon(Icons.add_shopping_cart, color: Colors.white),
                   label: const Text('Add to cart'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF8C4931),

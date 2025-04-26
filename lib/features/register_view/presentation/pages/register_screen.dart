@@ -1,3 +1,4 @@
+// داخل ملف RegisterScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/core/di/di.dart';
@@ -36,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Center(
                     child: Column(
                       children: [
-                        SizedBox(height: 100.h),
+                        SizedBox(height: 50.h),
                         Text(
                           'Create Account',
                           style: TextStyle(
@@ -59,10 +60,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   SizedBox(height: 40.h),
-                  const CustomLabelTextField(label: "Full Name",),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: const CustomLabelTextField(label: "Full Name"),
+                  ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
-                    prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _person_3.0x.png"),
+                    prefixIcon: Image.asset(
+                        "assets/icons/3.0x/🦆 icon _person_3.0x.png"),
                     hint: "Enter your full name",
                     keyboardType: TextInputType.text,
                     securedPassword: false,
@@ -70,13 +75,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: viewModel.nameController,
                   ),
                   SizedBox(height: 15.h),
-                  const CustomLabelTextField(label: "Phone Number"),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: const CustomLabelTextField(label: "Phone Number"),
+                  ),
                   SizedBox(height: 10.h),
                   CustomTextFormField(
                     hint: "Enter phone number",
                     keyboardType: TextInputType.number,
                     securedPassword: false,
-                    validator: (text) => AppValidators.validatePhoneNumber(text),
+                    validator: (text) =>
+                        AppValidators.validatePhoneNumber(text),
                     controller: viewModel.phoneController,
                     prefixIcon: Icon(
                       Icons.local_phone_outlined,
@@ -85,10 +94,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  const CustomLabelTextField(label: "Email Address"),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: const CustomLabelTextField(label: "Email Address"),
+                  ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
-                    prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                    prefixIcon:
+                        Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
                     hint: "Enter your email",
                     keyboardType: TextInputType.emailAddress,
                     securedPassword: false,
@@ -96,10 +109,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: viewModel.emailController,
                   ),
                   SizedBox(height: 15.h),
-                  const CustomLabelTextField(label: "Password"),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: const CustomLabelTextField(label: "Password"),
+                  ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
-                    prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                    prefixIcon:
+                        Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                     hint: "Enter your password",
                     keyboardType: TextInputType.text,
                     securedPassword: true,
@@ -107,10 +124,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: viewModel.passwordController,
                   ),
                   SizedBox(height: 15.h),
-                  const CustomLabelTextField(label: "Confirm Password"),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child:
+                        const CustomLabelTextField(label: "Confirm Password"),
+                  ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
-                    prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                    prefixIcon:
+                        Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                     hint: "Enter confirmPassword",
                     keyboardType: TextInputType.text,
                     securedPassword: true,
@@ -132,18 +154,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            // Save data to SharedPreferences
-                            await SharedPreference.saveData(key: "temp_name", value: viewModel.nameController.text);
-                            await SharedPreference.saveData(key: "temp_phone", value: viewModel.phoneController.text);
-                            await SharedPreference.saveData(key: "temp_email", value: viewModel.emailController.text);
-                            await SharedPreference.saveData(key: "temp_password", value: viewModel.passwordController.text);
-                            await SharedPreference.saveData(key: "temp_confirmPassword", value: viewModel.confirmPasswordController.text);
+                            await SharedPreference.saveData(
+                                key: "temp_name",
+                                value: viewModel.nameController.text);
+                            await SharedPreference.saveData(
+                                key: "temp_phone",
+                                value: viewModel.phoneController.text);
+                            await SharedPreference.saveData(
+                                key: "temp_email",
+                                value: viewModel.emailController.text);
+                            await SharedPreference.saveData(
+                                key: "temp_password",
+                                value: viewModel.passwordController.text);
+                            await SharedPreference.saveData(
+                                key: "temp_confirmPassword",
+                                value:
+                                    viewModel.confirmPasswordController.text);
 
-                            // Use Navigator for navigation
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const UserTypeSelectionScreen(),
+                                builder: (context) =>
+                                    const UserTypeSelectionScreen(),
                               ),
                             );
                           }
@@ -182,11 +214,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                         child: Text(
                           "Log In",
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontFamily: "Roboto",
-                              color: AppColors.primary,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  fontFamily: "Roboto",
+                                  color: AppColors.primary,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w500),
                         ),
                       ),
                     ],

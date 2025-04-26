@@ -30,6 +30,9 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(
+                  height: 140,
+                ),
                 Text(
                   'Are you a seller or a client?',
                   textAlign: TextAlign.center,
@@ -71,52 +74,64 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
                   child: ElevatedButton(
                     onPressed: selectedUserType != null
                         ? () async {
-                      final isMerchant = selectedUserType == 'seller';
-                      final role = isMerchant ? "Artisan" : "User";
+                            final isMerchant = selectedUserType == 'seller';
+                            final role = isMerchant ? "Artisan" : "User";
 
-                      // حفظ الدور
-                      await SharedPreference.saveData(key: "role", value: role);
+                            // حفظ الدور
+                            await SharedPreference.saveData(
+                                key: "role", value: role);
 
-                      // استدعاء البيانات من التخزين المؤقت
-                      final name = SharedPreference.getData(key: "temp_name");
-                      final phone = SharedPreference.getData(key: "temp_phone");
-                      final email = SharedPreference.getData(key: "temp_email");
-                      final password = SharedPreference.getData(key: "temp_password");
-                      final confirmPassword = SharedPreference.getData(key: "temp_confirmPassword");
+                            // استدعاء البيانات من التخزين المؤقت
+                            final name =
+                                SharedPreference.getData(key: "temp_name");
+                            final phone =
+                                SharedPreference.getData(key: "temp_phone");
+                            final email =
+                                SharedPreference.getData(key: "temp_email");
+                            final password =
+                                SharedPreference.getData(key: "temp_password");
+                            final confirmPassword = SharedPreference.getData(
+                                key: "temp_confirmPassword");
 
-                      // تنفيذ التسجيل عبر ViewModel
-                      final result = await viewModel.registerFromSelection(
-                        name: name,
-                        phone: phone,
-                        email: email,
-                        password: password,
-                        confirmPassword: confirmPassword, // تأكيد كلمة المرور
-                        role: role,
-                      );
+                            // تنفيذ التسجيل عبر ViewModel
+                            final result =
+                                await viewModel.registerFromSelection(
+                              name: name,
+                              phone: phone,
+                              email: email,
+                              password: password,
+                              confirmPassword:
+                                  confirmPassword, // تأكيد كلمة المرور
+                              role: role,
+                            );
 
-                      if (result) {
-                        // استلام التوكن والدور بعد التسجيل
-                        final token = await SharedPreference.getData(key: "token");
-                        final role = await SharedPreference.getData(key: "role");
-                        print("✅ Registration completed successfully.");
-                        print("📦 token: $token");
-                        print("🧑‍💼 role: $role");
+                            if (result) {
+                              // استلام التوكن والدور بعد التسجيل
+                              final token =
+                                  await SharedPreference.getData(key: "token");
+                              final role =
+                                  await SharedPreference.getData(key: "role");
+                              print("✅ Registration completed successfully.");
+                              print("📦 token: $token");
+                              print("🧑‍💼 role: $role");
 
-                        // استخدم Navigator للتوجيه إلى الصفحة الرئيسية
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainScreen(isMerchant: isMerchant),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Registration Failed. Please try again."),
-                          ),
-                        );
-                      }
-                    }
+                              // استخدم Navigator للتوجيه إلى الصفحة الرئيسية
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MainScreen(isMerchant: isMerchant),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Registration Failed. Please try again."),
+                                ),
+                              );
+                            }
+                          }
                         : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF774936),

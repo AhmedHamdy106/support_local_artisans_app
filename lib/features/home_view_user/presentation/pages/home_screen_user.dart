@@ -110,7 +110,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                   TextStyle(color: const Color(0xff9D9896), fontSize: 13.sp),
               prefixIcon: IconButton(
                 icon: Icon(Icons.search,
-                    color: const Color(0xff9D9896), size: 20.sp),
+                    color: const Color(0xff9D9896), size: 28.sp),
                 onPressed: filterProducts,
               ),
               fillColor: Colors.white,
