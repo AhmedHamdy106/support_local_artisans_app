@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void showErrorDialog(BuildContext context, String title, String message) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -15,18 +18,25 @@ void showErrorDialog(BuildContext context, String title, String message) {
             width: 0.6.sw,
             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: const Color(0xff232a3a),
+              color: colorScheme.background,
               borderRadius: BorderRadius.circular(12.r),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.onBackground.withOpacity(0.2),
+                  blurRadius: 20.r,
+                  spreadRadius: 2.r,
+                ),
+              ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.error_outline, color: Colors.red, size: 50.sp),
+                Icon(Icons.error_outline, color: colorScheme.error, size: 50.sp),
                 SizedBox(height: 8.h),
                 Text(
                   title,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: colorScheme.onBackground,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold),
                 ),
@@ -34,7 +44,7 @@ void showErrorDialog(BuildContext context, String title, String message) {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                  style: TextStyle(color: colorScheme.onBackground, fontSize: 14.sp),
                 ),
                 SizedBox(height: 15.h),
                 ElevatedButton(
@@ -42,15 +52,14 @@ void showErrorDialog(BuildContext context, String title, String message) {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                    backgroundColor: colorScheme.error,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                   ),
                   child: Text("Retry",
-                      style: TextStyle(fontSize: 14.sp, color: Colors.white)),
+                      style: TextStyle(fontSize: 14.sp, color: colorScheme.onError)),
                 ),
               ],
             ),

@@ -23,7 +23,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
   bool _isLoading = false;
   String? _savedToken;
 
@@ -113,17 +113,19 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Get the current theme
+
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: AppColors.background,
+          backgroundColor: theme.appBarTheme.backgroundColor, // Use app bar color from theme
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: theme.iconTheme.color, // Use icon color from theme
               size: 24.sp,
             ),
             onPressed: () => Navigator.pop(context),
@@ -141,7 +143,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                   child: Text(
                     'Create New Password',
                     style: TextStyle(
-                      color: AppColors.textPrimary,
+                      color: theme.textTheme.bodyLarge?.color, // Use text color from theme
                       fontFamily: "Roboto",
                       fontSize: 26.sp,
                       fontStyle: FontStyle.normal,
@@ -156,7 +158,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                     Text(
                       'Make sure your password is strong',
                       style: TextStyle(
-                        color: AppColors.textSecondary,
+                        color: theme.textTheme.bodyMedium?.color, // Use text color from theme
                         fontFamily: "Roboto",
                         fontSize: 16.sp,
                         fontStyle: FontStyle.normal,
@@ -170,7 +172,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
-                      Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                  Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                   hint: "Enter your New password",
                   keyboardType: TextInputType.text,
                   securedPassword: true,
@@ -182,7 +184,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
-                      Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                  Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                   hint: "Enter your New password",
                   keyboardType: TextInputType.text,
                   securedPassword: true,
@@ -203,34 +205,34 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 80.h),
                 _isLoading
                     ? Center(
-                        child: SpinKitFadingCircle(
-                          color: Colors.grey,
-                          size: 40.sp,
-                        ),
-                      )
+                  child: SpinKitFadingCircle(
+                    color: theme.primaryColor, // Use primary color from theme
+                    size: 40.sp,
+                  ),
+                )
                     : SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                          ),
-                          onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              await resetPassword();
-                            }
-                          },
-                          child: Text(
-                            'confirm',
-                            style: TextStyle(
-                              fontFamily: "Roboto",
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.buttonText,
-                            ),
-                          ),
-                        ),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.primaryColor, // Use primary color from theme
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                    ),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        await resetPassword();
+                      }
+                    },
+                    child: Text(
+                      'confirm',
+                      style: TextStyle(
+                        fontFamily: "Roboto",
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                        color: theme.textTheme.labelLarge?.color, // Use button text color from theme
                       ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

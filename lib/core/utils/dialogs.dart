@@ -13,6 +13,9 @@ class DialogUtils {
     String buttonText = 'Ok',
     VoidCallback? onButtonPressed,
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
@@ -29,10 +32,12 @@ class DialogUtils {
           color: Colors.white,
           size: 25.sp,
         ),
-        label:
-            Text("OK", style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+        label: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 16.sp),
+        ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
+          backgroundColor: colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
@@ -49,6 +54,9 @@ class DialogUtils {
     String buttonText = 'Retry',
     VoidCallback? onRetryPressed,
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.error,
@@ -65,10 +73,12 @@ class DialogUtils {
           color: Colors.white,
           size: 25.sp,
         ),
-        label: Text("Retry",
-            style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+        label: Text(
+          "Retry",
+          style: TextStyle(color: Colors.white, fontSize: 16.sp),
+        ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red,
+          backgroundColor: colorScheme.error,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
@@ -82,6 +92,9 @@ class DialogUtils {
     required BuildContext context,
     String title = 'Loading...',
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     _loadingDialog = AwesomeDialog(
       context: context,
       width: 300.w,
@@ -95,13 +108,17 @@ class DialogUtils {
           Row(
             children: [
               SpinKitFadingCircle(
-                color: Colors.grey,
+                color: colorScheme.primary,
                 size: 40.sp,
               ),
               SizedBox(width: 20.w),
               Text(
                 title,
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onBackground,
+                ),
               ),
             ],
           )

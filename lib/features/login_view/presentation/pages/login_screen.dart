@@ -27,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final theme = Theme.of(context); // Access the current theme
+    final colorScheme = theme.colorScheme; // Access the color scheme
 
     return BlocListener<LoginScreenViewModel, LoginStates>(
       bloc: viewModel,
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: colorScheme.background,
+          backgroundColor: colorScheme.background, // Use background color from theme
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: Center(
@@ -82,6 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w500,
+                          color: colorScheme.onBackground, // Use onBackground color for text
                         ),
                       ),
                     ),
@@ -90,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Please enter your email and password to log in.',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 14.sp,
+                          color: colorScheme.onBackground, // Use onBackground color for text
                         ),
                       ),
                     ),
@@ -120,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              activeColor: colorScheme.primary,
+                              activeColor: colorScheme.primary, // Use primary color from theme
                               value: rememberMe,
                               onChanged: (bool? newValue) {
                                 setState(() {
@@ -130,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Text(
                               "Remember Me",
-                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp),
+                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: colorScheme.onBackground), // Use onBackground color for text
                             ),
                           ],
                         ),
@@ -146,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'Forget password?',
                             style: TextStyle(
-                              color: colorScheme.primary,
+                              color: colorScheme.primary, // Use primary color from theme
                               fontSize: 14.sp,
                             ),
                           ),
@@ -163,14 +165,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
+                          backgroundColor: colorScheme.primary, // Use primary color from theme
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         child: Text(
                           'Log In',
                           style: theme.textTheme.labelLarge?.copyWith(
                             fontSize: 20.sp,
-                            color: colorScheme.onPrimary,
+                            color: colorScheme.onPrimary, // Use onPrimary color for text
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -182,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           "Don't have an account?",
-                          style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16.sp),
+                          style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16.sp, color: colorScheme.onBackground), // Use onBackground color for text
                         ),
                         TextButton(
                           onPressed: () => Navigator.pushNamed(context, Routes.registerRoute),
@@ -190,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             "Sign Up",
                             style: TextStyle(
                               fontSize: 16.sp,
-                              color: colorScheme.primary,
+                              color: colorScheme.primary, // Use primary color from theme
                               fontWeight: FontWeight.w500,
                             ),
                           ),

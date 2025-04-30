@@ -12,14 +12,16 @@ class ArtisanDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access current theme
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
       appBar: AppBar(
         title: const Text(
           'Artisan Profile',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: AppColors.primary, // ممكن نستخدم لون التطبيق الأساسي
+        backgroundColor: theme.primaryColor, // Use primary color from theme
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18.0),
@@ -40,22 +42,22 @@ class ArtisanDetailsScreen extends StatelessWidget {
             // اسم العرض
             Text(
               artisan.displayName ?? 'N/A',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: theme.textTheme.bodyLarge?.color, // Use text color from theme
               ),
             ),
             const SizedBox(height: 8.0),
             // معلومات أساسية
             Text(
               'Email: ${artisan.email ?? 'N/A'}',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: theme.textTheme.bodyMedium?.color), // Use secondary text color from theme
             ),
             const SizedBox(height: 4.0),
             Text(
               'Phone: ${artisan.phoneNumber ?? 'N/A'}',
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: theme.textTheme.bodyMedium?.color), // Use secondary text color from theme
             ),
             const SizedBox(height: 16.0),
             // نبذة عن الحرفي (لو فيه)
@@ -145,7 +147,7 @@ class ArtisanDetailsScreen extends StatelessWidget {
               ),
               label: const Text('Contact Artisan'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary, // لون ثانوي للتأكيد
+                backgroundColor: theme.primaryColor, // Use primary color from theme
                 foregroundColor: Colors.white,
                 padding:
                 const EdgeInsets.symmetric(horizontal: 32, vertical: 16),

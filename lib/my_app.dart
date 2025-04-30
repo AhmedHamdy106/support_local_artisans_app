@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'config/routes_manager/route_generator.dart';
 
@@ -9,7 +8,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         return MediaQuery(

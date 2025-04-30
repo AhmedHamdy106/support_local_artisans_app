@@ -28,57 +28,59 @@ class _MainScreenState extends State<MainScreen> {
 
     _screens = widget.isMerchant
         ? [
-            const HomeScreenUser(),
-            const CategoriesScreen(),
-            const MyProductsScreen(),
-            const AccountScreen(),
-          ]
+      const HomeScreenUser(),
+      const CategoriesScreen(),
+      const MyProductsScreen(),
+      const AccountScreen(),
+    ]
         : [
-            const HomeScreenUser(),
-            const CategoriesScreen(),
-            const CartScreen(),
-            const AccountScreen(),
-          ];
+      const HomeScreenUser(),
+      const CategoriesScreen(),
+      const CartScreen(),
+      const AccountScreen(),
+    ];
 
     _navItems = widget.isMerchant
         ? [
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined), label: "Home"),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.category_outlined), label: "Categories"),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.storefront_outlined), label: "My Products"),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: "Account"),
-          ]
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined), label: "Home"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.category_outlined), label: "Categories"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.storefront_outlined), label: "My Products"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline), label: "Account"),
+    ]
         : [
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined), label: "Home"),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.category_outlined), label: "Categories"),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: "Account"),
-          ];
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined), label: "Home"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.category_outlined), label: "Categories"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline), label: "Account"),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access current theme
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
       body: _screens[_currentIndex],
       floatingActionButton: widget.isMerchant
           ? FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AddProductScreen()),
-                );
-              },
-              child: const Icon(Icons.add, color: Colors.white),
-              backgroundColor: AppColors.primary,
-            )
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddProductScreen()),
+          );
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: theme.primaryColor, // Use theme primary color
+      )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -105,8 +107,8 @@ class _MainScreenState extends State<MainScreen> {
                       IconTheme(
                         data: IconThemeData(
                           color: _currentIndex == actualIndex
-                              ? const Color(0xFF8C4931)
-                              : const Color(0xff9D9896),
+                              ? theme.primaryColor // Use theme primary color
+                              : theme.iconTheme.color, // Use theme icon color
                         ),
                         child: item.icon!,
                       ),
@@ -115,8 +117,8 @@ class _MainScreenState extends State<MainScreen> {
                         item.label!,
                         style: TextStyle(
                           color: _currentIndex == actualIndex
-                              ? const Color(0xFF8C4931)
-                              : const Color(0xff9D9896),
+                              ? theme.primaryColor // Use theme primary color
+                              : theme.textTheme.bodyMedium?.color, // Use theme text color
                           fontSize: 12,
                         ),
                       )

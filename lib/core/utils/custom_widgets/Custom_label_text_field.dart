@@ -8,12 +8,16 @@ class CustomLabelTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Text(
       label,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+      style: theme.textTheme.bodyLarge?.copyWith(
         fontSize: 16.sp,
         fontWeight: FontWeight.w500,
         fontFamily: "Roboto",
+        color: colorScheme.onSurface, // للحصول على اللون المناسب للنص حسب الثيم
       ),
     );
   }

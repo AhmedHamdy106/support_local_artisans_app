@@ -41,11 +41,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access current theme
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor, // Use background color from theme
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: AppColors.background,
+        backgroundColor: theme.appBarTheme.backgroundColor, // Use app bar background from theme
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -61,7 +63,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
         title: Text(
           "Categories",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: theme.textTheme.bodyLarge?.color),
         ),
       ),
       body: isLoading
@@ -86,7 +88,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               },
               child: Card(
                 elevation: 3,
-                color: AppColors.background,
+                color: theme.cardColor, // Use card color from theme
                 margin: EdgeInsets.symmetric(vertical: 10.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.r),
@@ -118,10 +120,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
+                            color: theme.textTheme.bodyLarge?.color, // Use text color from theme
                           ),
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios, color: Colors.grey.shade500),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: theme.iconTheme.color, // Use icon color from theme
+                      ),
                     ],
                   ),
                 ),

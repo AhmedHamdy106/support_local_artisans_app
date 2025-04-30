@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'ProductArtistApi.dart';
@@ -44,8 +45,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: Wrap(
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.camera_alt, color: AppColors.primary),
-                title: Text('التقاط صورة بالكاميرا'),
+                leading: Icon(Icons.camera_alt, color: Theme.of(context).primaryColor),
+                title: Text('التقاط صورة بالكاميرا', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
                 onTap: () async {
                   Navigator.of(context).pop();
                   var status = await Permission.camera.request();
@@ -59,15 +60,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('تم رفض إذن الكاميرا')),
+                      SnackBar(content: Text('تم رفض إذن الكاميرا', style: TextStyle(color: Theme.of(context).colorScheme.error))),
                     );
                     await openAppSettings();
                   }
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library, color: AppColors.primary),
-                title: Text('اختيار صورة من المعرض'),
+                leading: Icon(Icons.photo_library, color: Theme.of(context).primaryColor),
+                title: Text('اختيار صورة من المعرض', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
                 onTap: () async {
                   Navigator.of(context).pop();
                   var status = await Permission.mediaLibrary.request();
@@ -81,7 +82,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('تم رفض إذن المعرض')),
+                      SnackBar(content: Text('تم رفض إذن المعرض', style: TextStyle(color: Theme.of(context).colorScheme.error))),
                     );
                     await openAppSettings();
                   }
@@ -98,13 +99,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedCategory == null) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Please select a category")));
+            .showSnackBar(SnackBar(content: Text("Please select a category", style: TextStyle(color: Theme.of(context).colorScheme.error))));
         return;
       }
 
       if (_image == null) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Please select an image")));
+            .showSnackBar(SnackBar(content: Text("Please select an image", style: TextStyle(color: Theme.of(context).colorScheme.error))));
         return;
       }
 
@@ -114,7 +115,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       try {
         String imageUrl =
-            await ProductArtistApi.uploadImage(_image!.path, _categories);
+        await ProductArtistApi.uploadImage(_image!.path, _categories);
 
         final product = ProductArtistModel(
           id: DateTime.now().millisecondsSinceEpoch,
@@ -130,11 +131,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
         await ProductArtistApi.addProduct(product);
 
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Product added successfully")));
+            SnackBar(content: Text("Product added successfully", style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color))));
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Failed to add product: $e")));
+            .showSnackBar(SnackBar(content: Text("Failed to add product: $e", style: TextStyle(color: Theme.of(context).colorScheme.error))));
       } finally {
         setState(() {
           _isLoading = false;
@@ -145,16 +146,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access current theme
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
       appBar: AppBar(
         title: const Text('Add Product'),
         centerTitle: true,
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 24),
-        backgroundColor: AppColors.primary,
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 24.sp),
+        backgroundColor: theme.primaryColor, // Use theme primary color
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -185,21 +188,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   );
                 }).toList(),
                 validator: (value) =>
-                    value == null ? 'Please select a category' : null,
+                value == null ? 'Please select a category' : null,
               ),
               const SizedBox(height: 16.0),
               ElevatedButton.icon(
                 onPressed: _pickImage,
                 icon: Icon(
                   Icons.image,
-                  color: Colors.white,
+                  color: theme.iconTheme.color, // Use icon color from theme
                 ),
                 label: Text(
                   'Pick Product Image',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: theme.textTheme.labelLarge?.color), // Use text color from theme
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: theme.primaryColor, // Use primary color from theme
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
               ),
@@ -211,22 +214,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
               const SizedBox(height: 24.0),
               _isLoading
-                  ? CircularProgressIndicator()
+                  ? CircularProgressIndicator(color: theme.primaryColor) // Use primary color from theme
                   : SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _submitForm,
-                        child: Text(
-                          'Add Product',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          textStyle: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _submitForm,
+                  child: Text(
+                    'Add Product',
+                    style: TextStyle(color: theme.textTheme.labelLarge?.color), // Use button text color from theme
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.primaryColor, // Use primary color from theme
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                    textStyle: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -246,7 +249,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
         ),
         validator: (value) =>
-            value == null || value.isEmpty ? 'Please enter $label' : null,
+        value == null || value.isEmpty ? 'Please enter $label' : null,
       ),
     );
   }

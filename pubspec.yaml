@@ -59,7 +59,7 @@ dependencies:
   image_picker:
   permission_handler:
   provider:
-
+  flutter_localization:
 dev_dependencies:
   flutter_test:
     sdk: flutter

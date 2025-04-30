@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../config/routes_manager/routes.dart';
 
 void showSuccessDialogGlass(BuildContext context) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -17,9 +20,9 @@ void showSuccessDialogGlass(BuildContext context) {
             width: 0.75.sw,
             padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: colorScheme.surface.withOpacity(0.1), // Color for the background
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              border: Border.all(color: colorScheme.surface.withOpacity(0.2)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -39,7 +42,7 @@ void showSuccessDialogGlass(BuildContext context) {
                   },
                   child: Icon(
                     Icons.check_circle_outline,
-                    color: Colors.greenAccent,
+                    color: colorScheme.primary, // Primary color for the icon
                     size: 60.sp,
                   ),
                 ),
@@ -47,7 +50,7 @@ void showSuccessDialogGlass(BuildContext context) {
                 Text(
                   "Success",
                   style: GoogleFonts.roboto(
-                    color: Colors.white,
+                    color: colorScheme.onSurface, // Text color from the theme
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -57,7 +60,7 @@ void showSuccessDialogGlass(BuildContext context) {
                   "Password has been changed successfully.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
-                    color: Colors.white70,
+                    color: colorScheme.onSurface.withOpacity(0.7), // Adjusted text color
                     fontSize: 18.sp,
                   ),
                 ),
@@ -68,9 +71,9 @@ void showSuccessDialogGlass(BuildContext context) {
                     Navigator.pushReplacementNamed(context, Routes.loginRoute);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
+                    backgroundColor: colorScheme.primary, // Primary color for the button
                     padding:
-                        EdgeInsets.symmetric(horizontal: 25.w, vertical: 8.h),
+                    EdgeInsets.symmetric(horizontal: 25.w, vertical: 8.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
@@ -80,6 +83,7 @@ void showSuccessDialogGlass(BuildContext context) {
                     style: GoogleFonts.poppins(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
+                      color: colorScheme.onPrimary, // Text color on primary button
                     ),
                   ),
                 ),

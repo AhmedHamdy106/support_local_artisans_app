@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/MainScreen.dart';
 import 'package:support_local_artisans/features/login_view/presentation/pages/login_screen.dart';
 
@@ -77,22 +76,28 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colorScheme.background,
       body: Center(
         child: ScaleTransition(
           scale: _scaleAnimation,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset("assets/images/logo.jpg", height: 120), // ضع اللوجو هنا
+              Image.asset(
+                "assets/images/logo.jpg", // ضع اللوجو هنا
+                height: 120,
+              ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 "Support Local Artisans",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
+                  color: colorScheme.primary,
                 ),
               ),
             ],

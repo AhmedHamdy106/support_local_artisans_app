@@ -6,8 +6,8 @@ import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/core/di/di.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/my_bloc_observer.dart';
-import 'package:support_local_artisans/my_app.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/MainScreen.dart';
+import 'config/routes_manager/route_generator.dart';
 import 'config/themes/AppTheme.dart';
 import 'config/themes/ThemeProvider.dart'; // استورد ملف الثيمات
 
@@ -33,10 +33,11 @@ void main() async {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.themeMode,
-            home: token == null
-                ? const MyApp(route: Routes.loginRoute)
-                : MainScreen(isMerchant: role == "Artisan"),
+            themeMode: themeProvider.themeMode, // سيتم تغيير الـ theme بناءً على التبديل
+            initialRoute: token == null ? Routes.loginRoute : Routes.splashRoute,
+            onGenerateRoute: (RouteSettings settings) {
+              return RouteGenerator.getRoute(settings);
+            },
           );
         },
       ),

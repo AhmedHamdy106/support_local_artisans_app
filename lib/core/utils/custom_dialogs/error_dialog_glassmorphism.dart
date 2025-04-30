@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void showErrorDialogGlass(BuildContext context) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -16,9 +19,9 @@ void showErrorDialogGlass(BuildContext context) {
             width: 0.75.sw,
             padding: EdgeInsets.all(20.sp),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: colorScheme.background.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              border: Border.all(color: colorScheme.onBackground.withOpacity(0.2)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -38,7 +41,7 @@ void showErrorDialogGlass(BuildContext context) {
                   },
                   child: Icon(
                     Icons.error_rounded,
-                    color: Colors.redAccent,
+                    color: colorScheme.error,
                     size: 60.sp,
                   ),
                 ),
@@ -46,7 +49,7 @@ void showErrorDialogGlass(BuildContext context) {
                 Text(
                   "Error!",
                   style: GoogleFonts.poppins(
-                    color: Colors.white,
+                    color: colorScheme.onError,
                     fontSize: 22.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -56,7 +59,7 @@ void showErrorDialogGlass(BuildContext context) {
                   "Something went wrong, please try again.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
-                    color: Colors.white70,
+                    color: colorScheme.onBackground.withOpacity(0.7),
                     fontSize: 14.sp,
                   ),
                 ),
@@ -66,9 +69,8 @@ void showErrorDialogGlass(BuildContext context) {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.w, vertical: 12.h),
+                    backgroundColor: colorScheme.error,
+                    padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 12.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),

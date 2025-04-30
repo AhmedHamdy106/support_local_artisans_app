@@ -7,7 +7,6 @@ import '../../config/themes/AppColorsLight.dart';
 import '../../config/themes/ThemeProvider.dart';
 import '../home_view_user/presentation/pages/MainScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'ProfileApi.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -117,8 +116,11 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: AppColorsLight.background,
+      backgroundColor: theme.scaffoldBackgroundColor, // استخدام خلفية الثيم
       appBar: AppBar(
         actions: [
           // زرار تغيير الثيم
@@ -144,8 +146,8 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         centerTitle: true,
         title: const Text('Edit profile'),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        foregroundColor: theme.iconTheme.color, // استخدام اللون المناسب من الثيم
         elevation: 0,
       ),
       body: _isLoading
@@ -161,16 +163,18 @@ class _AccountScreenState extends State<AccountScreen> {
           children: <Widget>[
             Text(
               'Welcome, ${_user!.displayName ?? "N/A"}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
+                color: theme.textTheme.bodyLarge?.color, // استخدام النص من الثيم
               ),
             ),
             Text(
               _user!.role.toString(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: theme.textTheme.bodyLarge?.color, // استخدام النص من الثيم
               ),
             ),
             const SizedBox(height: 25),
@@ -196,8 +200,8 @@ class _AccountScreenState extends State<AccountScreen> {
               child: ElevatedButton(
                 onPressed: _saveChanges,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColorsLight.primary,
-                  foregroundColor: Colors.white,
+                  backgroundColor: theme.primaryColor, // استخدام اللون الأساسي من الثيم
+                  foregroundColor: theme.textTheme.labelLarge?.color,
                   padding: const EdgeInsets.symmetric(
                       horizontal: 30, vertical: 10),
                   shape: RoundedRectangleBorder(

@@ -5,6 +5,9 @@ import '../../../features/verification_code_view/verification_code_screen.dart';
 
 void showCustomSuccessDialog(
     BuildContext context, String title, String message) {
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
+
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -18,19 +21,29 @@ void showCustomSuccessDialog(
             width: 0.6.sw,
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
-              color: const Color(0xff232a3a),
+              color: colorScheme.background,
               borderRadius: BorderRadius.circular(12.r),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.onBackground.withOpacity(0.1),
+                  blurRadius: 20.r,
+                  spreadRadius: 2.r,
+                ),
+              ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.check_circle_outline_outlined,
-                    color: Colors.green, size: 50.sp),
+                Icon(
+                  Icons.check_circle_outline_outlined,
+                  color: colorScheme.primary,
+                  size: 50.sp,
+                ),
                 SizedBox(height: 15.h),
                 Text(
                   title,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: colorScheme.onBackground,
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w500),
                 ),
@@ -38,7 +51,10 @@ void showCustomSuccessDialog(
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                  style: TextStyle(
+                    color: colorScheme.onBackground.withOpacity(0.7),
+                    fontSize: 16.sp,
+                  ),
                 ),
                 SizedBox(height: 20.h),
                 ElevatedButton(
@@ -51,14 +67,14 @@ void showCustomSuccessDialog(
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                   ),
                   child: Text(
                     "Ok",
-                    style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                    style: TextStyle(color: colorScheme.onPrimary, fontSize: 14.sp),
                   ),
                 ),
               ],

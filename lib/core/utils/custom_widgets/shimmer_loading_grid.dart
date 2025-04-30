@@ -7,10 +7,14 @@ class ShimmerLoadingGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // الحصول على الثيم الحالي
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return GridView.builder(
       padding: EdgeInsets.all(8.sp),
       itemCount: 6,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisExtent: 280,
         crossAxisSpacing: 10,

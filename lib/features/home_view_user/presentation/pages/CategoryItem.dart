@@ -9,6 +9,8 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access current theme
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -53,11 +55,14 @@ class CategoryItem extends StatelessWidget {
             SizedBox(height: 6),
             Text(
               name,
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.textTheme.bodyLarge?.color, // Use text color from theme
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-            )
+            ),
           ],
         ),
       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 import '../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../core/utils/validators.dart';
 import '../verification_code_view/verification_code_screen.dart';
@@ -27,23 +26,22 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.background,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
                   SpinKitFadingCircle(
-                    color: Colors.grey,
+                    color: Theme.of(context).primaryColor, // Use primary color from theme
                     size: 40.sp,
                   ),
                   SizedBox(width: 20.w),
                   Text(
                     "Please wait...",
                     style: TextStyle(
-                      color: AppColors.textPrimary,
+                      color: Theme.of(context).textTheme.bodyLarge?.color, // Use text color from theme
                       fontFamily: "Roboto",
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w500,
@@ -178,16 +176,20 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Get the current theme
+
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: AppColors.background,
+          backgroundColor: theme.appBarTheme.backgroundColor, // Use app bar color from theme
           leading: IconButton(
-            icon:
-                const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: theme.iconTheme.color, // Use icon color from theme
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -202,7 +204,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 Text(
                   'Forget Password',
                   style: TextStyle(
-                    color: AppColors.textPrimary,
+                    color: theme.textTheme.bodyLarge?.color, // Use text color from theme
                     fontFamily: "Roboto",
                     fontSize: 26.sp,
                     fontWeight: FontWeight.w500,
@@ -214,7 +216,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: "Roboto",
-                    color: AppColors.textSecondary,
+                    color: theme.textTheme.bodyMedium?.color, // Use text color from theme
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                   ),
@@ -227,7 +229,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       'Email Address',
                       style: TextStyle(
                         fontFamily: "Roboto",
-                        color: AppColors.textPrimary,
+                        color: theme.textTheme.bodyLarge?.color, // Use text color from theme
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                       ),
@@ -237,7 +239,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
-                      Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                  Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
                   hint: "Enter your email",
                   keyboardType: TextInputType.text,
                   securedPassword: false,
@@ -249,7 +251,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: theme.primaryColor, // Use primary color from theme
                       padding: EdgeInsets.symmetric(vertical: 12.h),
                     ),
                     onPressed: () async {
@@ -263,7 +265,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         fontFamily: "Roboto",
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.buttonText,
+                        color: theme.textTheme.labelLarge?.color, // Use button text color from theme
                       ),
                     ),
                   ),

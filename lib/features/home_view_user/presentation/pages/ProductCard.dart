@@ -6,12 +6,12 @@ class ProductCard extends StatelessWidget {
   final ProductModel product;
   final VoidCallback onTap; // 👈 إضافة الـ onTap هنا
 
-  const ProductCard(
-      {required this.product,
-      required this.onTap}); // 👈 تعديل المُنشئ ليشمل onTap
+  const ProductCard({required this.product, required this.onTap}); // 👈 تعديل المُنشئ ليشمل onTap
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access current theme
+
     return GestureDetector(
       onTap: onTap, // 👈 ربط الـ onTap هنا
       child: Card(
@@ -19,6 +19,7 @@ class ProductCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
+        color: theme.cardColor, // Use the card color from the theme
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,9 +33,9 @@ class ProductCard extends StatelessWidget {
                     padding: EdgeInsets.only(top: 65.0),
                     child: Center(
                         child: Icon(
-                      Icons.image_not_supported_outlined,
-                      size: 45,
-                    )),
+                          Icons.image_not_supported_outlined,
+                          size: 45,
+                        )),
                   );
                 },
                 fit: BoxFit.cover,
@@ -51,8 +52,10 @@ class ProductCard extends StatelessWidget {
                     product.name!,
                     maxLines: 1, // تحديد أقصى عدد للسطور هنا
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: theme.textTheme.bodyLarge?.color), // Use theme text color
                   ),
                   SizedBox(
                     height: 6,
@@ -61,11 +64,11 @@ class ProductCard extends StatelessWidget {
                     product.description!,
                     maxLines: 2, // تحديد أقصى عدد للسطور هنا
                     overflow:
-                        TextOverflow.ellipsis, // إضافة علامة حذف لو النص طويل
-                    style: const TextStyle(
+                    TextOverflow.ellipsis, // إضافة علامة حذف لو النص طويل
+                    style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
-                        color: AppColors.textSecondary),
+                        color: theme.textTheme.bodyMedium?.color), // Use theme text color
                   ),
                   const SizedBox(
                     height: 20,
@@ -76,7 +79,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         '${product.price} EGP',
                         style: TextStyle(
-                            color: AppColors.textPrimary, fontSize: 14),
+                            color: theme.textTheme.bodyLarge?.color, fontSize: 14), // Use theme text color
                       ),
                     ],
                   ),

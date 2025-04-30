@@ -92,30 +92,32 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? buildShimmerGrid() : buildMainContent();
+    final theme = Theme.of(context); // Access current theme
+
+    return isLoading ? buildShimmerGrid() : buildMainContent(theme);
   }
 
-  Widget buildMainContent() {
+  Widget buildMainContent(ThemeData theme) {
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 30.h),
-          buildSearchBar(),
+          buildSearchBar(theme),
           SizedBox(height: 40.h),
-          Text('Categories', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text('Categories', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color)),
           SizedBox(height: 10.h),
           buildCategoriesList(),
           SizedBox(height: 20.h),
-          Text('Products', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-          Expanded(child: buildProductsGrid()),
+          Text('Products', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: theme.textTheme.bodyLarge?.color)),
+          Expanded(child: buildProductsGrid(theme)),
         ],
       ),
     );
   }
 
-  Widget buildSearchBar() {
+  Widget buildSearchBar(ThemeData theme) {
     return Column(
       children: [
         Row(
@@ -129,9 +131,9 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                   hintText: 'Search for anything...',
-                  hintStyle: TextStyle(color: const Color(0xff9D9896), fontSize: 13.sp),
+                  hintStyle: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 13.sp),
                   prefixIcon: IconButton(
-                    icon: Icon(Icons.search, color: const Color(0xff9D9896), size: 28.sp),
+                    icon: Icon(Icons.search, color: theme.iconTheme.color, size: 28.sp),
                     onPressed: filterProducts,
                   ),
                   fillColor: Colors.white,
@@ -163,7 +165,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
                   return ListTile(
                     title: Text(
                       product.name != null ? product.name! : 'منتج غير معروف',
-                      style: TextStyle(color: Colors.grey), // تغيير اللون إلى رمادي
+                      style: TextStyle(color: theme.textTheme.bodyMedium?.color), // تغيير اللون إلى اللون الثانوي من الثيم
                     ),
                     onTap: () {
                       Navigator.push(
@@ -234,16 +236,16 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
               child: Image.network(imageUrl, width: 75.w, height: 75.h, fit: BoxFit.cover),
             ),
             SizedBox(height: 6.h),
-            Text(name, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500))
+            Text(name, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: Theme.of(context).textTheme.bodyLarge?.color))
           ],
         ),
       ),
     );
   }
 
-  Widget buildProductsGrid() {
+  Widget buildProductsGrid(ThemeData theme) {
     if (filteredProducts.isEmpty) {
-      return Center(child: Text("No products found.", style: TextStyle(fontSize: 14.sp)));
+      return Center(child: Text("No products found.", style: TextStyle(fontSize: 14.sp, color: theme.textTheme.bodyMedium?.color)));
     }
     return GridView.builder(
       padding: EdgeInsets.only(top: 10.h),

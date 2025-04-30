@@ -17,18 +17,21 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Access the current theme
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: theme.appBarTheme.backgroundColor, // Use theme background color
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: Icon(Icons.arrow_back_ios, color: theme.iconTheme.color), // Use theme icon color
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Product Details'),
+        title: Text('Product Details', style: TextStyle(color: theme.textTheme.bodyLarge?.color)), // Use theme text color
         actions: [
           IconButton(
-              icon: const Icon(Icons.shopping_cart_outlined), onPressed: () {}),
+              icon: Icon(Icons.shopping_cart_outlined, color: theme.iconTheme.color), // Use theme icon color
+              onPressed: () {}),
         ],
         centerTitle: true,
       ),
@@ -82,8 +85,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     children: [
                       Text(
                         widget.product?.name ?? "",
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: theme.textTheme.bodyLarge?.color), // Use theme text color
                       ),
                     ],
                   ),
@@ -111,19 +116,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       Text(
                         '${widget.product!.price?.toInt()} EGP',
-                        style: const TextStyle(
-                            color: Colors.grey, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: theme.textTheme.bodyLarge?.color,
+                            fontWeight: FontWeight.w600), // Use theme text color
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   const Text('Description',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 8),
                   Text(
                     widget.product?.description ?? "",
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: theme.textTheme.bodyMedium?.color), // Use theme text color
                   ),
                 ],
               ),
@@ -156,11 +162,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     }
                   },
                   icon:
-                      const Icon(Icons.add_shopping_cart, color: Colors.white),
-                  label: const Text('Add to cart'),
+                  Icon(Icons.add_shopping_cart, color: theme.iconTheme.color), // Use theme icon color
+                  label: Text('Add to cart', style: TextStyle(color: theme.textTheme.bodyLarge?.color)), // Use theme text color
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8C4931),
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.primaryColor, // Use theme primary color
+                    foregroundColor: theme.buttonTheme.colorScheme?.onPrimary, // Use theme text color for button
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
@@ -186,7 +192,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       );
                     }
                   },
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
@@ -194,7 +200,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         child: Icon(
                           Icons.person_pin,
                           size: 30.0,
-                          color: Colors.grey,
+                          color: theme.iconTheme.color, // Use theme icon color
                         ),
                       ),
                       Padding(
@@ -203,7 +209,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           'Artisan Profile',
                           style: TextStyle(
                               fontSize: 14.0,
-                              color: Colors.grey,
+                              color: theme.textTheme.bodyMedium?.color, // Use theme text color
                               fontWeight: FontWeight.w500),
                         ),
                       ),

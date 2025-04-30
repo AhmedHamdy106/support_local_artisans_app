@@ -1,4 +1,3 @@
-// داخل ملف RegisterScreen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/core/di/di.dart';
@@ -24,10 +23,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: colorScheme.background,
         body: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -44,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontFamily: "Roboto",
                             fontSize: 24.sp,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textPrimary,
+                            color: colorScheme.onBackground,
                           ),
                         ),
                         Text(
@@ -53,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontFamily: "Roboto",
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w400,
-                            color: AppColors.textSecondary,
+                            color: colorScheme.onBackground.withOpacity(0.6),
                           ),
                         ),
                       ],
@@ -89,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: viewModel.phoneController,
                     prefixIcon: Icon(
                       Icons.local_phone_outlined,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onBackground,
                       size: 25.sp,
                     ),
                   ),
@@ -101,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon:
-                        Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                    Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
                     hint: "Enter your email",
                     keyboardType: TextInputType.emailAddress,
                     securedPassword: false,
@@ -116,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon:
-                        Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                    Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                     hint: "Enter your password",
                     keyboardType: TextInputType.text,
                     securedPassword: true,
@@ -127,12 +129,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child:
-                        const CustomLabelTextField(label: "Confirm Password"),
+                    const CustomLabelTextField(label: "Confirm Password"),
                   ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon:
-                        Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                    Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                     hint: "Enter confirmPassword",
                     keyboardType: TextInputType.text,
                     securedPassword: true,
@@ -169,19 +171,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             await SharedPreference.saveData(
                                 key: "temp_confirmPassword",
                                 value:
-                                    viewModel.confirmPasswordController.text);
+                                viewModel.confirmPasswordController.text);
 
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const UserTypeSelectionScreen(),
+                                const UserTypeSelectionScreen(),
                               ),
                             );
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: colorScheme.primary,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         child: Text(
@@ -190,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontFamily: "Roboto",
                             fontSize: 20.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.buttonText,
+                            color: colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -206,7 +208,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontFamily: "Roboto",
                             fontWeight: FontWeight.bold,
                             fontSize: 16.sp,
-                            color: AppColors.textSecondary),
+                            color: colorScheme.onBackground.withOpacity(0.7)),
                       ),
                       TextButton(
                         onPressed: () {
@@ -214,14 +216,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                         child: Text(
                           "Log In",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                  fontFamily: "Roboto",
-                                  color: AppColors.primary,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],

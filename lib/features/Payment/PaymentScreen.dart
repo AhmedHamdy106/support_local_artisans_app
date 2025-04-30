@@ -12,12 +12,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Color(0xFFF8F0EC),
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Payment'),
-        backgroundColor: Color(0xFFF8F0EC),
+        title: Text('Payment', style: TextStyle(color: colorScheme.onBackground)),
+        backgroundColor: colorScheme.background,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -26,19 +29,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
           children: <Widget>[
             Text(
               'Product Details',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: colorScheme.onBackground),
             ),
             SizedBox(height: 10.0),
             ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text('Product Name: Premium'),
-              subtitle: Text('Price: \$99.99'),
+              leading: Icon(Icons.shopping_cart, color: colorScheme.onBackground),
+              title: Text('Product Name: Premium', style: TextStyle(color: colorScheme.onBackground)),
+              subtitle: Text('Price: \$99.99', style: TextStyle(color: colorScheme.onBackground)),
             ),
             Divider(),
             SizedBox(height: 20.0),
             Text(
               'Payment Method',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: colorScheme.onBackground),
             ),
             RadioListTile<String>(
               title: Row(
@@ -49,7 +52,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     height: 50.0,
                   ),
                   SizedBox(width: 8.0),
-                  Text('Credit Card'),
+                  Text('Credit Card', style: TextStyle(color: colorScheme.onBackground)),
                 ],
               ),
               value: 'Credit Card',
@@ -62,11 +65,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
               activeColor: selectedColor,
               tileColor: _selectedPaymentMethod == 'Credit Card'
                   ? null
-                  : unselectedColor
-                  .withOpacity(0.1), // Optional: change tile color
+                  : unselectedColor.withOpacity(0.1), // Optional: change tile color
             ),
-            if (_selectedPaymentMethod == 'Credit Card')
-              _buildCreditCardFields(),
+            if (_selectedPaymentMethod == 'Credit Card') _buildCreditCardFields(),
             RadioListTile<String>(
               title: Row(
                 children: <Widget>[
@@ -76,7 +77,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     height: 50.0,
                   ),
                   SizedBox(width: 8.0),
-                  Text('Cash on Delivery'),
+                  Text('Cash on Delivery', style: TextStyle(color: colorScheme.onBackground)),
                 ],
               ),
               value: 'Cash on Delivery',
@@ -89,20 +90,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
               activeColor: selectedColor,
               tileColor: _selectedPaymentMethod == 'Cash on Delivery'
                   ? null
-                  : unselectedColor
-                  .withOpacity(0.02), // Optional: change tile color
+                  : unselectedColor.withOpacity(0.02), // Optional: change tile color
             ),
             SizedBox(height: 30.0),
             Text(
               'Order Summary',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: colorScheme.onBackground),
             ),
             SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('Total:'),
-                Text('\$99.99'),
+                Text('Total:', style: TextStyle(color: colorScheme.onBackground)),
+                Text('\$99.99', style: TextStyle(color: colorScheme.onBackground)),
               ],
             ),
             SizedBox(height: 20.0),
@@ -111,13 +111,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF8C4931),
+                  backgroundColor: selectedColor,
                   padding: EdgeInsets.symmetric(vertical: 15.0),
                   textStyle: TextStyle(fontSize: 18.0),
                 ),
                 child: Text(
                   'Confirm Payment',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: colorScheme.onPrimary),
                 ),
               ),
             ),
