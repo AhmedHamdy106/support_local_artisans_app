@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 class CustomLabelTextField extends StatelessWidget {
   final String label;
@@ -11,12 +10,10 @@ class CustomLabelTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: TextStyle(
-        color: AppColors.textPrimary,
-        fontFamily: "Roboto",
+      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
         fontSize: 16.sp,
-        fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w500,
+        fontFamily: "Roboto",
       ),
     );
   }

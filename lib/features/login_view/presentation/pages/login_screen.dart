@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
-import 'package:support_local_artisans/core/utils/custom_widgets/Custom_label_text_field.dart';
+import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/MainScreen.dart';
 import 'package:support_local_artisans/features/login_view/presentation/manager/cubit/login_states.dart';
@@ -28,6 +27,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return BlocListener<LoginScreenViewModel, LoginStates>(
       bloc: viewModel,
       listener: (context, state) async {
@@ -35,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
           DialogUtils.showLoadingDialog(context: context, title: "Logging...");
         } else if (state is LoginSuccessState) {
           DialogUtils.hideLoadingDialog();
-
           final token = state.responseEntity.token;
           final role = state.responseEntity.user?.role ?? "User";
           final isMerchant = role == "Artisan";
@@ -43,14 +44,15 @@ class _LoginScreenState extends State<LoginScreen> {
           await SharedPreference.saveData(key: "token", value: token);
           await SharedPreference.saveData(key: "role", value: role);
 
-          // Use Navigator to navigate instead of GetX
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MainScreen(isMerchant: isMerchant),
-            ),
-                (route) => false, // Clear the navigation stack
-          );
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MainScreen(isMerchant: isMerchant),
+              ),
+                  (route) => false,
+            );
+          }
         } else if (state is LoginErrorState) {
           DialogUtils.hideLoadingDialog();
           DialogUtils.showErrorDialog(
@@ -58,16 +60,14 @@ class _LoginScreenState extends State<LoginScreen> {
             context: context,
             message: state.failures.errorMessage,
             buttonText: "Retry",
-            onRetryPressed: () {
-              Navigator.of(context).pop();
-            },
+            onRetryPressed: () => Navigator.of(context).pop(),
           );
         }
       },
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: colorScheme.background,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: Center(
@@ -79,20 +79,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: Text(
                         'Welcome Back👋',
-                        style: TextStyle(
-                          fontFamily: "Roboto",
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textPrimary,
                         ),
                       ),
                     ),
                     Center(
                       child: Text(
                         'Please enter your email and password to log in.',
-                        style: TextStyle(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 14.sp,
-                          color: AppColors.textSecondary,
                         ),
                       ),
                     ),
@@ -123,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              activeColor: AppColors.primary,
+                              activeColor: colorScheme.primary,
                               value: rememberMe,
                               onChanged: (bool? newValue) {
                                 setState(() {
@@ -131,11 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               },
                             ),
-                            Text("Remember Me",
-                                style: TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontSize: 14.sp,
-                                )),
+                            Text(
+                              "Remember Me",
+                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp),
+                            ),
                           ],
                         ),
                         TextButton(
@@ -143,13 +139,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const ForgetPasswordScreen()),
+                                builder: (context) => const ForgetPasswordScreen(),
+                              ),
                             );
                           },
                           child: Text(
                             'Forget password?',
                             style: TextStyle(
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                               fontSize: 14.sp,
                             ),
                           ),
@@ -166,14 +163,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: colorScheme.primary,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         child: Text(
                           'Log In',
-                          style: TextStyle(
+                          style: theme.textTheme.labelLarge?.copyWith(
                             fontSize: 20.sp,
-                            color: AppColors.buttonText,
+                            color: colorScheme.onPrimary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -185,17 +182,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           "Don't have an account?",
-                          style: TextStyle(
-                              fontSize: 16.sp, color: AppColors.textSecondary),
+                          style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16.sp),
                         ),
                         TextButton(
-                          onPressed: () =>
-                              Navigator.pushNamed(context, Routes.registerRoute),
+                          onPressed: () => Navigator.pushNamed(context, Routes.registerRoute),
                           child: Text(
                             "Sign Up",
                             style: TextStyle(
                               fontSize: 16.sp,
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

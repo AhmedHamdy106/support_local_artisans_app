@@ -19,6 +19,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
   List<CategoryModel> categories = [];
   List<ProductModel> products = [];
   List<ProductModel> filteredProducts = [];
+  List<ProductModel> recommendations = []; // لحفظ التوصيات
   bool isLoading = true;
   String searchText = "";
 
@@ -29,6 +30,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
   void initState() {
     super.initState();
     fetchData();
+    _searchController.addListener(onSearchTextChanged); // إضافة مراقب لحقل النص
   }
 
   Future<void> fetchData() async {
@@ -39,6 +41,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
         categories = fetchedCategories;
         products = fetchedProducts;
         filteredProducts = fetchedProducts;
+        recommendations = [];
         isLoading = false;
       });
     } catch (e) {
@@ -47,21 +50,41 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     }
   }
 
-  void filterProducts() async {
+  void onSearchTextChanged() {
+    // التأخير باستخدام debounce لمنع تنفيذ البحث في كل حرف يتم كتابته
     setState(() {
       searchText = _searchController.text;
+    });
+    filterProducts();
+  }
+
+  void onSearchSubmit(String value) {
+    // إخفاء الترشيحات عندما يضغط المستخدم على Enter أو "OK"
+    setState(() {
+      recommendations = []; // إخفاء الترشيحات
+    });
+    filterProducts(); // يمكن تنفيذ البحث هنا إذا أردت
+  }
+
+  void filterProducts() {
+    setState(() {
       isLoading = true;
     });
 
     if (searchText.isEmpty) {
       setState(() {
-        filteredProducts = products;
+        recommendations = []; // إخفاء التوصيات عندما لا يكون هناك نص
+        filteredProducts = products; // إظهار جميع المنتجات
         isLoading = false;
       });
     } else {
-      final searchResults = await HomeApi.searchProducts(searchText);
+      final filtered = products.where((product) {
+        return product.name!.toLowerCase().contains(searchText.toLowerCase());
+      }).toList();
+
       setState(() {
-        filteredProducts = searchResults;
+        recommendations = filtered; // وضع التوصيات في القائمة
+        filteredProducts = filtered; // تحديث المنتجات بناءً على البحث
         isLoading = false;
       });
     }
@@ -81,13 +104,11 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
           SizedBox(height: 30.h),
           buildSearchBar(),
           SizedBox(height: 40.h),
-          Text('Categories',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text('Categories', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           SizedBox(height: 10.h),
           buildCategoriesList(),
           SizedBox(height: 20.h),
-          Text('Products',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text('Products', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           Expanded(child: buildProductsGrid()),
         ],
       ),
@@ -95,33 +116,68 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
   }
 
   Widget buildSearchBar() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: TextField(
-            controller: _searchController,
-            focusNode: _focusNode,
-            onSubmitted: (_) => filterProducts(),
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              hintText: 'Search for anything...',
-              hintStyle:
-                  TextStyle(color: const Color(0xff9D9896), fontSize: 13.sp),
-              prefixIcon: IconButton(
-                icon: Icon(Icons.search,
-                    color: const Color(0xff9D9896), size: 28.sp),
-                onPressed: filterProducts,
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                focusNode: _focusNode,
+                onSubmitted: onSearchSubmit, // تعديل ليكون الدالة الجديدة
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  hintText: 'Search for anything...',
+                  hintStyle: TextStyle(color: const Color(0xff9D9896), fontSize: 13.sp),
+                  prefixIcon: IconButton(
+                    icon: Icon(Icons.search, color: const Color(0xff9D9896), size: 28.sp),
+                    onPressed: filterProducts,
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.r),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
               ),
-              fillColor: Colors.white,
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.r),
-                borderSide: BorderSide.none,
+            ),
+          ],
+        ),
+        // الترشيحات تظهر تحت مربع البحث
+        if (recommendations.isNotEmpty && searchText.isNotEmpty)
+          Container(
+            margin: EdgeInsets.only(top: 10.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              color: Colors.transparent, // خلفية شفافة
+              boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, offset: Offset(0, 2))],
+            ),
+            child: Container(
+              height: 200.h,  // الحد من ارتفاع الـ Container لترشيحات البحث
+              child: ListView.builder(
+                itemCount: recommendations.length,
+                itemBuilder: (context, index) {
+                  final product = recommendations[index];
+                  return ListTile(
+                    title: Text(
+                      product.name != null ? product.name! : 'منتج غير معروف',
+                      style: TextStyle(color: Colors.grey), // تغيير اللون إلى رمادي
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductDetailsScreen(product: product),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -130,28 +186,23 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
     final categoryList = [
       {
         'name': 'Glass',
-        'image':
-            'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg'
+        'image': 'https://i.pinimg.com/736x/4c/0f/81/4c0f81e0c24cbc9165d36f30aa05af05.jpg'
       },
       {
         'name': 'Leather',
-        'image':
-            'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg'
+        'image': 'https://i.pinimg.com/736x/ce/ed/2b/ceed2b1a638b5656c49f2c0d93937c95.jpg'
       },
       {
         'name': 'WeavingAndTextiles',
-        'image':
-            'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg'
+        'image': 'https://i.pinimg.com/736x/56/b3/8f/56b38f4b819517ca52bba9bac59ced69.jpg'
       },
       {
         'name': 'Wood',
-        'image':
-            'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg'
+        'image': 'https://i.pinimg.com/736x/f6/4b/f7/f64bf7de2e8b974a7c0b3bc56d8ee331.jpg'
       },
       {
         'name': 'PotteryAndCeramics',
-        'image':
-            'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg'
+        'image': 'https://i.pinimg.com/736x/39/a8/c9/39a8c9a401974f179c90f06b170051f0.jpg'
       },
     ];
 
@@ -159,8 +210,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: categoryList
-            .map((cat) =>
-                buildCategoryItem(name: cat['name']!, imageUrl: cat['image']!))
+            .map((cat) => buildCategoryItem(name: cat['name']!, imageUrl: cat['image']!))
             .toList(),
       ),
     );
@@ -181,12 +231,10 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(16.r),
-              child: Image.network(imageUrl,
-                  width: 75.w, height: 75.h, fit: BoxFit.cover),
+              child: Image.network(imageUrl, width: 75.w, height: 75.h, fit: BoxFit.cover),
             ),
             SizedBox(height: 6.h),
-            Text(name,
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500))
+            Text(name, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -195,8 +243,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
 
   Widget buildProductsGrid() {
     if (filteredProducts.isEmpty) {
-      return Center(
-          child: Text("No products found.", style: TextStyle(fontSize: 14.sp)));
+      return Center(child: Text("No products found.", style: TextStyle(fontSize: 14.sp)));
     }
     return GridView.builder(
       padding: EdgeInsets.only(top: 10.h),
@@ -213,8 +260,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (_) => ProductDetailsScreen(product: product)),
+              MaterialPageRoute(builder: (_) => ProductDetailsScreen(product: product)),
             );
           },
           child: AnimatedContainer(
@@ -225,8 +271,7 @@ class _HomeScreenUserState extends State<HomeScreenUser> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (_) => ProductDetailsScreen(product: product)),
+                  MaterialPageRoute(builder: (_) => ProductDetailsScreen(product: product)),
                 );
               },
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 typedef Validator = String? Function(String? text);
 
@@ -37,13 +36,13 @@ class _CustomTextFormField extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return TextFormField(
       validator: widget.validator,
       controller: widget.controller,
-      style: TextStyle(
-        color: AppColors.textPrimary,
-        fontSize: 16.sp,
-      ),
+      style: theme.textTheme.bodyLarge?.copyWith(fontSize: 16.sp),
       keyboardType: widget.keyboardType,
       obscureText: isVisibleText,
       decoration: InputDecoration(
@@ -52,53 +51,49 @@ class _CustomTextFormField extends State<CustomTextFormField> {
           child: SizedBox(width: 24.w, height: 24.h, child: widget.prefixIcon),
         ),
         errorMaxLines: 2,
-        errorStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: AppColors.error,
-              height: 1.2.h,
-              fontSize: 16.sp,
-              overflow: TextOverflow.visible,
-            ),
+        errorStyle: theme.textTheme.titleSmall?.copyWith(
+          color: colorScheme.error,
+          height: 1.2.h,
+          fontSize: 16.sp,
+        ),
         suffixIcon: widget.securedPassword
             ? InkWell(
-                onTap: () {
-                  setState(() {
-                    isVisibleText = !isVisibleText;
-                  });
-                },
-                child: Icon(
-                  isVisibleText
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility,
-                  color: isVisibleText ? Colors.grey : AppColors.primary,
-                  size: 25.sp,
-                ),
-              )
+          onTap: () {
+            setState(() {
+              isVisibleText = !isVisibleText;
+            });
+          },
+          child: Icon(
+            isVisibleText
+                ? Icons.visibility_off_outlined
+                : Icons.visibility,
+            color: isVisibleText ? Colors.grey : colorScheme.primary,
+            size: 25.sp,
+          ),
+        )
             : null,
         hintText: widget.hint,
-        hintStyle: TextStyle(
-          color: AppColors.textSecondary,
-          fontFamily: "Roboto",
+        hintStyle: theme.textTheme.bodyMedium?.copyWith(
           fontSize: 14.sp,
-          fontStyle: FontStyle.normal,
           fontWeight: FontWeight.w400,
         ),
-        fillColor: AppColors.background,
+        fillColor: theme.inputDecorationTheme.fillColor ?? colorScheme.surface,
         filled: true,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.5.w),
+          borderSide: BorderSide(color: colorScheme.primary, width: 1.5.w),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.textSecondary, width: 1.w),
+          borderSide: BorderSide(color: colorScheme.outline, width: 1.w),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.w),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.w),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.w),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.w),
         ),
       ),
     );

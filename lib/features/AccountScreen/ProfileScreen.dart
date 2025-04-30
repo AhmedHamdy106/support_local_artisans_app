@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:support_local_artisans/core/helper/logout.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/AccountScreen/CurrentProfileModel.dart';
+import '../../config/themes/AppColorsLight.dart';
+import '../../config/themes/ThemeProvider.dart';
 import '../home_view_user/presentation/pages/MainScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,7 +49,8 @@ class _AccountScreenState extends State<AccountScreen> {
         return;
       }
 
-      const String apiUrl = 'http://abdoemam.runasp.net/api/Account/GetCurentUser';
+      const String apiUrl =
+          'http://abdoemam.runasp.net/api/Account/GetCurentUser';
 
       final response = await _dio.get(
         apiUrl,
@@ -71,7 +74,8 @@ class _AccountScreenState extends State<AccountScreen> {
       } else {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Failed to fetch user data. Status code: ${response.statusCode}';
+          _errorMessage =
+          'Failed to fetch user data. Status code: ${response.statusCode}';
         });
       }
     } catch (error) {
@@ -114,9 +118,12 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColorsLight.background,
       appBar: AppBar(
         actions: [
+          // زرار تغيير الثيم
+          ThemeSwitcher(),
+
           IconButton(
             onPressed: () => logout(context),
             icon: const Icon(Icons.logout_outlined),
@@ -137,8 +144,8 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         centerTitle: true,
         title: const Text('Edit profile'),
-        backgroundColor: AppColors.background,
-        foregroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
         elevation: 0,
       ),
       body: _isLoading
@@ -166,7 +173,6 @@ class _AccountScreenState extends State<AccountScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 25),
             _buildProfileField(
               labelText: 'Your E-mail',
@@ -190,7 +196,7 @@ class _AccountScreenState extends State<AccountScreen> {
               child: ElevatedButton(
                 onPressed: _saveChanges,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppColorsLight.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                       horizontal: 30, vertical: 10),
@@ -241,12 +247,44 @@ class _AccountScreenState extends State<AccountScreen> {
             enabled: isEditable, // Control if the field is editable or not
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-              suffixIcon: isEditable ? const Icon(Icons.edit_outlined) : null, // Show icon only if editable
+              contentPadding:
+              EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              suffixIcon: isEditable
+                  ? const Icon(Icons.edit_outlined)
+                  : null, // Show icon only if editable
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class ThemeSwitcher extends StatelessWidget {
+  const ThemeSwitcher({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return RotationTransition(turns: animation, child: child);
+        },
+        child: IconButton(
+          key: ValueKey<bool>(themeProvider.isDarkMode),
+          icon: Icon(
+            themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          onPressed: () {
+            themeProvider.toggleTheme(!themeProvider.isDarkMode);
+          },
+        ),
+      ),
     );
   }
 }
