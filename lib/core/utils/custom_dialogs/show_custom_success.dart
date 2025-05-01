@@ -63,7 +63,7 @@ void showCustomSuccessDialog(
                     Navigator.pushNamed(
                       context,
                       Routes.createNewPasswordRoute,
-                      arguments: VerificationCodeScreen().token,
+                      arguments: VerificationCodeScreen(),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -74,7 +74,8 @@ void showCustomSuccessDialog(
                   ),
                   child: Text(
                     "Ok",
-                    style: TextStyle(color: colorScheme.onPrimary, fontSize: 14.sp),
+                    style: TextStyle(
+                        color: colorScheme.onPrimary, fontSize: 14.sp),
                   ),
                 ),
               ],

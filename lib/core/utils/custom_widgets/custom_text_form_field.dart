@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 
 typedef Validator = String? Function(String? text);
 
@@ -58,19 +59,19 @@ class _CustomTextFormField extends State<CustomTextFormField> {
         ),
         suffixIcon: widget.securedPassword
             ? InkWell(
-          onTap: () {
-            setState(() {
-              isVisibleText = !isVisibleText;
-            });
-          },
-          child: Icon(
-            isVisibleText
-                ? Icons.visibility_off_outlined
-                : Icons.visibility,
-            color: isVisibleText ? Colors.grey : colorScheme.primary,
-            size: 25.sp,
-          ),
-        )
+                onTap: () {
+                  setState(() {
+                    isVisibleText = !isVisibleText;
+                  });
+                },
+                child: Icon(
+                  isVisibleText
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility,
+                  color: isVisibleText ? Colors.grey : theme.primaryColor,
+                  size: 25.sp,
+                ),
+              )
             : null,
         hintText: widget.hint,
         hintStyle: theme.textTheme.bodyMedium?.copyWith(
@@ -81,11 +82,11 @@ class _CustomTextFormField extends State<CustomTextFormField> {
         filled: true,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: colorScheme.primary, width: 1.5.w),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5.w),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: colorScheme.outline, width: 1.w),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.w),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),

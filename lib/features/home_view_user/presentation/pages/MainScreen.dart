@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/CartScreen/CartScreen.dart';
 import 'package:support_local_artisans/features/AccountScreen/ProfileScreen.dart';
 import 'package:support_local_artisans/features/CategoriesScreen/CategoriesScreen.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/home_screen_user.dart';
 import '../../../home_view_artisan/AddProductScreen.dart';
 import '../../../home_view_artisan/MyProductsScreen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MainScreen extends StatefulWidget {
   final bool isMerchant;
@@ -28,39 +28,47 @@ class _MainScreenState extends State<MainScreen> {
 
     _screens = widget.isMerchant
         ? [
-      const HomeScreenUser(),
-      const CategoriesScreen(),
-      const MyProductsScreen(),
-      const AccountScreen(),
-    ]
+            const HomeScreenUser(),
+            const CategoriesScreen(),
+            const MyProductsScreen(),
+            const AccountScreen(),
+          ]
         : [
-      const HomeScreenUser(),
-      const CategoriesScreen(),
-      const CartScreen(),
-      const AccountScreen(),
-    ];
+            const HomeScreenUser(),
+            const CategoriesScreen(),
+            const CartScreen(),
+            const AccountScreen(),
+          ];
 
     _navItems = widget.isMerchant
         ? [
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined), label: "Home"),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.category_outlined), label: "Categories"),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.storefront_outlined), label: "My Products"),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline), label: "Account"),
-    ]
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.home_outlined),
+                label: 'home'.tr()), // الترجمة
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.category_outlined),
+                label: 'categories'.tr()), // الترجمة
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.storefront_outlined),
+                label: 'my_products'.tr()), // الترجمة
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.person_outline),
+                label: 'account'.tr()), // الترجمة
+          ]
         : [
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined), label: "Home"),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.category_outlined), label: "Categories"),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline), label: "Account"),
-    ];
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.home_outlined),
+                label: 'home'.tr()), // الترجمة
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.category_outlined),
+                label: 'categories'.tr()), // الترجمة
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.shopping_cart_outlined),
+                label: 'cart'.tr()), // الترجمة
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.person_outline),
+                label: 'account'.tr()), // الترجمة
+          ];
   }
 
   @override
@@ -68,19 +76,20 @@ class _MainScreenState extends State<MainScreen> {
     final theme = Theme.of(context); // Access current theme
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
+      backgroundColor:
+          theme.scaffoldBackgroundColor, // Use theme background color
       body: _screens[_currentIndex],
       floatingActionButton: widget.isMerchant
           ? FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AddProductScreen()),
-          );
-        },
-        child: const Icon(Icons.add, color: Colors.white),
-        backgroundColor: theme.primaryColor, // Use theme primary color
-      )
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddProductScreen()),
+                );
+              },
+              child: const Icon(Icons.add, color: Colors.white),
+              backgroundColor: theme.primaryColor, // Use theme primary color
+            )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -118,7 +127,8 @@ class _MainScreenState extends State<MainScreen> {
                         style: TextStyle(
                           color: _currentIndex == actualIndex
                               ? theme.primaryColor // Use theme primary color
-                              : theme.textTheme.bodyMedium?.color, // Use theme text color
+                              : theme.textTheme.bodyMedium
+                                  ?.color, // Use theme text color
                           fontSize: 12,
                         ),
                       )

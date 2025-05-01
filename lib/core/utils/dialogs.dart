@@ -108,7 +108,7 @@ class DialogUtils {
           Row(
             children: [
               SpinKitFadingCircle(
-                color: colorScheme.primary,
+                color: theme.primaryColor,
                 size: 40.sp,
               ),
               SizedBox(width: 20.w),

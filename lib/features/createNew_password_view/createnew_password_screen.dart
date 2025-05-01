@@ -4,7 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:support_local_artisans/core/api/api_manager.dart';
 import 'package:support_local_artisans/core/api/end_points.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 import '../../core/utils/custom_dialogs/success_dialog_glassmorphism.dart';
 import '../../core/utils/custom_widgets/Custom_label_text_field.dart';
 import '../../core/utils/custom_widgets/custom_text_form_field.dart';
@@ -23,7 +22,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
   bool _isLoading = false;
   String? _savedToken;
 
@@ -118,10 +117,12 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
+        backgroundColor:
+            theme.scaffoldBackgroundColor, // Use theme background color
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: theme.appBarTheme.backgroundColor, // Use app bar color from theme
+          backgroundColor:
+              theme.appBarTheme.backgroundColor, // Use app bar color from theme
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -143,7 +144,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                   child: Text(
                     'Create New Password',
                     style: TextStyle(
-                      color: theme.textTheme.bodyLarge?.color, // Use text color from theme
+                      color: theme.textTheme.bodyLarge
+                          ?.color, // Use text color from theme
                       fontFamily: "Roboto",
                       fontSize: 26.sp,
                       fontStyle: FontStyle.normal,
@@ -158,7 +160,8 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                     Text(
                       'Make sure your password is strong',
                       style: TextStyle(
-                        color: theme.textTheme.bodyMedium?.color, // Use text color from theme
+                        color: theme.textTheme.bodyMedium
+                            ?.color, // Use text color from theme
                         fontFamily: "Roboto",
                         fontSize: 16.sp,
                         fontStyle: FontStyle.normal,
@@ -172,7 +175,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
-                  Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                   hint: "Enter your New password",
                   keyboardType: TextInputType.text,
                   securedPassword: true,
@@ -184,7 +187,7 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
-                  Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
                   hint: "Enter your New password",
                   keyboardType: TextInputType.text,
                   securedPassword: true,
@@ -205,34 +208,37 @@ class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
                 SizedBox(height: 80.h),
                 _isLoading
                     ? Center(
-                  child: SpinKitFadingCircle(
-                    color: theme.primaryColor, // Use primary color from theme
-                    size: 40.sp,
-                  ),
-                )
+                        child: SpinKitFadingCircle(
+                          color: theme
+                              .primaryColor, // Use primary color from theme
+                          size: 40.sp,
+                        ),
+                      )
                     : SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.primaryColor, // Use primary color from theme
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                    ),
-                    onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        await resetPassword();
-                      }
-                    },
-                    child: Text(
-                      'confirm',
-                      style: TextStyle(
-                        fontFamily: "Roboto",
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: theme.textTheme.labelLarge?.color, // Use button text color from theme
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme
+                                .primaryColor, // Use primary color from theme
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                          ),
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              await resetPassword();
+                            }
+                          },
+                          child: Text(
+                            'confirm',
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600,
+                              color: theme.textTheme.labelLarge
+                                  ?.color, // Use button text color from theme
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:support_local_artisans/core/di/di.dart';
-import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_text_form_field.dart';
 import 'package:support_local_artisans/core/utils/validators.dart';
@@ -9,6 +8,7 @@ import 'package:support_local_artisans/features/register_view/presentation/manag
 import 'package:support_local_artisans/features/user_type_selection_screen/user_type_selection_screen.dart';
 import '../../../../core/shared/shared_preference.dart';
 import '../../../../config/routes_manager/routes.dart';
+import 'package:easy_localization/easy_localization.dart'; // Import EasyLocalization
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -41,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         SizedBox(height: 50.h),
                         Text(
-                          'Create Account',
+                          'create_account'.tr(), // Translate this string
                           style: TextStyle(
                             fontFamily: "Roboto",
                             fontSize: 24.sp,
@@ -50,7 +50,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         Text(
-                          'create an account to start your journey.',
+                          'create_account_subtitle'
+                              .tr(), // Translate this string
                           style: TextStyle(
                             fontFamily: "Roboto",
                             fontSize: 16.sp,
@@ -64,13 +65,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 40.h),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: const CustomLabelTextField(label: "Full Name"),
+                    child: CustomLabelTextField(
+                        label: "full_name_label".tr()), // Translate this string
                   ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon: Image.asset(
                         "assets/icons/3.0x/🦆 icon _person_3.0x.png"),
-                    hint: "Enter your full name",
+                    hint: "full_name_hint".tr(), // Translate this string
                     keyboardType: TextInputType.text,
                     securedPassword: false,
                     validator: (text) => AppValidators.validateUsername(text),
@@ -79,11 +81,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 15.h),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: const CustomLabelTextField(label: "Phone Number"),
+                    child: CustomLabelTextField(
+                        label:
+                            "phone_number_label".tr()), // Translate this string
                   ),
                   SizedBox(height: 10.h),
                   CustomTextFormField(
-                    hint: "Enter phone number",
+                    hint: "phone_number_hint".tr(), // Translate this string
                     keyboardType: TextInputType.number,
                     securedPassword: false,
                     validator: (text) =>
@@ -98,13 +102,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 10.h),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: const CustomLabelTextField(label: "Email Address"),
+                    child: CustomLabelTextField(
+                        label: "email_label".tr()), // Translate this string
                   ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon:
-                    Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
-                    hint: "Enter your email",
+                        Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                    hint: "email_hint".tr(), // Translate this string
                     keyboardType: TextInputType.emailAddress,
                     securedPassword: false,
                     validator: (text) => AppValidators.validateEmail(text),
@@ -113,13 +118,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 15.h),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: const CustomLabelTextField(label: "Password"),
+                    child: CustomLabelTextField(
+                        label: "password_label".tr()), // Translate this string
                   ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon:
-                    Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
-                    hint: "Enter your password",
+                        Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                    hint: "password_hint".tr(), // Translate this string
                     keyboardType: TextInputType.text,
                     securedPassword: true,
                     validator: (text) => AppValidators.validatePassword(text),
@@ -128,22 +134,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 15.h),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child:
-                    const CustomLabelTextField(label: "Confirm Password"),
+                    child: CustomLabelTextField(
+                        label: "confirm_password_label"
+                            .tr()), // Translate this string
                   ),
                   SizedBox(height: 5.h),
                   CustomTextFormField(
                     prefixIcon:
-                    Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
-                    hint: "Enter confirmPassword",
+                        Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                    hint: "confirm_password_hint".tr(), // Translate this string
                     keyboardType: TextInputType.text,
                     securedPassword: true,
                     validator: (text) {
                       if (text!.isEmpty || text.trim().isEmpty) {
-                        return "Confirm Password is required";
+                        return "confirm_password_required"
+                            .tr(); // Translate this string
                       }
                       if (viewModel.passwordController.text != text) {
-                        return "Passwords don't match";
+                        return "passwords_do_not_match"
+                            .tr(); // Translate this string
                       }
                       return null;
                     },
@@ -171,28 +180,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             await SharedPreference.saveData(
                                 key: "temp_confirmPassword",
                                 value:
-                                viewModel.confirmPasswordController.text);
+                                    viewModel.confirmPasswordController.text);
 
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                const UserTypeSelectionScreen(),
+                                    const UserTypeSelectionScreen(),
                               ),
                             );
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
+                          backgroundColor: theme.primaryColor,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         child: Text(
-                          'Sign Up',
+                          'sign_up'.tr(), // Translate this string
                           style: TextStyle(
                             fontFamily: "Roboto",
                             fontSize: 20.sp,
                             fontWeight: FontWeight.w600,
-                            color: colorScheme.onPrimary,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -203,7 +212,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Already have an account?",
+                        "already_have_account".tr(), // Translate this string
                         style: TextStyle(
                             fontFamily: "Roboto",
                             fontWeight: FontWeight.bold,
@@ -215,10 +224,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Navigator.pushNamed(context, Routes.loginRoute);
                         },
                         child: Text(
-                          "Log In",
+                          "log_in".tr(), // Translate this string
                           style: TextStyle(
                             fontSize: 16.sp,
-                            color: colorScheme.primary,
+                            color: theme.primaryColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

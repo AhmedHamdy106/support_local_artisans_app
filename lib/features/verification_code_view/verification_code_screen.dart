@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -71,7 +70,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
         return AlertDialog(
           backgroundColor: AppColors.background,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -187,14 +186,11 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        backgroundColor: colorScheme.background,
+        backgroundColor: AppColors.background,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
@@ -254,7 +250,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                   showFieldAsBox: true,
                   onSubmit: (String verificationCode) {
                     setState(
-                          () {
+                      () {
                         otpController.text = verificationCode;
                       },
                     );
@@ -279,7 +275,7 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                         fontStyle: FontStyle.normal,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
-                        color: colorScheme.background),
+                        color: AppColors.background),
                   ),
                 ),
               ),
@@ -305,9 +301,9 @@ class _VerificationCodeScreenState extends State<VerificationCodeScreen> {
                     child: Text(
                       "send again",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontFamily: "Roboto",
-                        color: AppColors.primary,
-                      ),
+                            fontFamily: "Roboto",
+                            color: AppColors.primary,
+                          ),
                     ),
                   ),
                 ],

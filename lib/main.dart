@@ -6,13 +6,14 @@ import 'package:support_local_artisans/config/routes_manager/routes.dart';
 import 'package:support_local_artisans/core/di/di.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/my_bloc_observer.dart';
-import 'package:support_local_artisans/features/home_view_user/presentation/pages/MainScreen.dart';
 import 'config/routes_manager/route_generator.dart';
 import 'config/themes/AppTheme.dart';
-import 'config/themes/ThemeProvider.dart'; // استورد ملف الثيمات
+import 'config/themes/ThemeProvider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   Bloc.observer = MyBlocObserver();
   await SharedPreference.init();
   configureDependencies();
@@ -21,25 +22,34 @@ void main() async {
   String? role = SharedPreference.getData(key: "role");
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(), // هنا دخلنا الProvider
-      child: ScreenUtilInit(
-        designSize: const Size(375, 812),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          final themeProvider = Provider.of<ThemeProvider>(context);
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.themeMode, // سيتم تغيير الـ theme بناءً على التبديل
-            initialRoute: token == null ? Routes.loginRoute : Routes.splashRoute,
-            onGenerateRoute: (RouteSettings settings) {
-              return RouteGenerator.getRoute(settings);
-            },
-          );
-        },
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en'),
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+        child: ScreenUtilInit(
+          designSize: const Size(375, 812),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            final themeProvider = Provider.of<ThemeProvider>(context);
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              locale: context.locale, // ✅ مهم جداً
+              supportedLocales: context.supportedLocales,
+              localizationsDelegates: context.localizationDelegates,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: themeProvider.themeMode,
+              initialRoute:
+                  token == null ? Routes.loginRoute : Routes.splashRoute,
+              onGenerateRoute: (RouteSettings settings) {
+                return RouteGenerator.getRoute(settings);
+              },
+            );
+          },
+        ),
       ),
     ),
   );

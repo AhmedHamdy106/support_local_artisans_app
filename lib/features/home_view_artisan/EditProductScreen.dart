@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../core/utils/app_colors.dart';
 import 'ProductArtistApi.dart';
 import 'ProductArtistModel.dart';
 
@@ -114,7 +113,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final theme = Theme.of(context); // Access current theme
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
+      backgroundColor:
+          theme.scaffoldBackgroundColor, // Use theme background color
       appBar: AppBar(
         title: const Text(
           "Edit Product",
@@ -128,142 +128,178 @@ class _EditProductScreenState extends State<EditProductScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : ListView(
-          children: [
-            GestureDetector(
-              onTap: _pickImage,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30.0),
-                child: SizedBox(
-                  height: 180.0,
-                  child: _newImage != null
-                      ? Image.file(
-                    File(_newImage!.path),
-                    fit: BoxFit
-                        .cover, // عشان الصورة تغطي المساحة المحددة
-                  )
-                      : Image.network(
-                    widget.product.pictureUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                    const Icon(Icons.image),
+                children: [
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: SizedBox(
+                        height: 180.0,
+                        child: _newImage != null
+                            ? Image.file(
+                                File(_newImage!.path),
+                                fit: BoxFit
+                                    .cover, // عشان الصورة تغطي المساحة المحددة
+                              )
+                            : Image.network(
+                                widget.product.pictureUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) =>
+                                    const Icon(Icons.image),
+                              ),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 12),
+                  const Text("Tap image to change",
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 20),
+                  TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: "Name",
+                        labelStyle: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color), // Use text color from theme
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                      )),
+                  SizedBox(height: 10),
+                  TextField(
+                      controller: _priceController,
+                      decoration: InputDecoration(
+                        labelText: "Price",
+                        labelStyle: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color), // Use text color from theme
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                      ),
+                      keyboardType: TextInputType.number),
+                  SizedBox(height: 10),
+                  TextField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: "Description",
+                        labelStyle: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color), // Use text color from theme
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                      )),
+                  SizedBox(height: 10),
+                  TextField(
+                      controller: _brandController,
+                      decoration: InputDecoration(
+                        labelText: "Brand",
+                        labelStyle: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color), // Use text color from theme
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                      )),
+                  SizedBox(height: 10),
+                  TextField(
+                      controller: _typeController,
+                      decoration: InputDecoration(
+                        labelText: "Type",
+                        labelStyle: TextStyle(
+                            color: theme.textTheme.bodyLarge
+                                ?.color), // Use text color from theme
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: theme
+                                  .primaryColor), // Use primary color from theme
+                        ),
+                      )),
+                  SizedBox(height: 15),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCategory,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedCategory = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Select Category',
+                      labelStyle: TextStyle(
+                          color: theme.textTheme.bodyLarge
+                              ?.color), // Use text color from theme
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0)),
+                    ),
+                    items: _categories.map((String category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category,
+                            style: TextStyle(
+                                color: theme.textTheme.bodyLarge
+                                    ?.color)), // Use text color from theme
+                      );
+                    }).toList(),
+                    validator: (value) =>
+                        value == null ? 'Please select a category' : null,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _submit,
+                    child: const Text(
+                      "Save Changes",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            theme.primaryColor), // Use primary color from theme
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 12),
-            const Text("Tap image to change",
-                textAlign: TextAlign.center),
-            const SizedBox(height: 20),
-            TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: "Name",
-                  labelStyle: TextStyle(color: theme.textTheme.bodyLarge?.color), // Use text color from theme
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                )),
-            SizedBox(height: 10),
-            TextField(
-                controller: _priceController,
-                decoration: InputDecoration(
-                  labelText: "Price",
-                  labelStyle: TextStyle(color: theme.textTheme.bodyLarge?.color), // Use text color from theme
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                ),
-                keyboardType: TextInputType.number),
-            SizedBox(height: 10),
-            TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: "Description",
-                  labelStyle: TextStyle(color: theme.textTheme.bodyLarge?.color), // Use text color from theme
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                )),
-            SizedBox(height: 10),
-            TextField(
-                controller: _brandController,
-                decoration: InputDecoration(
-                  labelText: "Brand",
-                  labelStyle: TextStyle(color: theme.textTheme.bodyLarge?.color), // Use text color from theme
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                )),
-            SizedBox(height: 10),
-            TextField(
-                controller: _typeController,
-                decoration: InputDecoration(
-                  labelText: "Type",
-                  labelStyle: TextStyle(color: theme.textTheme.bodyLarge?.color), // Use text color from theme
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor), // Use primary color from theme
-                  ),
-                )),
-            SizedBox(height: 15),
-            DropdownButtonFormField<String>(
-              value: _selectedCategory,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedCategory = newValue;
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Select Category',
-                labelStyle: TextStyle(color: theme.textTheme.bodyLarge?.color), // Use text color from theme
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-              ),
-              items: _categories.map((String category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category, style: TextStyle(color: theme.textTheme.bodyLarge?.color)), // Use text color from theme
-                );
-              }).toList(),
-              validator: (value) =>
-              value == null ? 'Please select a category' : null,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submit,
-              child: const Text(
-                "Save Changes",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor), // Use primary color from theme
-            ),
-          ],
-        ),
       ),
     );
   }

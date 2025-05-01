@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/utils/custom_widgets/custom_text_form_field.dart';
 import '../../core/utils/validators.dart';
@@ -27,21 +27,22 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
                   SpinKitFadingCircle(
-                    color: Theme.of(context).primaryColor, // Use primary color from theme
+                    color: Theme.of(context).primaryColor,
                     size: 40.sp,
                   ),
                   SizedBox(width: 20.w),
                   Text(
-                    "Please wait...",
+                    "please_wait".tr(),
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyLarge?.color, // Use text color from theme
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontFamily: "Roboto",
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w500,
@@ -62,133 +63,93 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       );
       Navigator.of(context).pop();
       if (response.statusCode == 200) {
-        Get.snackbar(
-          "",
-          "",
-          titleText: Text(
-            "Success",
-            style: TextStyle(
-              fontFamily: "Roboto",
-              color: Colors.white,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Row(
+              children: [
+                Icon(Icons.check_circle_outline_outlined,
+                    color: Colors.white, size: 30.sp),
+                SizedBox(width: 10.w),
+                Expanded(
+                    child: Text(response.data['message'] ?? "otp_sent".tr())),
+              ],
             ),
+            duration: const Duration(seconds: 3),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r)),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(15.sp),
           ),
-          messageText: Text(
-            response.data['message'] ?? "OTP code has been sent to your email.",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: "Roboto",
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green,
-          borderRadius: 12.r,
-          margin: EdgeInsets.all(15.sp),
-          duration: const Duration(seconds: 3),
-          icon: Icon(
-            Icons.check_circle_outline_outlined,
-            color: Colors.black,
-            size: 30.sp,
-          ),
-          forwardAnimationCurve: Curves.fastOutSlowIn,
-          reverseAnimationCurve: Curves.easeIn,
         );
-        Get.to(() => VerificationCodeScreen(),
-            arguments: ForgetPasswordScreen.emailController.text.trim());
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerificationCodeScreen(),
+            settings: RouteSettings(
+              arguments: ForgetPasswordScreen.emailController.text.trim(),
+            ),
+          ),
+        );
       } else {
-        Get.snackbar(
-          "",
-          "",
-          titleText: Text(
-            "Error",
-            style: TextStyle(
-              fontFamily: "Roboto",
-              color: Colors.white,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.white, size: 30.sp),
+                SizedBox(width: 10.w),
+                Expanded(
+                    child: Text(
+                        response.data['message'] ?? "something_wrong".tr())),
+              ],
             ),
+            duration: const Duration(seconds: 3),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r)),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.all(15.sp),
           ),
-          messageText: Text(
-            response.data['message'] ??
-                "Something went wrong, please try again.",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: "Roboto",
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          borderRadius: 12.r,
-          margin: EdgeInsets.all(15.sp),
-          duration: const Duration(seconds: 3),
-          icon: Icon(
-            Icons.error_outline,
-            color: Colors.white,
-            size: 30.sp,
-          ),
-          forwardAnimationCurve: Curves.fastOutSlowIn,
-          reverseAnimationCurve: Curves.easeIn,
         );
       }
     } catch (e) {
       Navigator.of(context).pop();
-      Get.snackbar(
-        "",
-        "",
-        titleText: Text(
-          "Error!",
-          style: TextStyle(
-            fontFamily: "Roboto",
-            color: Colors.white,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: const Color(0xffd9403d),
+          content: Row(
+            children: [
+              Icon(Icons.error_outline_outlined,
+                  color: Colors.white, size: 30.sp),
+              SizedBox(width: 10.w),
+              Expanded(child: Text("email_not_registered".tr())),
+            ],
           ),
+          duration: const Duration(seconds: 3),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(15.sp),
         ),
-        messageText: Text(
-          "This email is not registered. Please enter a valid email.",
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: "Roboto",
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xffd9403d),
-        borderRadius: 12.r,
-        margin: EdgeInsets.all(15.sp),
-        duration: const Duration(seconds: 3),
-        icon: Icon(
-          Icons.error_outline_outlined,
-          color: Colors.white,
-          size: 30.sp,
-        ),
-        forwardAnimationCurve: Curves.fastOutSlowIn,
-        reverseAnimationCurve: Curves.easeIn,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Get the current theme
+    final theme = Theme.of(context);
 
     return Form(
       key: formKey,
       child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor, // Use theme background color
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: theme.appBarTheme.backgroundColor, // Use app bar color from theme
+          backgroundColor: theme.appBarTheme.backgroundColor,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: theme.iconTheme.color, // Use icon color from theme
+              color: theme.iconTheme.color,
             ),
             onPressed: () => Navigator.pop(context),
           ),
@@ -197,14 +158,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           padding: EdgeInsets.all(16.sp),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 40.h),
                 Text(
-                  'Forget Password',
+                  "forget_password".tr(),
                   style: TextStyle(
-                    color: theme.textTheme.bodyLarge?.color, // Use text color from theme
+                    color: theme.textTheme.bodyLarge?.color,
                     fontFamily: "Roboto",
                     fontSize: 26.sp,
                     fontWeight: FontWeight.w500,
@@ -212,11 +171,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'Please enter your email and we send a confirmation code to your email.',
+                  "forget_password_description".tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: "Roboto",
-                    color: theme.textTheme.bodyMedium?.color, // Use text color from theme
+                    color: theme.textTheme.bodyMedium?.color,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                   ),
@@ -226,10 +185,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Email Address',
+                      "email_address".tr(),
                       style: TextStyle(
                         fontFamily: "Roboto",
-                        color: theme.textTheme.bodyLarge?.color, // Use text color from theme
+                        color: theme.textTheme.bodyLarge?.color,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                       ),
@@ -239,8 +198,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 SizedBox(height: 5.h),
                 CustomTextFormField(
                   prefixIcon:
-                  Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
-                  hint: "Enter your email",
+                      Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                  hint: "enter_email".tr(),
                   keyboardType: TextInputType.text,
                   securedPassword: false,
                   validator: (text) => AppValidators.validateEmail(text),
@@ -251,7 +210,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.primaryColor, // Use primary color from theme
+                      backgroundColor: theme.primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 12.h),
                     ),
                     onPressed: () async {
@@ -260,12 +219,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       }
                     },
                     child: Text(
-                      'send code',
+                      "send_code".tr(),
                       style: TextStyle(
                         fontFamily: "Roboto",
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
-                        color: theme.textTheme.labelLarge?.color, // Use button text color from theme
+                        color: theme.textTheme.labelLarge?.color,
                       ),
                     ),
                   ),

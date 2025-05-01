@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:support_local_artisans/core/utils/custom_widgets/custom_label_text_field.dart';
 import 'package:support_local_artisans/core/utils/dialogs.dart';
 import 'package:support_local_artisans/features/home_view_user/presentation/pages/MainScreen.dart';
@@ -27,14 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Access the current theme
-    final colorScheme = theme.colorScheme; // Access the color scheme
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return BlocListener<LoginScreenViewModel, LoginStates>(
       bloc: viewModel,
       listener: (context, state) async {
         if (state is LoginLoadingState) {
-          DialogUtils.showLoadingDialog(context: context, title: "Logging...");
+          DialogUtils.showLoadingDialog(
+              context: context, title: "logging".tr());
         } else if (state is LoginSuccessState) {
           DialogUtils.hideLoadingDialog();
           final token = state.responseEntity.token;
@@ -50,16 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialPageRoute(
                 builder: (context) => MainScreen(isMerchant: isMerchant),
               ),
-                  (route) => false,
+              (route) => false,
             );
           }
         } else if (state is LoginErrorState) {
           DialogUtils.hideLoadingDialog();
           DialogUtils.showErrorDialog(
-            title: "Login Failed",
+            title: "login_failed".tr(),
             context: context,
             message: state.failures.errorMessage,
-            buttonText: "Retry",
+            buttonText: "retry".tr(),
             onRetryPressed: () => Navigator.of(context).pop(),
           );
         }
@@ -67,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Form(
         key: formKey,
         child: Scaffold(
-          backgroundColor: colorScheme.background, // Use background color from theme
+          backgroundColor: colorScheme.background,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: Center(
@@ -75,41 +77,65 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    // 🔁 Language switch button
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: TextButton(
+                        onPressed: () {
+                          final currentLocale = context.locale;
+                          final newLocale = currentLocale.languageCode == 'en'
+                              ? const Locale('ar')
+                              : const Locale('en');
+                          context.setLocale(newLocale);
+                        },
+                        child: Text(
+                          context.locale.languageCode == 'ar'
+                              ? 'عربي'
+                              : 'English',
+                          style: TextStyle(
+                            color: theme.primaryColor,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 40.h),
                     Center(
                       child: Text(
-                        'Welcome Back👋',
+                        'welcome_back'.tr(),
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w500,
-                          color: colorScheme.onBackground, // Use onBackground color for text
+                          color: colorScheme.onBackground,
                         ),
                       ),
                     ),
                     Center(
                       child: Text(
-                        'Please enter your email and password to log in.',
+                        'login_prompt'.tr(),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 14.sp,
-                          color: colorScheme.onBackground, // Use onBackground color for text
+                          color: colorScheme.onBackground,
                         ),
                       ),
                     ),
                     SizedBox(height: 80.h),
-                    const CustomLabelTextField(label: "Email Address"),
+                    CustomLabelTextField(label: "email_label".tr()),
                     CustomTextFormField(
-                      prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
-                      hint: "Enter your email",
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _mail_3.0x.png"),
+                      hint: "email_hint".tr(),
                       keyboardType: TextInputType.emailAddress,
                       securedPassword: false,
                       validator: (text) => AppValidators.validateEmail(text),
                       controller: viewModel.emailController,
                     ),
                     SizedBox(height: 20.h),
-                    const CustomLabelTextField(label: "Password"),
+                    CustomLabelTextField(label: "password_label".tr()),
                     CustomTextFormField(
-                      prefixIcon: Image.asset("assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
-                      hint: "Enter your password",
+                      prefixIcon: Image.asset(
+                          "assets/icons/3.0x/🦆 icon _lock_3.0x.png"),
+                      hint: "password_hint".tr(),
                       keyboardType: TextInputType.text,
                       securedPassword: true,
                       validator: (text) => AppValidators.validatePassword(text),
@@ -122,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Row(
                           children: [
                             Checkbox(
-                              activeColor: colorScheme.primary, // Use primary color from theme
+                              activeColor: theme.primaryColor,
                               value: rememberMe,
                               onChanged: (bool? newValue) {
                                 setState(() {
@@ -131,8 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                             Text(
-                              "Remember Me",
-                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: colorScheme.onBackground), // Use onBackground color for text
+                              "remember_me".tr(),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontSize: 14.sp,
+                                color: colorScheme.onBackground,
+                              ),
                             ),
                           ],
                         ),
@@ -141,14 +170,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ForgetPasswordScreen(),
+                                builder: (context) =>
+                                    const ForgetPasswordScreen(),
                               ),
                             );
                           },
                           child: Text(
-                            'Forget password?',
+                            'forget_password'.tr(),
                             style: TextStyle(
-                              color: colorScheme.primary, // Use primary color from theme
+                              color: theme.primaryColor,
                               fontSize: 14.sp,
                             ),
                           ),
@@ -165,14 +195,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary, // Use primary color from theme
+                          backgroundColor: theme.primaryColor,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         child: Text(
-                          'Log In',
+                          'login_button'.tr(),
                           style: theme.textTheme.labelLarge?.copyWith(
                             fontSize: 20.sp,
-                            color: colorScheme.onPrimary, // Use onPrimary color for text
+                            color: Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -183,16 +213,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have an account?",
-                          style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16.sp, color: colorScheme.onBackground), // Use onBackground color for text
+                          "no_account".tr(),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 16.sp,
+                            color: colorScheme.onBackground,
+                          ),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.pushNamed(context, Routes.registerRoute),
+                          onPressed: () => Navigator.pushNamed(
+                              context, Routes.registerRoute),
                           child: Text(
-                            "Sign Up",
+                            "sign_up".tr(),
                             style: TextStyle(
                               fontSize: 16.sp,
-                              color: colorScheme.primary, // Use primary color from theme
+                              color: theme.primaryColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

@@ -5,7 +5,7 @@ import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/core/shared/shared_preference.dart';
 import 'package:support_local_artisans/features/register_view/presentation/manager/cubit/register_view_model.dart';
 import '../home_view_user/presentation/pages/MainScreen.dart';
-import '../../../../config/routes_manager/routes.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UserTypeSelectionScreen extends StatefulWidget {
   const UserTypeSelectionScreen({super.key});
@@ -37,7 +37,7 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
                   height: 140,
                 ),
                 Text(
-                  'Are you a seller or a client?',
+                  'are_you_seller_or_client'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20,
@@ -46,8 +46,8 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Choose the method that aligns with the\nservice you want.',
+                Text(
+                  'choose_service_type'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -77,76 +77,75 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
                   child: ElevatedButton(
                     onPressed: selectedUserType != null
                         ? () async {
-                      final isMerchant = selectedUserType == 'seller';
-                      final role = isMerchant ? "Artisan" : "User";
+                            final isMerchant = selectedUserType == 'seller';
+                            final role = isMerchant ? "Artisan" : "User";
 
-                      // حفظ الدور
-                      await SharedPreference.saveData(
-                          key: "role", value: role);
+                            // حفظ الدور
+                            await SharedPreference.saveData(
+                                key: "role", value: role);
 
-                      // استدعاء البيانات من التخزين المؤقت
-                      final name =
-                      SharedPreference.getData(key: "temp_name");
-                      final phone =
-                      SharedPreference.getData(key: "temp_phone");
-                      final email =
-                      SharedPreference.getData(key: "temp_email");
-                      final password =
-                      SharedPreference.getData(key: "temp_password");
-                      final confirmPassword = SharedPreference.getData(
-                          key: "temp_confirmPassword");
+                            // استدعاء البيانات من التخزين المؤقت
+                            final name =
+                                SharedPreference.getData(key: "temp_name");
+                            final phone =
+                                SharedPreference.getData(key: "temp_phone");
+                            final email =
+                                SharedPreference.getData(key: "temp_email");
+                            final password =
+                                SharedPreference.getData(key: "temp_password");
+                            final confirmPassword = SharedPreference.getData(
+                                key: "temp_confirmPassword");
 
-                      // تنفيذ التسجيل عبر ViewModel
-                      final result =
-                      await viewModel.registerFromSelection(
-                        name: name,
-                        phone: phone,
-                        email: email,
-                        password: password,
-                        confirmPassword:
-                        confirmPassword, // تأكيد كلمة المرور
-                        role: role,
-                      );
+                            // تنفيذ التسجيل عبر ViewModel
+                            final result =
+                                await viewModel.registerFromSelection(
+                              name: name,
+                              phone: phone,
+                              email: email,
+                              password: password,
+                              confirmPassword:
+                                  confirmPassword, // تأكيد كلمة المرور
+                              role: role,
+                            );
 
-                      if (result) {
-                        // استلام التوكن والدور بعد التسجيل
-                        final token =
-                        await SharedPreference.getData(key: "token");
-                        final role =
-                        await SharedPreference.getData(key: "role");
-                        print("✅ Registration completed successfully.");
-                        print("📦 token: $token");
-                        print("🧑‍💼 role: $role");
+                            if (result) {
+                              // استلام التوكن والدور بعد التسجيل
+                              final token =
+                                  await SharedPreference.getData(key: "token");
+                              final role =
+                                  await SharedPreference.getData(key: "role");
+                              print("✅ Registration completed successfully.");
+                              print("📦 token: $token");
+                              print("🧑‍💼 role: $role");
 
-                        // استخدم Navigator للتوجيه إلى الصفحة الرئيسية
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MainScreen(isMerchant: isMerchant),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "Registration Failed. Please try again."),
-                          ),
-                        );
-                      }
-                    }
+                              // استخدم Navigator للتوجيه إلى الصفحة الرئيسية
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MainScreen(isMerchant: isMerchant),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('registration_failed'.tr()),
+                                ),
+                              );
+                            }
+                          }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
+                      backgroundColor: theme.primaryColor,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
                     ),
                     child: Text(
-                      'Continue',
-                      style: TextStyle(
-                        color: colorScheme.onPrimary,
+                      'continue'.tr(),
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -196,7 +195,7 @@ class _UserTypeSelectionScreenState extends State<UserTypeSelectionScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 45.h, left: 7.w),
                   child: Text(
-                    type,
+                    type.tr(),
                     style: TextStyle(
                       fontFamily: "Roboto",
                       fontSize: 20.sp,

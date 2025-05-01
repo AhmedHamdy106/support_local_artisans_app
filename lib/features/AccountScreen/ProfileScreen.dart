@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:support_local_artisans/core/helper/logout.dart';
+import 'package:support_local_artisans/core/utils/app_colors.dart';
 import 'package:support_local_artisans/features/AccountScreen/CurrentProfileModel.dart';
-import '../../config/themes/AppColorsLight.dart';
 import '../../config/themes/ThemeProvider.dart';
 import '../home_view_user/presentation/pages/MainScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'ProfileApi.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _AccountScreenState extends State<AccountScreen> {
       if (authToken == null || authToken.isEmpty) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Authentication token not found.';
+          _errorMessage = 'auth_token_not_found'.tr();
         });
         return;
       }
@@ -65,32 +66,27 @@ class _AccountScreenState extends State<AccountScreen> {
         setState(() {
           _user = CurrentUserModel.fromJson(responseData);
           _isLoading = false;
-
-          // Set the initial values in the text fields
           _displayNameController.text = _user?.displayName ?? '';
           _phoneController.text = _user?.phoneNumber ?? '';
         });
       } else {
         setState(() {
           _isLoading = false;
-          _errorMessage =
-          'Failed to fetch user data. Status code: ${response.statusCode}';
+          _errorMessage = '${'fetch_user_failed'.tr()} ${response.statusCode}';
         });
       }
     } catch (error) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Unexpected error: $error';
+        _errorMessage = '${'unexpected_error'.tr()} $error';
       });
     }
   }
 
-  // Function to handle save changes
   Future<void> _saveChanges() async {
     String newDisplayName = _displayNameController.text;
     String newPhoneNumber = _phoneController.text;
 
-    // Update the user profile using the UserApi
     bool success = await ProfileApi.updateProfile(
       displayName: newDisplayName,
       phoneNumber: newPhoneNumber,
@@ -98,10 +94,9 @@ class _AccountScreenState extends State<AccountScreen> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
+        SnackBar(content: Text('profile_updated'.tr())),
       );
       setState(() {
-        // Update the local model
         if (_user != null) {
           _user!.displayName = newDisplayName;
           _user!.phoneNumber = newPhoneNumber;
@@ -109,7 +104,7 @@ class _AccountScreenState extends State<AccountScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile')),
+        SnackBar(content: Text('update_failed'.tr())),
       );
     }
   }
@@ -120,12 +115,10 @@ class _AccountScreenState extends State<AccountScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor, // استخدام خلفية الثيم
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         actions: [
-          // زرار تغيير الثيم
           ThemeSwitcher(),
-
           IconButton(
             onPressed: () => logout(context),
             icon: const Icon(Icons.logout_outlined),
@@ -140,83 +133,88 @@ class _AccountScreenState extends State<AccountScreen> {
               MaterialPageRoute(
                 builder: (_) => MainScreen(isMerchant: role == 'Artisan'),
               ),
-                  (route) => false,
+              (route) => false,
             );
           },
         ),
         centerTitle: true,
-        title: const Text('Edit profile'),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.iconTheme.color, // استخدام اللون المناسب من الثيم
+        title: Text(
+          'edit_profile'.tr(),
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: AppColors.primary,
+        foregroundColor: theme.iconTheme.color,
         elevation: 0,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage.isNotEmpty
-          ? Center(child: Text('Error: $_errorMessage'))
-          : _user == null
-          ? const Center(child: Text('No user data available.'))
-          : SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Welcome, ${_user!.displayName ?? "N/A"}',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: theme.textTheme.bodyLarge?.color, // استخدام النص من الثيم
-              ),
-            ),
-            Text(
-              _user!.role.toString(),
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: theme.textTheme.bodyLarge?.color, // استخدام النص من الثيم
-              ),
-            ),
-            const SizedBox(height: 25),
-            _buildProfileField(
-              labelText: 'Your E-mail',
-              initialValue: _user!.email ?? "N/A",
-              isEditable: false, // Make email field non-editable
-            ),
-            const SizedBox(height: 25.0),
-            _buildProfileField(
-              labelText: 'Your full name',
-              controller: _displayNameController,
-            ),
-            const SizedBox(height: 25.0),
-            _buildProfileField(
-              labelText: 'Your mobile number',
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 32.0),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _saveChanges,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.primaryColor, // استخدام اللون الأساسي من الثيم
-                  foregroundColor: theme.textTheme.labelLarge?.color,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: const Text(
-                  'save changes',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+              ? Center(child: Text('${'error'.tr()}: $_errorMessage'))
+              : _user == null
+                  ? Center(child: Text('no_user_data'.tr()))
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '${'welcome'.tr()}, ${_user!.displayName ?? "N/A"}',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
+                          Text(
+                            _user!.role.toString(),
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: theme.textTheme.bodyLarge?.color,
+                            ),
+                          ),
+                          const SizedBox(height: 25),
+                          _buildProfileField(
+                            labelText: 'your_email'.tr(),
+                            initialValue: _user!.email ?? "N/A",
+                            isEditable: false,
+                          ),
+                          const SizedBox(height: 25.0),
+                          _buildProfileField(
+                            labelText: 'your_full_name'.tr(),
+                            controller: _displayNameController,
+                          ),
+                          const SizedBox(height: 25.0),
+                          _buildProfileField(
+                            labelText: 'your_mobile_number'.tr(),
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                          ),
+                          const SizedBox(height: 32.0),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _saveChanges,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.primaryColor,
+                                foregroundColor:
+                                    theme.textTheme.labelLarge?.color,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              child: Text(
+                                'save_changes'.tr(),
+                                style: const TextStyle(
+                                    fontSize: 18.0, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
     );
   }
 
@@ -227,7 +225,7 @@ class _AccountScreenState extends State<AccountScreen> {
     TextInputType? keyboardType,
     bool obscureText = false,
     int? maxLines = 1,
-    bool isEditable = true, // Flag to determine if the field is editable
+    bool isEditable = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,14 +246,12 @@ class _AccountScreenState extends State<AccountScreen> {
             keyboardType: keyboardType,
             obscureText: obscureText,
             maxLines: maxLines,
-            enabled: isEditable, // Control if the field is editable or not
-            decoration: InputDecoration(
+            enabled: isEditable,
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding:
-              EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-              suffixIcon: isEditable
-                  ? const Icon(Icons.edit_outlined)
-                  : null, // Show icon only if editable
+                  EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              suffixIcon: Icon(Icons.edit_outlined),
             ),
           ),
         ),
